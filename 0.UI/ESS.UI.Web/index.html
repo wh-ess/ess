@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE HTML>
 <!--[if IE 8]> <html lang="zh" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="zh" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
@@ -46,18 +46,18 @@
 <body id="ng-app" ng-app="EssApp" layout="column">
 
     <!-- BEGIN HEADER -->
-    <md-toolbar layout="row">
+    <md-toolbar layout="row">        
         <h4>Angular Material - Starter App</h4>
     </md-toolbar>
     <!-- END HEADER -->
     <!-- BEGIN CONTAINER -->
-    <div flex=flex layout="row">
+    <div flex="flex" layout="row">
 
         <md-sidenav md-is-locked-open="true" class="md-whiteframe-z2">
             <div data-ng-include="'/app/shared/header/mainMenu.html'"></div>
         </md-sidenav>
 
-        <md-content flex=flex >
+        <md-content flex="flex" >
             <div ng-view></div>
         </md-content>
 
