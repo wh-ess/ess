@@ -1,6 +1,7 @@
 # ess
- this is a framework use angularjs,web api,cqrs,redis.. to speed up develop speed 
+ this is a framework use angularjs,web api,cqrs,redis.. to speed up develop speed.
  
+ <pre>
  <h1>技术参考</h1>
                 1.前台
                 angularjs : <a href="https://angularjs.org/">https://angularjs.org/</a>
