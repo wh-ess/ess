@@ -2,12 +2,12 @@
  this is a framework use angularjs,web api,cqrs,redis.. to speed up develop speed.
  
  <pre>
- <h1>技术参考</h1>
+   <h1>技术参考</h1>
                 1.前台
                 angularjs : <a href="https://angularjs.org/">https://angularjs.org/</a>
                 angular ui : <a href="https://angular-ui.github.io/">http://angular-ui.github.io/</a>
                 bootstrap : <a href="https://getbootstrap.com">http://getbootstrap.com</a>
-                ui : <a href="http://www.keenthemes.com/preview/metronic/theme/templates/admin3/ecommerce_index.html">http://www.keenthemes.com/preview/metronic/theme/templates/admin3/ecommerce_index.html</a>
+                ui : <a href="https://material.angularjs.org/">material angular</a>
                 2.后台
                 restfull api:<a href="http://chimera.labs.oreilly.com/books/1234000001708/pr01.html">http://chimera.labs.oreilly.com/books/1234000001708/pr01.html</a>
                 cqrs : <a href="http://www.cnblogs.com/netfocus/p/4150084.html">http://www.cnblogs.com/netfocus/p/4150084.html</a>
