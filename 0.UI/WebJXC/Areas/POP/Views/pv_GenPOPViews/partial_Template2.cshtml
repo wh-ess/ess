@@ -1,0 +1,185 @@
+﻿<style>
+    #center {
+        width: 100%;
+        height: 427px;
+        border: 1px solid #ffffff;
+        /*background-image: url("/Temple/ChoseTemple/POP_2.png");*/
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+    }
+
+    .div_1 {
+        width: 100%;
+        height: 90px;
+        margin-top: 100px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_2 {
+        width: 100%;
+        height: 40px;
+        margin-top: 3px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3 {
+        width: 100%;
+        height: 126px;
+        float: left;
+        margin-top: 3px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3_1 {
+        width: 240px;
+        height: 120px;
+        float: left;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3_2 {
+        width: 54px;
+        height: 30px;
+        float: left;
+        margin-top: 90px;
+        margin-left: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    #txt_spnm {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        font-size: 24px;
+        font-family: 'Microsoft YaHei';
+        /*border: 1px solid blue;*/
+        border-style: none;
+    }
+
+    #txt_model1 {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        /*border: 1px solid blue;*/
+        border-style: none;
+    }
+
+    #txt_number1 {
+        width: 100%;
+        height: 100%;
+        text-align: right;
+        font-family: 'Microsoft YaHei';
+        /*border: 1px solid blue;*/
+        border-style: none;
+        color: red;
+        font-size: 24px;
+    }
+
+    #txt_message1 {
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        font-family: 'Microsoft YaHei';
+        font-size: 12px;
+        /*border: 1px solid blue;*/
+        border-style: none;
+    }
+
+    #left {
+        width: 310px;
+        height: 100%;
+        /*border: 1px solid black;*/
+        float: left;
+    }
+</style>
+
+<script>
+    //$(function () {
+    //    init();
+    //});
+
+    function doGenPOP() {
+        //赋值
+        var spnm = $("#txt_spnm").val();
+        var model1 = $("#txt_model1").val();
+        var number1 = $("#txt_number1").val();
+        var message1 = $("#txt_message1").val();
+        //var emptyTemplate = $("#imgEmptyTemplate").attr("src");
+
+        var templateheadguid = $('#selectImage').val();
+        var emptytemplateguid = $('#select1').val();
+
+        $.ajax({
+            type: 'post', cache: false, dataType: 'json',
+            url: '/POP/POPManage/GenPOP',
+
+            data: [
+                { name: 'templateHeadGuid', value: templateheadguid },
+                { name: 'emptyTemplateGuid', value: emptytemplateguid },
+                { name: 'spnm', value: spnm },
+                { name: 'model1', value: model1 },
+                { name: 'number1', value: number1 },
+                { name: 'message1', value: message1 },
+            ],
+
+            success: function (result) {
+                if (result = 't') {
+                    alert('POP图片生成成功！');
+                    var out_pop = "/Areas/POP/POPImages/OutPOPImages/POP_" + spnm + ".jpg";
+                    $('#Gened_POP').css("backgroundImage", "url(" + out_pop + ")");
+                }
+                else {
+                    alert('调用后台成功，但是POP图片生成失败！');
+                }
+            },
+
+            statusCode: {
+                404: function () { alert('cannot  find resource'); },
+                505: function () { alert('internal server error'); }
+            },
+
+            error: function () {
+                alert('返回信息错误，请联系系统管理员！');
+            }
+        });
+    }
+
+</script>
+
+<div id="center">
+    <div class="div_1">
+        <input id="txt_spnm" type="text" value="1_品牌" />
+    </div>
+    <div class="div_3">
+        <div class="div_3_1">
+            <input id="txt_number1" type="text" value="2_金额" />
+        </div>
+        <div class="div_3_2">
+            <input id="txt_message1" type="text" value="3_元字" />
+        </div>
+    </div>
+    <div class="div_2">
+        <input id="txt_model1" type="text" value="4_加赠" />
+    </div>
+</div>
+
+

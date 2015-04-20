@@ -1,0 +1,23 @@
+﻿<ul ng-controller="MenuController" class="">
+    <li class="active">
+        <a href="#/dashboard.html">Dashboard</a>
+    </li>
+    <li class=" " ng-repeat="menu in menus">
+        <a>
+            {{menu.Text}} <i class="fa fa-angle-down"></i>
+        </a>
+        <div class="col-md-3" ng-repeat="m in menu.children">
+            <ul class="">
+                <li>
+                    <h3>{{m.Text}}</h3>
+                </li>
+
+                <li ng-repeat="mm in m.children">
+                    <a href="#{{mm.Url}}">
+                        <i class="{{mm.Icon}}"></i> {{mm.Text}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>

@@ -1,0 +1,273 @@
+﻿<style>
+    #center {
+        width: 100%;
+        height: 427px;
+        border: 1px solid #ffffff;
+        /*background-image: url("/Temple/ChoseTemple/POP_4.png");*/
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+    }
+
+    .div_1 {
+        width: 100%;
+        height: 70px;
+        margin-top: 65px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_2 {
+        width: 100%;
+        height: 30px;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3 {
+        width: 100%;
+        height: 60px;
+        /*border:1px solid blue;*/
+        margin-top: 6px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3_1 {
+        width: 96px;
+        height: 50px;
+        /*border: 1px solid blue;*/
+        float: left;
+    }
+
+    .div_3_2 {
+        width: 110px;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 4px;
+    }
+
+    .div_3_3 {
+        width: 86px;
+        height: 40px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 4px;
+        margin-top: 20px;
+    }
+
+
+    .div_4 {
+        width: 100%;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        margin-top: 6px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_4_1 {
+        width: 96px;
+        height: 50px;
+        /*border: 1px solid blue;*/
+        float: left;
+    }
+
+    .div_4_2 {
+        width: 110px;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 4px;
+    }
+
+    .div_4_3 {
+        width: 86px;
+        height: 40px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 4px;
+        margin-top: 20px;
+    }
+
+    .div_5 {
+        width: 100%;
+        height: 40px;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .txt {
+        width: 100%;
+        height: 100%;
+        border: 1px solid blue;
+    }
+
+    #txt_spnm {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        border-style: none;
+    }
+
+    #txt_model {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        border-style: none;
+    }
+
+    #txt_man1, #txt_man2 {
+        text-align: right;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        border-style: none;
+    }
+
+    #txt_yuan1, #txt_yuan2 {
+        text-align: left;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        border-style: none;
+    }
+
+    #txt_amount1, #txt_amount2 {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        color: red;
+        border-style: none;
+    }
+
+    #txt_message1 {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        border-style: none;
+    }
+
+
+    #left {
+        width: 310px;
+        height: 100%;
+        /*border: 1px solid black;*/
+        float: left;
+    }
+</style>
+
+<script>
+    //$(function () {
+    //    init();
+    //});
+
+    function doGenPOP() {
+        //赋值
+        var spnm = $("#txt_spnm").val();
+        var model = $("#txt_model").val();
+        var man1 = $("#txt_man1").val();
+        var amount1 = $("#txt_amount1").val();
+        var yuan1 = $("#txt_yuan1").val();
+        var man2 = $("#txt_man2").val();
+        var amount2 = $("#txt_amount2").val();
+        var yuan2 = $("#txt_yuan2").val();
+        var message1 = $("#txt_message1").val();
+        //var emptyTemplate = $("#imgEmptyTemplate").attr("src");
+        var templateheadguid = $('#selectImage').val();
+        var emptytemplateguid = $('#select1').val();
+
+        $.ajax({
+            type: 'post', cache: false, dataType: 'json',
+            url: '/POP/POPManage/GenPOP',
+
+            data: [
+                { name: 'templateHeadGuid', value: templateheadguid },
+                { name: 'emptyTemplateGuid', value: emptytemplateguid },
+                { name: 'spnm', value: spnm },
+                { name: 'model', value: model },
+                { name: 'man1', value: man1 },
+                { name: 'amount1', value: amount1 },
+                { name: 'yuan1', value: yuan1 },
+                { name: 'man2', value: man2 },
+                { name: 'amount2', value: amount2 },
+                { name: 'yuan2', value: yuan2 },
+                { name: 'message1', value: message1 },
+            ],
+
+            success: function (result) {
+                if (result = 't') {
+                    alert('POP图片生成成功！');
+                    var out_pop = "/Areas/POP/POPImages/OutPOPImages/POP_" + spnm + ".jpg";
+                    $('#Gened_POP').css("backgroundImage", "url(" + out_pop + ")");
+                }
+                else {
+                    alert('后台调用方法成功，但返回值错误');
+                }
+            },
+
+            statusCode: {
+                404: function () { alert('cannot  find resource'); },
+                505: function () { alert('internal server error'); }
+            },
+
+            error: function () {
+                alert('返回信息错误，请联系系统管理员！');
+            }
+        });
+    }
+</script>
+
+
+<div id="center">
+    <div class="div_1">
+        <input id="txt_spnm" type="text" value="1_品牌" class="txt" />
+    </div>
+    <div class="div_2">
+        <input id="txt_model" type="text" value="2_款式" class="txt" />
+    </div>
+    <div class="div_3">
+        <div class="div_3_1">
+            <input id="txt_man1" type="text" value="3_满字" class="txt" />
+        </div>
+        <div class="div_3_2">
+            <input id="txt_amount1" type="text" value="4_金额" class="txt" />
+        </div>
+        <div class="div_3_3">
+            <input id="txt_yuan1" type="text" value="5_元字" class="txt" />
+        </div>
+    </div>
+    <div class="div_4">
+        <div class="div_4_1">
+            <input id="txt_man2" type="text" value="6_满字" class="txt" />
+        </div>
+        <div class="div_4_2">
+            <input id="txt_amount2" type="text" value="7_金额" class="txt" />
+        </div>
+        <div class="div_4_3">
+            <input id="txt_yuan2" type="text" value="8_元字" class="txt" />
+        </div>
+    </div>
+    <div class="div_5">
+        <input id="txt_message1" type="text" value="9_加赠" class="txt" />
+    </div>
+</div>
+
+
+
+
+
+
+
+

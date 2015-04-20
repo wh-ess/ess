@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = ViewData["title"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="mainsearch" style="width: 98%">
+    <div class="searchtitle">
+        <span>搜索</span><img src="/content/icons/32X32/searchtool.gif" />
+        <div class="togglebtn">
+        </div>
+    </div>
+    <div class="navline" style="margin-bottom: 4px; margin-top: 4px;">
+    </div>
+    <div class="searchbox">
+        <form id="formsearch" class="l-form">
+        </form>
+    </div>
+</div>
+<div id="tab">
+    <div id="maingrid" title="表格">
+    </div>
+    <div title="图表">
+        <div class="chartToolbar">
+            <div>
+                选择图表类型：
+                <select id="chartType" name="chartType" onchange="initChart()">
+                    @*<option value="pie">饼状图</option>*@
+                    <option value="column" selected>柱状图</option>
+                    <option value="line">线状图</option>
+                    <option value="scatter">散布图</option>
+                    <option value="area">区域图</option>
+                    <option value="bar">条状图</option>
+                </select>
+            </div>
+            <div>
+                <div>
+                    选择X轴列:
+                </div>
+                <input id="chartX" name="chartX" />
+            </div>
+            <div>
+                <div>
+                    选择Y轴列:
+                </div>
+                <input id="chartY" name="chartY" /><b>图表数据只显示前15条</b>
+            </div>
+        </div>
+        <div id="container" title="图表" style="width: 95%">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _p = "@ViewData["p"]";
+    var _data = {}, _config = {}, _chartX = [], _chartY = [], grid = {}, _columns = [];
+    var cx = {}, cy = {};
+
+    LG.showLoading();
+    $.when($.getJSON("/config/ProcInfo/" + _p)).done(function (columns) {
+        _columns = columns;
+        _config = LG.bulidData(_columns);
+        _config.search.push({ name: "p", type: "hidden" });
+
+        initGridPage();
+    });
+
+    function changeX(value, text) {
+        _chartX = [];
+        $.each(_data.slice(0, 15), function (i, n) {
+            _chartX.push(getJsonValueByName(value, n));
+        });
+        initChart();
+    }
+
+    function changeY(value, text) {
+        _chartY = [];
+        $.each(value.split(";"), function (j, k) {
+            var serie = {};
+            serie.data = [];
+            serie.name = text.split(";")[j];
+            $.each(_data.slice(0, 15), function (i, n) {
+                serie.data.push(getJsonValueByName(k, n));
+            });
+            _chartY.push(serie);
+        });
+        initChart();
+    }
+
+
+    function getJsonValueByName(name, data) {
+        var val = null;
+        $.each(data, function (i, n) {
+            if (i == name) { val = n; return; }
+        });
+        return val;
+    }
+
+
+
+    function initGridPage() {
+
+        //列表结构
+        grid = $("#maingrid").ligerGrid({
+            columns: _config.grid,
+            url: "/manage/queryview",
+            delayLoad: true,
+            width: '98%', height: '100%', heightDiff: -10,
+            totalRender: _config.totalRender
+        });
+
+        //grid.bind('AfterShowData', function (data) {
+        //    if (_config.chartX.length <= 0 || _config.chartY.length <= 0) return;
+
+        //    _data = data.Rows;
+        //    if (cx.getValue()) {
+        //        cx.selectValue(cx.getValue());
+        //    }
+        //    else {
+        //        var c = _config.chartX.length > 2 ? 2 : _config.chartX.length - 1;
+        //        cx.selectValue(_config.chartX[c].id);
+        //    }
+        //    if (cy.getValue()) {
+        //        cy.selectValue(cy.getValue());
+        //    }
+        //    else {
+        //        cy.selectValue(_config.chartY[0].id);
+        //    }
+        //});
+
+        //搜索表单应用ligerui样式
+
+        $("#formsearch").ligerForm({
+            fields: _config.search
+        });
+
+        //增加搜索按钮,并创建事件
+        LG.appendSearchButtons("#formsearch", grid, queryCallBack, true);
+
+        $("#tab").ligerTab();
+        $("#p").val(_p);
+
+        grid.loadData({ Rows: _data });
+
+        LG.hideLoading();
+
+    }
+
+    function queryCallBack(rule) {
+        var param = [];
+        if (rule && rule.rules && rule.rules.length) {
+            $.each(rule.rules, function () {
+                param.push({ name: this.field.replace("_search", ""), value: this.value });
+            });
+        }
+        LG.ajax({
+            url: "/manage/queryview",
+            data: param,
+            success: function (data) {
+                _data = data;
+                if (_data.length > 0 && grid.getColumns().length <= 1) {
+                    _config = LG.bulidData(_columns, _data[0]);
+                    grid.set('columns', _config.grid);
+                    grid.reRender();
+
+                    cx = $("#chartX").ligerComboBox({ isMultiSelect: false, data: _config.chartX, onSelected: changeX });
+                    cy = $("#chartY").ligerComboBox({ isMultiSelect: true, data: _config.chartY, onSelected: changeY });
+                }
+                grid.loadData({ Rows: data });
+            }
+        });
+
+
+    }
+
+    //load from cvs
+    function initChart() {
+        if (_chartX.length < 0 || _chartY.length < 0) return;
+        var options = {
+            chart: {
+                renderTo: 'container',
+                type: $("#chartType").val()
+                //zoomType: 'x'
+            },
+            title: {
+                text: "@ViewData["title"]"
+            },
+            subtitle: {
+                text: 'Source: ESTARTSOFT'
+            },
+            xAxis: {
+                categories: _chartX,
+                labels: {
+                    rotation: -45,
+                    align: 'right'
+                }
+
+            },
+            yAxis: {
+                title: {
+                    text: '金额'
+                }
+            },
+            credits: {
+                text: "ESTARTSOFT@2012"
+            },
+            series: _chartY
+        };
+
+
+        var chart = new Highcharts.Chart(options);
+
+
+    }
+</script>

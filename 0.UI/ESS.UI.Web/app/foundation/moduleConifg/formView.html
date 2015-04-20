@@ -1,0 +1,34 @@
+﻿<form class="form form-horizontal" ng-style="style()" name="form">
+    <div ng-repeat="f in fields| orderBy:'Index'" class="col-sm-6">
+        <div class="form-group">
+            <label class="control-label col-sm-4">{{f.Name}}</label>
+            <div class="col-sm-8" ng-switch="f.Type">
+                <select ng-switch-when="select" ng-disabled="mode=='view'" ng-model="model[f.Name]" ng-options="d[f.SourceIdField] as d[f.SourceTextField] for d in ddl[f.SourceName]" ng-required="contains(f.Feature,'Required')">
+                    <option value="">-- choose --</option>
+                </select>
+                <label ng-switch-when="checkList" ng-repeat="d in ddl[f.SourceName]" ng-required="contains(f.Feature,'Required')">
+                    <input type="checkbox" ng-disabled="mode=='view'" checklist-model="model[f.Name]" checklist-value="d[f.SourceIdField]"> {{d[f.SourceTextField]}}
+                </label>
+                <div ng-switch-when="selectMulti">
+                    <ui-select multiple ng-disabled="mode=='view'" ng-model="model[f.Name]" close-on-select="false">
+                        <ui-select-match placeholder="Select ...">{{$item[f.SourceTextField]}} &lt;{{$item[f.SourceTextField]}}&gt;</ui-select-match>
+                        <ui-select-choices repeat="d in ddl[f.SourceName] | filter:$select.search">
+                            <div ng-bind="d[f.SourceTextField] | highlight: $select.search"></div>
+                            <small>
+                                {{d[f.SourceIdField]}}
+                            </small>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <input ng-switch-default ng-disabled="mode=='view'" type="{{f.Type|default:'text'}}" ng-model="model[f.Name]" ng-required="contains(f.Feature,'required')">
+            </div>
+        </div>
+    </div>
+    <div ng-messages="form.$error"
+         ng-messages-include="/app/shared/error/error-messages.html"></div>
+
+    <div class="col-sm-offset-2 col-sm-10" ng-hide="mode=='view'">
+        <!--<button type="reset" ng-click="goPrevious()">Cancel</button>-->
+        <button type="submit" ng-disabled="form.$invalid" ng-click="saveClick()">{{okButtonText|default:'Save'}}</button>
+    </div>
+</form>

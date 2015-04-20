@@ -1,0 +1,22 @@
+﻿<table class="table table-striped table-hover table-responsive table-condensed">
+    <thead>
+        <tr role="row" class="">
+            <th ng-repeat="f in fields">{{f.Name}}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="m in ms =(models |filter:q)  | skip : 10*(bigCurrentPage-1) | limitTo : 10">
+            <td ng-repeat="f in fields">{{m[f.Name]}}</td>
+            <td>
+                <div toolbar></div>
+            </td>
+
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div pagination total-items="ms.length" ng-model="bigCurrentPage" class="pagination-sm col-sm-8" boundary-links="false" rotate="false" num-pages="numPages"></div>
+
+    <div class="pagination col-sm-4 text-right">显示 {{bigCurrentPage | default:1}} / {{numPages}} 的 {{ms.length}} 条记录</div>
+</div>

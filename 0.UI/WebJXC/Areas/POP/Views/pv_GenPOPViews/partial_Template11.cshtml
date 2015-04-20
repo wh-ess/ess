@@ -1,0 +1,271 @@
+﻿<style>
+    #center {
+        width: 100%;
+        height: 427px;
+        border: 1px solid #ffffff;
+        /*background-image: url("http://localhost:2191/Areas/POP/POPImages/PopTemplates/常规减现模板.png");*/
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+    }
+
+    .div_1 {
+        width: 100%;
+        height: 70px;
+        margin-top: 90px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_2 {
+        width: 100%;
+        height: 30px;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3 {
+        width: 100%;
+        height: 60px;
+        /*border:1px solid blue;*/
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_3_1 {
+        width: 188px;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        float: left;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+
+
+    .div_3_3 {
+        width: 106px;
+        height: 40px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 5px;
+        margin-top: 20px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_4 {
+        width: 100%;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_4_1 {
+        width: 188px;
+        height: 60px;
+        /*border: 1px solid blue;*/
+        float: left;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+
+
+    .div_4_3 {
+        width: 106px;
+        height: 40px;
+        /*border: 1px solid blue;*/
+        float: left;
+        margin-left: 5px;
+        margin-top: 20px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_5 {
+        width: 100%;
+        height: 30px;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+    .div_6 {
+        width: 100%;
+        height: 30px;
+        margin-top: 5px;
+        filter: alpha(Opacity=99);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+        z-index: 100;
+    }
+
+
+    .txt {
+        width: 100%;
+        height: 100%;
+        /*border: 1px solid blue;*/
+        border-style: none;
+    }
+
+    #txt_spnm {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+    }
+
+    #txt_model1, #txt_model2, #txt_message1 {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+    }
+
+    #txt_discount1, #txt_discount2 {
+        text-align: right;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        color: red;
+    }
+
+    #txt_cutdown1, #txt_cutdown2 {
+        text-align: left;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+    }
+
+    #txt_amount1, #txt_amount2 {
+        text-align: center;
+        font-size: 12px;
+        font-family: 'Microsoft YaHei';
+        color: red;
+    }
+
+    #left {
+        width: 310px;
+        height: 100%;
+        /*border: 1px solid black;*/
+        float: left;
+    }
+</style>
+
+<script>
+    //$(function () {
+    //    init();
+    //});
+
+    function doGenPOP() {
+        //赋值
+        var spnm = $("#txt_spnm").val();
+        var model1 = $("#txt_model1").val();
+        var discount1 = $("#txt_discount1").val();
+        var cutdown1 = $("#txt_cutdown1").val();
+        var model2 = $("#txt_model2").val();
+        var discount2 = $("#txt_discount2").val();
+        var cutdown2 = $("#txt_cutdown2").val();
+        var message1 = $("#txt_message1").val();
+        //var emptyTemplate = $("#imgEmptyTemplate").attr("src");
+
+        var templateheadguid = $('#selectImage').val();
+        var emptytemplateguid = $('#select1').val();
+
+        $.ajax({
+            type: 'post', cache: false, dataType: 'json',
+            url: '/POP/POPManage/GenPOP',
+
+            data: [
+                  { name: 'templateHeadGuid', value: templateheadguid },
+                { name: 'emptyTemplateGuid', value: emptytemplateguid },
+                { name: 'spnm', value: spnm },
+                { name: 'model1', value: model1 },
+                { name: 'discount1', value: discount1 },
+                { name: 'cutdown1', value: cutdown1 },
+                { name: 'model2', value: model2 },
+                { name: 'discount2', value: discount2 },
+                { name: 'cutdown2', value: cutdown2 },
+                { name: 'message1', value: message1 },
+            ],
+
+            success: function (result) {
+                if (result = 't') {
+                    alert('POP图片生成成功！');
+                    var out_pop = "/Areas/POP/POPImages/OutPOPImages/POP_" + spnm + ".jpg";
+                    $('#Gened_POP').css("backgroundImage", "url(" + out_pop + ")");
+                }
+                else {
+                    alert('后台调用方法成功，但返回值错误');
+                }
+            },
+
+            statusCode: {
+                404: function () { alert('cannot  find resource'); },
+                505: function () { alert('internal server error'); }
+            },
+
+            error: function () {
+                alert('返回信息错误，请联系系统管理员！');
+            }
+        });
+    }
+</script>
+
+<div id="center">
+    <div class="div_1">
+        <input id="txt_spnm" type="text" value="1_品牌" class="txt" />
+    </div>
+    <div class="div_2">
+        <input id="txt_model1" type="text" value="2_款式" class="txt" />
+    </div>
+    <div class="div_3">
+        <div class="div_3_1">
+            <input id="txt_discount1" type="text" value="3_金额" class="txt" />
+        </div>
+
+        <div class="div_3_3">
+            <input id="txt_cutdown1" type="text" value="4_元起" class="txt" />
+        </div>
+    </div>
+    <div class="div_5">
+        <input id="txt_model2" type="text" value="5_款式" class="txt" />
+    </div>
+
+    <div class="div_4">
+        <div class="div_4_1">
+            <input id="txt_discount2" type="text" value="6_金额" class="txt" />
+        </div>
+
+        <div class="div_4_3">
+            <input id="txt_cutdown2" type="text" value="7_元起" class="txt" />
+        </div>
+    </div>
+    <div class="div_6">
+        <input id="txt_message1" type="text" value="8_信息" class="txt" />
+    </div>
+</div>
+
+
+
+
+

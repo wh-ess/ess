@@ -1,0 +1,35 @@
+﻿#payDetail
+{
+    font-size: 20px;
+}
+
+    #payDetail *
+    {
+        margin: 5px;
+    }
+
+    #payDetail input:no-button
+    {
+        text-align: right;
+    }
+
+#save
+{
+    height:40px;
+}
+
+.leftPay, .rightPay
+{
+    width: 48%;
+    float: left;
+}
+
+    .leftPay div:first-child
+    {
+        font-size: 40px;
+    }
+
+#detailGrid
+{
+    height: 300px;
+}

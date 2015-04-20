@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="69611be6-5492-45f6-a5a7-59bc43aef593" name="车辆管理" linkedPackageId="b39b6aec-4372-46b5-9e8d-2236e35d9a81" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <referencesInternal>
+    <reference Id="f0ff1d12-1053-4e68-b1e7-5a98625227c1" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$27" tag="Work Item Reference" />
+  </referencesInternal>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="aa7e0335-e6c1-4c8d-b38b-e933ae044c05" name="管理员" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b3fc957f-7ebb-49be-b9f5-96f80fa9afa0" />
+        <targetEnds>
+          <association Id="ae26a9cd-11a3-4d9c-b520-f5d4c3c8d7b8" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="车辆明细" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="b3bf02bf-77b1-40cc-8633-97df4742033d" LastKnownName="车辆明细" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="aa0dad4f-08bd-48d8-b360-968af9853ca6" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="9a063d18-7545-4d6c-8eae-7050cf95cd71" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e229aae4-685a-4235-880e-323175db8a4e" name="车辆明细" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="38677fd9-65b2-489d-9bbc-f06efdb85da6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="0fad9724-abf0-4d36-bf75-760c7b207971" />
+          </association>
+          <association Id="a16fd26b-28c4-4a44-9687-5929a69029a9" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="驾驶员明细" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="b5e381dc-5368-4fc2-8ce5-c9bd8ef860da" LastKnownName="驾驶员明细" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="600d3e26-ac88-411c-9330-5817a12a335d" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="cc05ee26-d111-442f-9a34-36ff8d73cbea" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a064e7b9-522f-4b21-af31-c4e7e5dc2356" name="驾驶员明细" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="8dcacbc5-7631-4670-a1da-f3e08c935e96" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="448570cb-c5e8-4f07-aafb-aab0e83c9595" />
+          </association>
+          <association Id="98f1cad1-5ece-4f0f-993d-d5843f4f4cfc" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="车辆买费" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="98b6b035-538c-425b-9ddd-a11e0f31f34b" LastKnownName="车辆买费" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="be264649-36d5-4a8f-9440-8f7116e1b3a3" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="e3e24eee-8890-452f-86ed-1b90034ca37d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="2fdb650b-e563-47b3-903f-b528a76af9e9" name="车辆买费" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="995f18ef-cd41-4685-b3a3-2291b1da1ff0" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fbe01d47-b787-42ae-bddf-778def363c75" />
+          </association>
+          <association Id="51a75644-7b75-42e7-b320-82d04b236662" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="车辆保险" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="5252b192-3aab-4dbd-aafa-33df5f189f0b" LastKnownName="车辆保险" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="fa5578c4-33b6-4885-b6de-e785cf0c98a3" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="6e74b63e-ce11-4f98-bbf6-a16d10da9664" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9787f717-9c55-4f91-bf99-eb6ea74e51a5" name="车辆保险" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="06ddc624-456b-46ad-8969-566fe1c6e6ed" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="cd2c5004-315c-489f-a1bf-b9025773ed0f" />
+          </association>
+          <association Id="9fe8ad46-9fcd-4a8e-be58-7d647ee1025b" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="车辆买票" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="1108564c-7c59-4af0-a1b2-56aa192764ac" LastKnownName="车辆买票" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d12c659f-e2b2-4f22-ba0f-0ea2a308a9cc" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="2bc3a084-c9e0-48ad-af3f-e94a1499678a" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="56563876-d3b4-4eb6-9684-bf99c66fdbe2" name="车辆买票" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="7fadaf9d-f33f-4ab1-86f5-d63d020cd061" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="470279f3-9d27-417c-b2ab-f6215d5f2c80" />
+          </association>
+          <association Id="736de617-27e9-42a1-864c-079a0aaba4b4" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="交通违法记录" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="c67284c3-9004-47c5-a7b5-b6684ffb45dd" LastKnownName="交通违法记录" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="65a09926-8149-4bdd-b274-35d0ac3a8f89" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="cdb185f3-79ca-4116-aa80-22cecac9b1cc" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="c8b2366e-7b2f-400b-8a77-6c3f94305c17" name="交通违法记录" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="28e37002-9fdb-4325-a913-691137644e96" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="0fb1dc7f-2aea-435c-96d7-7f0370821dad" />
+          </association>
+          <association Id="cae67e45-b6dc-41a5-9d27-1f1fcdc41028" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="营运违章记录" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="3b961705-289e-4c19-a301-e3c45e7bef0a" LastKnownName="营运违章记录" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="6edbf7b4-5990-496a-84fa-0d17b281d97d" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="eb98fcdf-3f61-432e-9155-965f93fece7c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0e594e09-b8c0-4397-803a-97e54c45ad57" name="营运违章记录" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="0d8b1f21-e46e-48c6-9be4-7dfca19abf4c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ab1a405a-d024-42e3-a326-f584a0a3e46f" />
+          </association>
+          <association Id="2b40d883-6c8a-4b85-9c0f-46d4cb5e8e79" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="异动记录" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="22ac1e73-d495-427c-8276-6f747ce65c86" LastKnownName="异动记录" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="b3769ae8-897e-43f1-83cc-5852cabb1881" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a3ff4fad-7d14-4e83-907c-9923ffc1e2e4" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="30ea74f8-ec21-41bb-a3c1-d397f74a0da8" name="异动记录" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="0c859f38-4697-4756-be5d-6d90bc5eb934" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="92fbe241-e57d-4fb3-bf9b-8d548bed6059" />
+          </association>
+          <association Id="2e619b32-0e49-44b3-8f37-b288fce09a75" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="投诉记录" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="b1998694-a13f-4092-ad83-ef9129123506" LastKnownName="投诉记录" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f7dbc9f1-92ca-4662-a075-a7c3a6d3499c" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="f6941b15-abb7-478e-ac21-a7f77ca902cd" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="20aebf7c-9849-430b-a95b-ed7420d26fd6" name="投诉记录" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a78045f0-d15c-4931-bfdf-e2bd26ca4b34" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="4f041f4f-da3e-4e1e-8b2a-a42a91b8b978" />
+          </association>
+          <association Id="d9a08d29-3ea9-45c7-8dca-6bfe063bf6ad" isDerived="false" sourceEndRoleName="管理员" targetEndRoleName="奖罚记录" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="a08403cc-87e1-4005-b80b-6418a36083c0" LastKnownName="奖罚记录" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8aef0f71-fce3-4263-837e-535447ec2f25" name="管理员" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c0d44b7c-84f1-483c-bf0a-8b6c7a77fa59" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="aefd1951-dab1-41ce-86b4-66e3357bbc7b" name="奖罚记录" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="d6fd64ca-2722-4277-b823-fbcb28479e06" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="45e3427f-d0e7-48a1-b425-140eea172b5c" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="b3bf02bf-77b1-40cc-8633-97df4742033d" name="车辆明细" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="dd760a75-ee5b-4549-9df2-267e5ee14880" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$28" tag="Work Item Reference">
+            <elementDefinition Id="f29aa0f0-6daa-4fb1-be1d-ed1929e730cd" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="6d700efc-707d-487a-9a9d-8fcd784e4958" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="b5e381dc-5368-4fc2-8ce5-c9bd8ef860da" name="驾驶员明细" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="dfe63ffb-0879-4288-ade8-cecc2a88e771" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$29" tag="Work Item Reference">
+            <elementDefinition Id="c54fc9e4-5be3-4867-bfff-2c88db5249f7" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="e5f3dd45-8e63-48dd-9bc6-31991daa18c9" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="98b6b035-538c-425b-9ddd-a11e0f31f34b" name="车辆买费" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="9424402e-efd8-459b-9e07-bc02d905fa7c" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$30" tag="Work Item Reference">
+            <elementDefinition Id="5d4c5b7a-488a-4f53-bbc1-eba7b0f41ee5" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="26345e59-910e-478e-a97a-0322d518e082" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="5252b192-3aab-4dbd-aafa-33df5f189f0b" name="车辆保险" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="164fce04-4736-4749-a8bc-e8f4b7a4f9f3" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$31" tag="Work Item Reference">
+            <elementDefinition Id="e0c5fea8-9d36-4bf9-b787-5ec2dee985aa" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="9b0a2300-0b8e-417c-b439-b4fd9b995e62" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="1108564c-7c59-4af0-a1b2-56aa192764ac" name="车辆买票" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="53c04412-700c-49a1-be47-23cf8617e5a6" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$32" tag="Work Item Reference">
+            <elementDefinition Id="8ca20365-730f-472c-ac0c-0ecb25e15d05" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="97906c52-4351-476c-a96a-9435c3c749e1" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="c67284c3-9004-47c5-a7b5-b6684ffb45dd" name="交通违法记录" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="139525de-d2fc-443d-9e59-388613f732cc" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$33" tag="Work Item Reference">
+            <elementDefinition Id="2d75001b-5f80-4076-8aa5-90c68520ad94" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="10e86e70-2a4d-403d-99ef-2dd0d0d7f600" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="a08403cc-87e1-4005-b80b-6418a36083c0" name="奖罚记录" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="685a2da5-395e-4e9c-89c0-66d9026f7899" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$37" tag="Work Item Reference">
+            <elementDefinition Id="dd9cc4e3-e550-4865-b308-981a759e7a8a" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="93e3132e-8816-4a9e-891d-335effaa4345" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="3b961705-289e-4c19-a301-e3c45e7bef0a" name="营运违章记录" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="d36ac81f-7ac5-442a-9dde-17ce71e261df" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$34" tag="Work Item Reference">
+            <elementDefinition Id="3aaf87b6-bc33-40e2-9da2-3e72ebcb2f2f" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="1f326c30-e6ee-4226-a487-15d5eb63b89a" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="22ac1e73-d495-427c-8276-6f747ce65c86" name="异动记录" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="e8baed28-b1ff-40a0-b500-ff28a4d4f2d1" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$35" tag="Work Item Reference">
+            <elementDefinition Id="bf928314-6524-4022-8bb0-4b717582e04d" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="d01cd9c9-8ebf-4106-8f8d-99df532dee20" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="b1998694-a13f-4092-ad83-ef9129123506" name="投诉记录" isAbstract="false" isLeaf="false">
+        <referencesInternal>
+          <reference Id="4bd91171-cb43-44ca-8298-8b23afea80fc" handle="%whess.visualstudio.com\DefaultCollection#5e656efd-dd28-466a-8c6d-4c8eb0481bc1$36" tag="Work Item Reference">
+            <elementDefinition Id="195e74a5-1891-42dd-9cb1-ec4b05d7e0da" />
+          </reference>
+        </referencesInternal>
+        <elementDefinition Id="c3291ef5-53d5-4acb-82cb-5e369ad684be" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="b39b6aec-4372-46b5-9e8d-2236e35d9a81" name="ESS.Domain.Car.Uml">
+    <elementDefinition Id="536a17c9-0dde-40c5-b595-0a4087741d26" />
+    <profileInstances>
+      <packageHasProfileInstances Id="293e067d-e41e-490d-a9c2-a1ccdf5656f6">
+        <profileInstance Id="04bd6e78-62e9-40fd-b9ca-8593b71ec32a" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="37f9a310-d3d1-42b3-b4a7-7f38b5b8dc86">
+        <profileInstance Id="498fadac-a453-4e8f-9ff1-474460078dc0" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</useCaseModelRoot>

@@ -1,0 +1,20 @@
+﻿<div class="input-icon right">
+    <i class="fa fa-search"></i>
+    <input class="form-control " ng-model="q" type="text" placeholder="搜索">
+</div>
+<ul class="nav nav-pills nav-stacked">
+    <li ng-repeat="m in ms =(models |filter:q)" ng-class="{'active':m.Id==selected.item.Id}">
+        <a ng-click="selected.item = m">
+            <div class="media">
+                <div class="media-left">
+                    <img src="" alt=""><i class="fa fa-edit" ng-click="edit()"></i>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{m[title]}}</h4>
+                    <small>{{m[subTitle]}}</small>
+                </div>
+            </div>
+        </a>
+    </li>
+
+</ul>

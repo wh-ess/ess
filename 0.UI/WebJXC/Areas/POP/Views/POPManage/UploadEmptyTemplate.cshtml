@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "UploadEmptyTemplate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Content/pop.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/uploadify.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.uploadify.min.js"></script>
+
+<div style="margin:5px;">
+    <input type="file" name="btnUpload" id="btnUpload" />
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnUpload').uploadify({
+            uploader: '/POP/POPManage/UploadEmptyTemplate',    // 服务器端处理地址
+            swf: '/Content/uploadify/uploadify.swf',    // 上传使用的 Flash
+
+            width: 200,                          // 按钮的宽度
+            height: 18,                         // 按钮的高度
+            buttonText: "促销POP空白模板上传",                 // 按钮上的文字
+            buttonCursor: 'hand',                // 按钮的鼠标图标
+
+            fileObjName: 'Filedata',            // 上传参数名称
+
+            // 两个配套使用
+            //fileTypeExts: "*.jpg;*.png",             // 扩展名
+            fileTypeExts: "*.jpg;*.png",             // 扩展名
+            fileTypeDesc: "请选择 jpg png 文件",     // 文件说明
+
+            auto: true,                // 选择之后，自动开始上传
+            multi: true,               // 是否支持同时上传多个文件
+            queueSizeLimit: 5,       // 允许多文件上传的时候，同时上传文件的个数
+        });
+    });
+</script>

@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{dd43c64e-ec76-42a8-ae97-562a8561a9e0}</ProjectGuid>
+    <ArchitectureToolsVersion>2.0.0.0</ArchitectureToolsVersion>
+    <Name>ESS.Framework.UML</Name>
+    <RootNamespace>ESS.Framework.UML</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ItemGroup>
+    <Content Include="系统活动图.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="系统活动图.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>系统活动图.activitydiagram</DependentUpon>
+    </Content>
+    <Folder Include="ModelDefinition\" />
+    <Content Include="ModelDefinition\ESS.Framework.UML.uml">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Validate Include="项目架构.layerdiagram">
+      <SubType>Content</SubType>
+    </Validate>
+    <Validate Include="项目架构.layerdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>项目架构.layerdiagram</DependentUpon>
+    </Validate>
+    <Validate Include="项目架构.layerdiagram.suppressions">
+      <SubType>Content</SubType>
+      <DependentUpon>项目架构.layerdiagram</DependentUpon>
+    </Validate>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\0.UI\ESS.Api.Foundation\ESS.Api.Foundation.csproj">
+      <Name>ESS.Api.Foundation</Name>
+      <Project>{9e17e765-ed35-48d2-8836-e5d606d18558}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\0.UI\ESS.UI.HelpPage\ESS.UI.HelpPage.csproj">
+      <Name>ESS.UI.HelpPage</Name>
+      <Project>{1ec247bf-b8bc-4cf1-9de4-2aa64930a991}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\0.UI\ESS.UI.Web\ESS.UI.Web.csproj">
+      <Name>ESS.UI.Web</Name>
+      <Project>{f698475f-89b1-4723-82c0-3574a33d72ef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\0.UI\WebJXC\WebJquery.csproj">
+      <Name>WebJquery</Name>
+      <Project>{02cecb3f-a28d-4c9f-b683-50b937563c5c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Car\ESS.Domain.Car.csproj">
+      <Name>ESS.Domain.Car</Name>
+      <Project>{f40cbe0d-8e69-4185-a6c7-754a7ab69ad0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Common.Test\ESS.Domain.Common.Test.csproj">
+      <Name>ESS.Domain.Common.Test</Name>
+      <Project>{24163ccf-df54-4f15-b424-d7c19a4fb0f6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Common\ESS.Domain.Common.csproj">
+      <Name>ESS.Domain.Common</Name>
+      <Project>{743d850b-33a1-487c-9a48-1b51a4c6f546}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Foundation.Test\ESS.Domain.Foundation.Test.csproj">
+      <Name>ESS.Domain.Foundation.Test</Name>
+      <Project>{14d9284c-1f23-43bb-a107-98242bbd522d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Foundation\ESS.Domain.Foundation.csproj">
+      <Name>ESS.Domain.Foundation</Name>
+      <Project>{418a6464-3081-4af8-b1fa-b54945a16f87}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.JXC\ESS.Domain.JXC.csproj">
+      <Name>ESS.Domain.JXC</Name>
+      <Project>{0ced35c0-f156-405c-940d-f27cc45b0ea9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Loan.Test\ESS.Domain.Loan.Test.csproj">
+      <Name>ESS.Domain.Loan.Test</Name>
+      <Project>{cb38c01d-236b-452f-87e0-83b4f0866d0e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Loan\ESS.Domain.Loan.csproj">
+      <Name>ESS.Domain.Loan</Name>
+      <Project>{e7c1d891-1043-424e-89fa-411f640cc7f2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.POP\ESS.Domain.POP.csproj">
+      <Name>ESS.Domain.POP</Name>
+      <Project>{c54a915a-3b12-4263-9cf5-cb867e47713c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.Common\ESS.Framework.Common.csproj">
+      <Name>ESS.Framework.Common</Name>
+      <Project>{b5cddc08-747e-4460-94ff-2c81a33dc6cf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.CQRS\ESS.Framework.CQRS.csproj">
+      <Name>ESS.Framework.CQRS</Name>
+      <Project>{c2b89288-b9d3-40b7-97b2-1752ad56ce0e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.Data\ESS.Framework.Data.csproj">
+      <Name>ESS.Framework.Data</Name>
+      <Project>{e7361ade-fa40-4047-b618-b87c8f2b827c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.Licensing\ESS.Framework.Licensing.csproj">
+      <Name>ESS.Framework.Licensing</Name>
+      <Project>{3f32b306-3716-4bde-be6c-a6474737d455}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.UI\ESS.Framework.UI.csproj">
+      <Name>ESS.Framework.UI</Name>
+      <Project>{775a877c-e2da-44ac-b61c-d4954738a71e}</Project>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

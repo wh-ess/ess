@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="c619d679-aa25-49cf-bf1d-fdb5a5ca9c08" name="排队" linkedPackageId="8daf8a43-85a0-48e1-9106-62b83b31d6a4" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <ownedCommentsInternal>
+    <comment Id="6850b2d3-cba9-4c8d-bcc9-ee05af6fc27c">
+      <elementDefinition Id="e0c70291-9579-4f3a-b158-128e9f3701f4" />
+      <body>通过手机号 预约</body>
+      <annotatedElements>
+        <useCaseMoniker Id="d64c32f7-b727-4a5b-8a3d-4a661e50faf0" LastKnownName="预约排队" />
+      </annotatedElements>
+    </comment>
+    <comment Id="34d1e7fb-67f6-4070-8e82-d464028661c5">
+      <elementDefinition Id="c46726fb-1cf4-458f-abd4-03841261acdd" />
+      <body>查询当前预约商户的排队号，前面人数，大概时间等。
+</body>
+      <annotatedElements>
+        <useCaseMoniker Id="6858864d-11a0-47b1-b76c-820d8c3b9867" LastKnownName="查询排队信息" />
+      </annotatedElements>
+    </comment>
+    <comment Id="1f15c6f2-6429-4676-a3de-bb28c1e2fadb">
+      <elementDefinition Id="6cec5fb2-de51-4d5f-ab0b-4108c3b7cd01" />
+      <body>根据商户实际情况，进人销号，继续排队轮询</body>
+      <annotatedElements>
+        <useCaseMoniker Id="a3b8cae8-f451-4dfd-9bbd-66b903019988" LastKnownName="进人销号" />
+      </annotatedElements>
+    </comment>
+    <comment Id="5de6e96d-5d8d-444b-86e3-2678da66976b">
+      <elementDefinition Id="af66d34d-7c0e-46c7-a52a-4c9428c1aa98" />
+      <body>查看当前预约号码和人数 电话</body>
+      <annotatedElements>
+        <useCaseMoniker Id="7d8a87fe-e305-44e5-b4ec-1e59bae8fe2c" LastKnownName="查询当前排队信息" />
+      </annotatedElements>
+    </comment>
+  </ownedCommentsInternal>
+  <profileInstances>
+    <packageHasProfileInstances Id="01046c2e-4a34-4917-b61e-237dc5f3c70b">
+      <profileInstance Id="3e2f093e-4e3e-47f2-a3e0-08c4a4de7753" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="a9620582-8df5-4cff-9255-568622c2b076">
+      <profileInstance Id="58ad4faf-f9c0-4871-9594-3c45b7b00b4e" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="ec238dfc-c356-4125-ac41-c036c555f08e" name="用户" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c1350409-5fb3-4220-8ae6-a9f84670d6d7" />
+        <targetEnds>
+          <association Id="aca1267b-530e-45f9-a2d1-55db1d49d1bb" isDerived="false" sourceEndRoleName="用户" targetEndRoleName="预约排队" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="d64c32f7-b727-4a5b-8a3d-4a661e50faf0" LastKnownName="预约排队" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9d8d5ce2-7eff-4945-9a76-debd0f64d360" name="用户" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="1e617f89-593a-4b88-a6f6-895a8d407c49" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="fcca2340-5a38-4403-b00d-9d4da99040a7" name="预约排队" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="fd1b1b7b-0a5a-437a-9c28-ce866e794b52" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="8f115c14-6d12-4668-ab46-7c42f9500774" />
+          </association>
+          <association Id="3fe6bfd3-4a39-4e9d-82ba-7ec7f801a5ee" isDerived="false" sourceEndRoleName="用户" targetEndRoleName="查询排队信息" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="6858864d-11a0-47b1-b76c-820d8c3b9867" LastKnownName="查询排队信息" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e05080c4-7181-4c30-a058-9f359c7b009f" name="用户" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="ed96aca9-edf1-4059-9d2f-bea571fbd6a7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bd021959-a27e-4a68-b061-626831bf8ab7" name="查询排队信息" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="8f3e06d3-ad48-48ea-a855-973889975fd1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="0f306662-0a66-4f34-a70c-45b4c1b014d2" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="d64c32f7-b727-4a5b-8a3d-4a661e50faf0" name="预约排队" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e152bef4-0faa-46dd-a645-b5d78d2579f9" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="6858864d-11a0-47b1-b76c-820d8c3b9867" name="查询排队信息" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="faad562a-89a2-4403-8215-4bc608e6b60e" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="6d1cc173-bd62-4da7-a173-5e61c4a68eb0" name="商户" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="95a5c375-2259-4282-8dd8-0b9cd4aee215" />
+        <targetEnds>
+          <association Id="a1b780dd-c454-444a-8ec6-de19803ac894" isDerived="false" sourceEndRoleName="商户" targetEndRoleName="进人销号" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="a3b8cae8-f451-4dfd-9bbd-66b903019988" LastKnownName="进人销号" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="388b1276-4928-42e9-9fc7-b166df1dc5aa" name="商户" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a70f4bd7-fe88-4608-91ce-a3d6acc6ee52" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="b1fb601d-3907-4542-a117-684e0ef3d925" name="进人销号" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="0459cca3-a751-448f-995e-5eca3bd00e6c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a8c33dc3-a3c5-4b05-a334-7d3effeafa33" />
+          </association>
+          <association Id="acd9301e-d29a-49e2-85a4-80558a32082c" isDerived="false" sourceEndRoleName="商户" targetEndRoleName="查询当前排队信息" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="7d8a87fe-e305-44e5-b4ec-1e59bae8fe2c" LastKnownName="查询当前排队信息" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3c5175cb-f1ff-4c52-a687-ebf2b3fcfe11" name="商户" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a975fafa-1a90-4071-bf46-80d38d83edde" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="36c04716-7983-49e6-bd0a-79485cfbd71d" name="查询当前排队信息" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="bfcff94d-27aa-4db3-9064-842df7a928db" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="3d3a39a2-21da-4963-865e-d4e70c63e89f" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="a3b8cae8-f451-4dfd-9bbd-66b903019988" name="进人销号" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="93595d4d-ed23-4ab7-bf39-84ab6115f385" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="7d8a87fe-e305-44e5-b4ec-1e59bae8fe2c" name="查询当前排队信息" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="cbec47ee-05e4-4b9f-8373-db1097fef987" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="8daf8a43-85a0-48e1-9106-62b83b31d6a4" name="ESS.Domain.Common.UML">
+    <elementDefinition Id="dbc0435c-ba5b-444d-912d-041ee14856a4" />
+  </package>
+</useCaseModelRoot>

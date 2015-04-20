@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Main";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Content/main.css" rel="stylesheet" type="text/css" />
+<div id="pageloading" style="display: block;">
+</div>
+<div id="topmenu" class="l-topmenu">
+    <div class="l-topmenu-logo">
+        @*  武汉ESS管理系统平台*@
+        @ViewBag.ApplicationName
+    </div>
+    <div class="l-topmenu-welcome">
+        <span class="l-topmenu-username"></span>欢迎您 &nbsp;
+        [<a href="javascript:f_changepassword()">修改密码</a>]&nbsp;
+        @*        [<a href="javascript:f_changeuser()">切换用户</a>]*@
+        [<a href="/home/Logout">退出</a>]
+    </div>
+</div>
+<div id="mainbody" class="l-mainbody" style="width: 99.2%; margin: 0 auto; margin-top: 3px;">
+    <div position="left" title="主要菜单" id="mainmenu">
+    </div>
+    <div position="center" id="framecenter">
+    </div>
+</div>
+<div style="height: 24px; line-height: 24px; text-align: center;">
+    @ViewBag.CopyRight
+</div>
+<script type="text/javascript">
+
+    //    self.moveTo(0, 0);
+    //    self.resizeTo(screen.availWidth, screen.availHeight);
+
+    //几个布局的对象
+    var layout, tab, accordion;
+    //tabid计数器，保证tabid不会重复
+    var tabidcounter = 0;
+    //窗口改变时的处理函数
+    function f_heightChanged(options) {
+        if (tab)
+            tab.addHeight(options.diff);
+        if (accordion && options.middleHeight - 24 > 0)
+            accordion.setHeight(options.middleHeight - 24);
+    }
+    //增加tab项的函数
+    function f_addTab(tabid, text, url) {
+        if (!tab) return;
+        if (!tabid) {
+            tabidcounter++;
+            tabid = "tabid" + tabidcounter;
+        }
+        tab.addTabItem({ tabid: tabid, text: text, url: url });
+    }
+    //登录
+    function f_login() {
+        LG.login();
+    }
+    //修改密码
+    function f_changepassword() {
+        LG.changepassword();
+    }
+
+    //切换用户
+    function f_changeuser() {
+        LG.changeuser();
+    }
+
+    $(document).ready(function () {
+
+        function initMenu() {
+            //菜单初始化
+            $("ul.menulist  li").on('click', function () {
+                var jitem = $(this);
+                var tabid = jitem.attr("tabid");
+                var url = jitem.attr("url");
+                if (!url) return;
+                if (!tabid) {
+                    tabidcounter++;
+                    tabid = "tabid" + tabidcounter;
+                    jitem.attr("tabid", tabid);
+
+                    //给url附加menuno
+                    if (url.indexOf('?') > -1) url += "&";
+                    else url += "?";
+                    url += "MenuNo=" + jitem.attr("menuno");
+                    jitem.attr("url", url);
+                }
+                f_addTab(tabid, $("span:first", jitem).html(), url);
+            }).on('mouseover', function () {
+                var jitem = $(this);
+                jitem.addClass("over");
+            }).on('mouseout', function () {
+                var jitem = $(this);
+                jitem.removeClass("over");
+            });
+        };
+
+        //布局初始化
+        //layout
+        layout = $("#mainbody").ligerLayout({ height: '100%', heightDiff: -24, leftWidth: 150, onHeightChanged: f_heightChanged, minLeftWidth: 120 });
+        var bodyHeight = $(".l-layout-center:first").height();
+        //Tab
+        tab = $("#framecenter").ligerTab({ height: bodyHeight, contextmenu: true });
+        //添加主页
+        tab.addTabItem({ tabid: "home", text: "我的主页", url: "/home/welcome", showClose: false });
+
+        var mainmenu = $("#mainmenu");
+
+        $.getJSON("/home/GetMenu", function (data) {
+            var menus = arrayToTree(data, "MenuId", "MenuParentId");
+            $(menus).each(function (i, menu) {
+                var item = $('<div title="' + menu.Title + '"><ul class="menulist"></ul></div>');
+
+                $(menu.children).each(function (j, submenu) {
+                    var subitem = $('<li><img/><span></span><div class="menuitem-l"></div><div class="menuitem-r"></div></li>');
+                    subitem.attr({
+                        url: submenu.Url,
+                        menuno: submenu.MenuNo
+                    });
+
+                    $("img", subitem).attr("src", submenu.Icon || submenu.icon || "/content/icons/silkicons/application.png");
+
+                    $("span", subitem).html(submenu.Title || submenu.text);
+
+                    $("ul:first", item).append(subitem);
+                });
+                mainmenu.append(item);
+                initMenu();
+            });
+
+            //Accordion
+            accordion = $("#mainmenu").ligerAccordion({ height: bodyHeight - 24, speed: "fast" });
+
+            $("#pageloading").hide();
+        });
+
+    });
+</script>

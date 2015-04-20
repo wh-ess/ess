@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="车辆管理">
+  <useCaseModelRootMoniker Id="69611be6-5492-45f6-a5a7-59bc43aef593" />
+  <nestedChildShapes>
+    <actorShape Id="f767bac6-c640-411b-8856-8ced7dd57236" absoluteBounds="0.875, 3.125, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="aa7e0335-e6c1-4c8d-b38b-e933ae044c05" LastKnownName="管理员" />
+      <relativeChildShapes />
+    </actorShape>
+    <useCaseShape Id="39420de5-8568-4d65-8409-a8db7d258996" absoluteBounds="1.75, 1.125, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="b3bf02bf-77b1-40cc-8633-97df4742033d" LastKnownName="车辆明细" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.265625 : 3.125); (2.11462721154086 : 1.61566273503847)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="ae26a9cd-11a3-4d9c-b520-f5d4c3c8d7b8" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="39420de5-8568-4d65-8409-a8db7d258996" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="a1d6de95-fabf-41bc-bf41-8d924ea5f3ed" absoluteBounds="2.125, 1.875, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="b5e381dc-5368-4fc2-8ce5-c9bd8ef860da" LastKnownName="驾驶员明细" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.16666666666667); (2.36775212228624 : 2.33937323142814)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="a16fd26b-28c4-4a44-9687-5929a69029a9" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="a1d6de95-fabf-41bc-bf41-8d924ea5f3ed" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="23f1d1a5-947b-4ac9-90f9-dcdc92ad6233" absoluteBounds="2.25, 2.625, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="98b6b035-538c-425b-9ddd-a11e0f31f34b" LastKnownName="车辆买费" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.29807692307692); (2.32417084164773 : 3.00602435641608)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="98f1cad1-5ece-4f0f-993d-d5843f4f4cfc" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="23f1d1a5-947b-4ac9-90f9-dcdc92ad6233" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="a0fd9d5b-f384-412f-8013-8dfb50200230" absoluteBounds="2.125, 3.25, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="5252b192-3aab-4dbd-aafa-33df5f189f0b" LastKnownName="车辆保险" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.39583333333333); (2.13180303808393 : 3.45890025317366)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="51a75644-7b75-42e7-b320-82d04b236662" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="a0fd9d5b-f384-412f-8013-8dfb50200230" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="fa08f27d-2fba-4d8b-bcf7-b959ce948858" absoluteBounds="2.125, 3.875, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="1108564c-7c59-4af0-a1b2-56aa192764ac" LastKnownName="车辆买票" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.5); (2.27144660940673 : 3.94822330470336)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="9fe8ad46-9fcd-4a8e-be58-7d647ee1025b" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="fa08f27d-2fba-4d8b-bcf7-b959ce948858" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="d7c065d2-329e-4e1b-8ec1-d042b789d47b" absoluteBounds="2.125, 4.5, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="c67284c3-9004-47c5-a7b5-b6684ffb45dd" LastKnownName="交通违法记录" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.5787037037037); (2.53231730536922 : 4.52170298956011)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="736de617-27e9-42a1-864c-079a0aaba4b4" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="d7c065d2-329e-4e1b-8ec1-d042b789d47b" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="3e812031-4e65-4e74-a75e-ad794d1df1bb" absoluteBounds="3.625, 4, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="a08403cc-87e1-4005-b80b-6418a36083c0" LastKnownName="奖罚记录" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.44362745098039); (3.76379376742753 : 4.09937475968599)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="d9a08d29-3ea9-45c7-8dca-6bfe063bf6ad" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="3e812031-4e65-4e74-a75e-ad794d1df1bb" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="f7605d90-0e28-4918-bf9b-73c962f892f9" absoluteBounds="3.625, 1.5, 1.25, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="3b961705-289e-4c19-a301-e3c45e7bef0a" LastKnownName="营运违章记录" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.245); (3.86893077446894 : 1.94815599727615)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="cae67e45-b6dc-41a5-9d27-1f1fcdc41028" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="f7605d90-0e28-4918-bf9b-73c962f892f9" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="2d9b9013-22a4-42f2-8d65-50311dbc459a" absoluteBounds="3.75, 2.25, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="22ac1e73-d495-427c-8276-6f747ce65c86" LastKnownName="异动记录" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.305); (3.81374699202514 : 2.62215084223296)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="2b40d883-6c8a-4b85-9c0f-46d4cb5e8e79" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="2d9b9013-22a4-42f2-8d65-50311dbc459a" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="1de522da-4380-4228-a286-7945bca1d05a" absoluteBounds="3.75, 3, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="b1998694-a13f-4092-ad83-ef9129123506" LastKnownName="投诉记录" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.375 : 3.365); (3.75159236073194 : 3.26993630557072)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="2e619b32-0e49-44b3-8f37-b288fce09a75" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="f767bac6-c640-411b-8856-8ced7dd57236" />
+        <useCaseShapeMoniker Id="1de522da-4380-4228-a286-7945bca1d05a" />
+      </nodes>
+    </useCaseAssociationConnector>
+  </nestedChildShapes>
+</useCaseDiagram>

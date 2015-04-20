@@ -1,0 +1,11 @@
+﻿
+<form name="form" class="form">
+   
+    <div ng-messages="form.$error"
+         ng-messages-include="/app/shared/error/error-messages.html"></div>
+
+    <div ng-hide="mode=='view'">
+        <button type="submit" class="btn btn-primary " ng-disabled="form.$invalid" ng-click="changeRoleInfo()">Save</button>
+        <button type="reset" class="btn btn-default" ui-sref="role.list">Cancel</button>
+    </div>
+</form>

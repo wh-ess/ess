@@ -1,0 +1,347 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.UI", "0.UI", "{87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.WinForm", "0.WinForm", "{37D75596-A496-4012-8B45-D5036E5150AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.BusinessLogic", "1.BusinessLogic", "{C6D65EAA-67E6-48D7-9690-412120E823C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{56CCDE76-748B-4F54-B8B5-B9779412A594}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Common", "Framework\ESS.Framework.Common\ESS.Framework.Common.csproj", "{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.CQRS", "Framework\ESS.Framework.CQRS\ESS.Framework.CQRS.csproj", "{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Data", "Framework\ESS.Framework.Data\ESS.Framework.Data.csproj", "{E7361ADE-FA40-4047-B618-B87C8F2B827C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Licensing", "Framework\ESS.Framework.Licensing\ESS.Framework.Licensing.csproj", "{3F32B306-3716-4BDE-BE6C-A6474737D455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Common", "1.BusinessLogic\ESS.Domain.Common\ESS.Domain.Common.csproj", "{743D850B-33A1-487C-9A48-1B51A4C6F546}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Foundation", "1.BusinessLogic\ESS.Domain.Foundation\ESS.Domain.Foundation.csproj", "{418A6464-3081-4AF8-B1FA-B54945A16F87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Foundation.Test", "1.BusinessLogic\ESS.Domain.Foundation.Test\ESS.Domain.Foundation.Test.csproj", "{14D9284C-1F23-43BB-A107-98242BBD522D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.JXC", "1.BusinessLogic\ESS.Domain.JXC\ESS.Domain.JXC.csproj", "{0CED35C0-F156-405C-940D-F27CC45B0EA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Loan", "1.BusinessLogic\ESS.Domain.Loan\ESS.Domain.Loan.csproj", "{E7C1D891-1043-424E-89FA-411F640CC7F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.POP", "1.BusinessLogic\ESS.Domain.POP\ESS.Domain.POP.csproj", "{C54A915A-3B12-4263-9CF5-CB867E47713C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "License", "0.WinForm\License\License.csproj", "{FE5A9F8F-4DD5-436D-AB5C-438684ABA718}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrint", "0.WinForm\LabelPrint\LabelPrint.csproj", "{837D8840-0420-49A3-9028-D5BCC2331458}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJquery", "0.UI\WebJXC\WebJquery.csproj", "{02CECB3F-A28D-4C9F-B683-50B937563C5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CD8356B9-78A2-47C6-B16B-FC2FD2200D8D}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Common.Test", "1.BusinessLogic\ESS.Domain.Common.Test\ESS.Domain.Common.Test.csproj", "{24163CCF-DF54-4F15-B424-D7C19A4FB0F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.UI.Web", "0.UI\ESS.UI.Web\ESS.UI.Web.csproj", "{F698475F-89B1-4723-82C0-3574A33D72EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Api.Foundation", "0.UI\ESS.Api.Foundation\ESS.Api.Foundation.csproj", "{9E17E765-ED35-48D2-8836-E5D606D18558}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Loan.Test", "1.BusinessLogic\ESS.Domain.Loan.Test\ESS.Domain.Loan.Test.csproj", "{CB38C01D-236B-452F-87E0-83B4F0866D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.UI", "Framework\ESS.Framework.UI\ESS.Framework.UI.csproj", "{775A877C-E2DA-44AC-B61C-D4954738A71E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.UI.HelpPage", "0.UI\ESS.UI.HelpPage\ESS.UI.HelpPage.csproj", "{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Car", "1.BusinessLogic\ESS.Domain.Car\ESS.Domain.Car.csproj", "{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ESS.Domain.Car.Uml", "1.BusinessLogic\ESS.Domain.Car.Uml\ESS.Domain.Car.Uml.modelproj", "{270587EF-45CB-4040-80E3-C14A788F9634}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ESS.Domain.Foundation.UML", "1.BusinessLogic\ESS.Domain.Foundation.UML\ESS.Domain.Foundation.UML.modelproj", "{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ESS.Domain.Common.UML", "1.BusinessLogic\ESS.Domain.Common.UML\ESS.Domain.Common.UML.modelproj", "{F1DEF789-54B9-463E-B03A-CCA672879A15}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ESS.Framework.UML", "Framework\ESS.Framework.UML\ESS.Framework.UML.modelproj", "{DD43C64E-EC76-42A8-AE97-562A8561A9E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Mall", "1.BusinessLogic\ESS.Domain.Mall\ESS.Domain.Mall.csproj", "{0FED2115-8D41-4D02-868A-6CC90BB19F08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Domain.Mall.Test", "1.BusinessLogic\ESS.Domain.Mall.Test\ESS.Domain.Mall.Test.csproj", "{ECC87B8E-C24C-43A0-9195-08A8A70F1439}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Api.Mall", "0.UI\ESS.Api.Mall\ESS.Api.Mall.csproj", "{8D7764C9-74B6-45A5-89BA-573248756FFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Api.Common", "0.UI\ESS.Api.Common\ESS.Api.Common.csproj", "{B3681B24-77D5-4267-8A9A-F67C22ECA13C}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 29
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://whess.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = 0.UI\\WebJXC\\WebJquery.csproj
+		SccProjectTopLevelParentUniqueName1 = ESS.sln
+		SccProjectName1 = 0.UI/WebJXC
+		SccLocalPath1 = 0.UI\\WebJXC
+		SccProjectUniqueName2 = 0.WinForm\\LabelPrint\\LabelPrint.csproj
+		SccProjectTopLevelParentUniqueName2 = ESS.sln
+		SccProjectName2 = 0.WinForm/LabelPrint
+		SccLocalPath2 = 0.WinForm\\LabelPrint
+		SccProjectUniqueName3 = 0.WinForm\\License\\License.csproj
+		SccProjectTopLevelParentUniqueName3 = ESS.sln
+		SccProjectName3 = 0.WinForm/License
+		SccLocalPath3 = 0.WinForm\\License
+		SccProjectUniqueName4 = 1.BusinessLogic\\ESS.Domain.Common\\ESS.Domain.Common.csproj
+		SccProjectTopLevelParentUniqueName4 = ESS.sln
+		SccProjectName4 = 1.BusinessLogic/ESS.Domain.Common
+		SccLocalPath4 = 1.BusinessLogic\\ESS.Domain.Common
+		SccProjectUniqueName5 = 1.BusinessLogic\\ESS.Domain.Foundation.Test\\ESS.Domain.Foundation.Test.csproj
+		SccProjectTopLevelParentUniqueName5 = ESS.sln
+		SccProjectName5 = 1.BusinessLogic/ESS.Domain.Foundation.Test
+		SccLocalPath5 = 1.BusinessLogic\\ESS.Domain.Foundation.Test
+		SccProjectUniqueName6 = 1.BusinessLogic\\ESS.Domain.Foundation\\ESS.Domain.Foundation.csproj
+		SccProjectTopLevelParentUniqueName6 = ESS.sln
+		SccProjectName6 = 1.BusinessLogic/ESS.Domain.Foundation
+		SccLocalPath6 = 1.BusinessLogic\\ESS.Domain.Foundation
+		SccProjectUniqueName7 = 1.BusinessLogic\\ESS.Domain.JXC\\ESS.Domain.JXC.csproj
+		SccProjectTopLevelParentUniqueName7 = ESS.sln
+		SccProjectName7 = 1.BusinessLogic/ESS.Domain.JXC
+		SccLocalPath7 = 1.BusinessLogic\\ESS.Domain.JXC
+		SccProjectUniqueName8 = 1.BusinessLogic\\ESS.Domain.Loan\\ESS.Domain.Loan.csproj
+		SccProjectTopLevelParentUniqueName8 = ESS.sln
+		SccProjectName8 = 1.BusinessLogic/ESS.Domain.Loan
+		SccLocalPath8 = 1.BusinessLogic\\ESS.Domain.Loan
+		SccProjectUniqueName9 = 1.BusinessLogic\\ESS.Domain.POP\\ESS.Domain.POP.csproj
+		SccProjectTopLevelParentUniqueName9 = ESS.sln
+		SccProjectName9 = 1.BusinessLogic/ESS.Domain.POP
+		SccLocalPath9 = 1.BusinessLogic\\ESS.Domain.POP
+		SccProjectUniqueName10 = Framework\\ESS.Framework.Common\\ESS.Framework.Common.csproj
+		SccProjectTopLevelParentUniqueName10 = ESS.sln
+		SccProjectName10 = Framework/ESS.Framework.Common
+		SccLocalPath10 = Framework\\ESS.Framework.Common
+		SccProjectUniqueName11 = Framework\\ESS.Framework.CQRS\\ESS.Framework.CQRS.csproj
+		SccProjectTopLevelParentUniqueName11 = ESS.sln
+		SccProjectName11 = Framework/ESS.Framework.CQRS
+		SccLocalPath11 = Framework\\ESS.Framework.CQRS
+		SccProjectUniqueName12 = Framework\\ESS.Framework.Data\\ESS.Framework.Data.csproj
+		SccProjectTopLevelParentUniqueName12 = ESS.sln
+		SccProjectName12 = Framework/ESS.Framework.Data
+		SccLocalPath12 = Framework\\ESS.Framework.Data
+		SccProjectUniqueName13 = Framework\\ESS.Framework.Licensing\\ESS.Framework.Licensing.csproj
+		SccProjectTopLevelParentUniqueName13 = ESS.sln
+		SccProjectName13 = Framework/ESS.Framework.Licensing
+		SccLocalPath13 = Framework\\ESS.Framework.Licensing
+		SccProjectUniqueName14 = 1.BusinessLogic\\ESS.Domain.Common.Test\\ESS.Domain.Common.Test.csproj
+		SccProjectTopLevelParentUniqueName14 = ESS.sln
+		SccProjectName14 = 1.BusinessLogic/ESS.Domain.Common.Test
+		SccLocalPath14 = 1.BusinessLogic\\ESS.Domain.Common.Test
+		SccProjectUniqueName15 = 0.UI\\ESS.UI.Web\\ESS.UI.Web.csproj
+		SccProjectTopLevelParentUniqueName15 = ESS.sln
+		SccProjectName15 = 0.UI/ESS.UI.Web
+		SccLocalPath15 = 0.UI\\ESS.UI.Web
+		SccProjectUniqueName16 = 0.UI\\ESS.Api.Foundation\\ESS.Api.Foundation.csproj
+		SccProjectTopLevelParentUniqueName16 = ESS.sln
+		SccProjectName16 = 0.UI/ESS.Api.Foundation
+		SccLocalPath16 = 0.UI\\ESS.Api.Foundation
+		SccProjectUniqueName17 = 1.BusinessLogic\\ESS.Domain.Loan.Test\\ESS.Domain.Loan.Test.csproj
+		SccProjectTopLevelParentUniqueName17 = ESS.sln
+		SccProjectName17 = 1.BusinessLogic/ESS.Domain.Loan.Test
+		SccLocalPath17 = 1.BusinessLogic\\ESS.Domain.Loan.Test
+		SccProjectUniqueName18 = Framework\\ESS.Framework.UI\\ESS.Framework.UI.csproj
+		SccProjectTopLevelParentUniqueName18 = ESS.sln
+		SccProjectName18 = Framework/ESS.Framework.UI
+		SccLocalPath18 = Framework\\ESS.Framework.UI
+		SccProjectUniqueName19 = 0.UI\\ESS.UI.HelpPage\\ESS.UI.HelpPage.csproj
+		SccProjectTopLevelParentUniqueName19 = ESS.sln
+		SccProjectName19 = 0.UI/ESS.UI.HelpPage
+		SccLocalPath19 = 0.UI\\ESS.UI.HelpPage
+		SccProjectUniqueName20 = 1.BusinessLogic\\ESS.Domain.Car\\ESS.Domain.Car.csproj
+		SccProjectTopLevelParentUniqueName20 = ESS.sln
+		SccProjectName20 = 1.BusinessLogic/ESS.Domain.Car
+		SccLocalPath20 = 1.BusinessLogic\\ESS.Domain.Car
+		SccProjectUniqueName21 = 1.BusinessLogic\\ESS.Domain.Car.Uml\\ESS.Domain.Car.Uml.modelproj
+		SccProjectTopLevelParentUniqueName21 = ESS.sln
+		SccProjectName21 = 1.BusinessLogic/ESS.Domain.Car.Uml
+		SccLocalPath21 = 1.BusinessLogic\\ESS.Domain.Car.Uml
+		SccProjectUniqueName22 = 1.BusinessLogic\\ESS.Domain.Foundation.UML\\ESS.Domain.Foundation.UML.modelproj
+		SccProjectTopLevelParentUniqueName22 = ESS.sln
+		SccProjectName22 = 1.BusinessLogic/ESS.Domain.Foundation.UML
+		SccLocalPath22 = 1.BusinessLogic\\ESS.Domain.Foundation.UML
+		SccProjectUniqueName23 = 1.BusinessLogic\\ESS.Domain.Common.UML\\ESS.Domain.Common.UML.modelproj
+		SccProjectTopLevelParentUniqueName23 = ESS.sln
+		SccProjectName23 = 1.BusinessLogic/ESS.Domain.Common.UML
+		SccLocalPath23 = 1.BusinessLogic\\ESS.Domain.Common.UML
+		SccProjectUniqueName24 = Framework\\ESS.Framework.UML\\ESS.Framework.UML.modelproj
+		SccProjectTopLevelParentUniqueName24 = ESS.sln
+		SccProjectName24 = Framework/ESS.Framework.UML
+		SccLocalPath24 = Framework\\ESS.Framework.UML
+		SccProjectUniqueName25 = 1.BusinessLogic\\ESS.Domain.Mall\\ESS.Domain.Mall.csproj
+		SccProjectTopLevelParentUniqueName25 = ESS.sln
+		SccProjectName25 = 1.BusinessLogic/ESS.Domain.Mall
+		SccLocalPath25 = 1.BusinessLogic\\ESS.Domain.Mall
+		SccProjectUniqueName26 = 1.BusinessLogic\\ESS.Domain.Mall.Test\\ESS.Domain.Mall.Test.csproj
+		SccProjectTopLevelParentUniqueName26 = ESS.sln
+		SccProjectName26 = 1.BusinessLogic/ESS.Domain.Mall.Test
+		SccLocalPath26 = 1.BusinessLogic\\ESS.Domain.Mall.Test
+		SccProjectUniqueName27 = 0.UI\\ESS.Api.Mall\\ESS.Api.Mall.csproj
+		SccProjectTopLevelParentUniqueName27 = ESS.sln
+		SccProjectName27 = 0.UI/ESS.Api.Mall
+		SccLocalPath27 = 0.UI\\ESS.Api.Mall
+		SccProjectUniqueName28 = 0.UI\\ESS.Api.Common\\ESS.Api.Common.csproj
+		SccProjectTopLevelParentUniqueName28 = ESS.sln
+		SccProjectName28 = 0.UI/ESS.Api.Common
+		SccLocalPath28 = 0.UI\\ESS.Api.Common
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7361ADE-FA40-4047-B618-B87C8F2B827C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7361ADE-FA40-4047-B618-B87C8F2B827C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7361ADE-FA40-4047-B618-B87C8F2B827C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7361ADE-FA40-4047-B618-B87C8F2B827C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F32B306-3716-4BDE-BE6C-A6474737D455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F32B306-3716-4BDE-BE6C-A6474737D455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F32B306-3716-4BDE-BE6C-A6474737D455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F32B306-3716-4BDE-BE6C-A6474737D455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{743D850B-33A1-487C-9A48-1B51A4C6F546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{743D850B-33A1-487C-9A48-1B51A4C6F546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{743D850B-33A1-487C-9A48-1B51A4C6F546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{743D850B-33A1-487C-9A48-1B51A4C6F546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{418A6464-3081-4AF8-B1FA-B54945A16F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{418A6464-3081-4AF8-B1FA-B54945A16F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{418A6464-3081-4AF8-B1FA-B54945A16F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{418A6464-3081-4AF8-B1FA-B54945A16F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D9284C-1F23-43BB-A107-98242BBD522D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D9284C-1F23-43BB-A107-98242BBD522D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D9284C-1F23-43BB-A107-98242BBD522D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D9284C-1F23-43BB-A107-98242BBD522D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CED35C0-F156-405C-940D-F27CC45B0EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CED35C0-F156-405C-940D-F27CC45B0EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CED35C0-F156-405C-940D-F27CC45B0EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CED35C0-F156-405C-940D-F27CC45B0EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C1D891-1043-424E-89FA-411F640CC7F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7C1D891-1043-424E-89FA-411F640CC7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7C1D891-1043-424E-89FA-411F640CC7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7C1D891-1043-424E-89FA-411F640CC7F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C54A915A-3B12-4263-9CF5-CB867E47713C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C54A915A-3B12-4263-9CF5-CB867E47713C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C54A915A-3B12-4263-9CF5-CB867E47713C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C54A915A-3B12-4263-9CF5-CB867E47713C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5A9F8F-4DD5-436D-AB5C-438684ABA718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5A9F8F-4DD5-436D-AB5C-438684ABA718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5A9F8F-4DD5-436D-AB5C-438684ABA718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5A9F8F-4DD5-436D-AB5C-438684ABA718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{837D8840-0420-49A3-9028-D5BCC2331458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{837D8840-0420-49A3-9028-D5BCC2331458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{837D8840-0420-49A3-9028-D5BCC2331458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{837D8840-0420-49A3-9028-D5BCC2331458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02CECB3F-A28D-4C9F-B683-50B937563C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02CECB3F-A28D-4C9F-B683-50B937563C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02CECB3F-A28D-4C9F-B683-50B937563C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02CECB3F-A28D-4C9F-B683-50B937563C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24163CCF-DF54-4F15-B424-D7C19A4FB0F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24163CCF-DF54-4F15-B424-D7C19A4FB0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24163CCF-DF54-4F15-B424-D7C19A4FB0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24163CCF-DF54-4F15-B424-D7C19A4FB0F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F698475F-89B1-4723-82C0-3574A33D72EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F698475F-89B1-4723-82C0-3574A33D72EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F698475F-89B1-4723-82C0-3574A33D72EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F698475F-89B1-4723-82C0-3574A33D72EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E17E765-ED35-48D2-8836-E5D606D18558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E17E765-ED35-48D2-8836-E5D606D18558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E17E765-ED35-48D2-8836-E5D606D18558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E17E765-ED35-48D2-8836-E5D606D18558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB38C01D-236B-452F-87E0-83B4F0866D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB38C01D-236B-452F-87E0-83B4F0866D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB38C01D-236B-452F-87E0-83B4F0866D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB38C01D-236B-452F-87E0-83B4F0866D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{775A877C-E2DA-44AC-B61C-D4954738A71E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{775A877C-E2DA-44AC-B61C-D4954738A71E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{775A877C-E2DA-44AC-B61C-D4954738A71E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{775A877C-E2DA-44AC-B61C-D4954738A71E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{270587EF-45CB-4040-80E3-C14A788F9634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{270587EF-45CB-4040-80E3-C14A788F9634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{270587EF-45CB-4040-80E3-C14A788F9634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{270587EF-45CB-4040-80E3-C14A788F9634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1DEF789-54B9-463E-B03A-CCA672879A15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1DEF789-54B9-463E-B03A-CCA672879A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1DEF789-54B9-463E-B03A-CCA672879A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1DEF789-54B9-463E-B03A-CCA672879A15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD43C64E-EC76-42A8-AE97-562A8561A9E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD43C64E-EC76-42A8-AE97-562A8561A9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD43C64E-EC76-42A8-AE97-562A8561A9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD43C64E-EC76-42A8-AE97-562A8561A9E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FED2115-8D41-4D02-868A-6CC90BB19F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FED2115-8D41-4D02-868A-6CC90BB19F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FED2115-8D41-4D02-868A-6CC90BB19F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FED2115-8D41-4D02-868A-6CC90BB19F08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECC87B8E-C24C-43A0-9195-08A8A70F1439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC87B8E-C24C-43A0-9195-08A8A70F1439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC87B8E-C24C-43A0-9195-08A8A70F1439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC87B8E-C24C-43A0-9195-08A8A70F1439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D7764C9-74B6-45A5-89BA-573248756FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D7764C9-74B6-45A5-89BA-573248756FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D7764C9-74B6-45A5-89BA-573248756FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D7764C9-74B6-45A5-89BA-573248756FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B5CDDC08-747E-4460-94FF-2C81A33DC6CF} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{C2B89288-B9D3-40B7-97B2-1752AD56CE0E} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{E7361ADE-FA40-4047-B618-B87C8F2B827C} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{3F32B306-3716-4BDE-BE6C-A6474737D455} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{743D850B-33A1-487C-9A48-1B51A4C6F546} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{418A6464-3081-4AF8-B1FA-B54945A16F87} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{14D9284C-1F23-43BB-A107-98242BBD522D} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{0CED35C0-F156-405C-940D-F27CC45B0EA9} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{E7C1D891-1043-424E-89FA-411F640CC7F2} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{C54A915A-3B12-4263-9CF5-CB867E47713C} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{FE5A9F8F-4DD5-436D-AB5C-438684ABA718} = {37D75596-A496-4012-8B45-D5036E5150AD}
+		{837D8840-0420-49A3-9028-D5BCC2331458} = {37D75596-A496-4012-8B45-D5036E5150AD}
+		{02CECB3F-A28D-4C9F-B683-50B937563C5C} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{24163CCF-DF54-4F15-B424-D7C19A4FB0F6} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{F698475F-89B1-4723-82C0-3574A33D72EF} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{9E17E765-ED35-48D2-8836-E5D606D18558} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{CB38C01D-236B-452F-87E0-83B4F0866D0E} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{775A877C-E2DA-44AC-B61C-D4954738A71E} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{1EC247BF-B8BC-4CF1-9DE4-2AA64930A991} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{F40CBE0D-8E69-4185-A6C7-754A7AB69AD0} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{270587EF-45CB-4040-80E3-C14A788F9634} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{CE51446C-C1C9-46BE-9775-87F7E6B5E8B4} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{F1DEF789-54B9-463E-B03A-CCA672879A15} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{DD43C64E-EC76-42A8-AE97-562A8561A9E0} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{0FED2115-8D41-4D02-868A-6CC90BB19F08} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{ECC87B8E-C24C-43A0-9195-08A8A70F1439} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
+		{8D7764C9-74B6-45A5-89BA-573248756FFD} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{B3681B24-77D5-4267-8A9A-F67C22ECA13C} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+	EndGlobalSection
+EndGlobal

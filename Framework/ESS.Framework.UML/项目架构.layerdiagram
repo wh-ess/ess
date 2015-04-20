@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="a02a79fe-c2c9-4b4a-a23b-2e33a9fc30c6" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="a59813a9-cef6-4bf2-8692-12d3d1266fc4" name="UI">
+      <childLayers>
+        <layer Id="1fa59dc1-fc5b-492c-b2db-505c35ad60fe" name="ESS.Api.Foundation">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="2ca2d6f7-db13-4927-9711-9163116ca835" direction="Forward">
+              <layerMoniker Id="ac021f8a-9349-482f-aafc-1ac0a5aba549" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="25e31329-1bda-44a6-a9c7-0ca8c6c1e988" direction="Forward">
+              <layerMoniker Id="0cc1d1f1-e9bd-4b50-8ed0-902a09862ea0" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="2f87d0ee-6e80-4a24-b0c6-7f19b0b7a541" direction="Forward">
+              <layerMoniker Id="6098b209-8ce6-46e8-8188-ca83cbd3934f" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+          <references>
+            <reference Id="ed6dca0f-9068-4648-b837-7fb396f2e732" name="ESS.Api.Foundation">
+              <ArtifactNode Label="ESS.Api.Foundation" Category="CodeSchema_Project" Id="(Assembly=../../0.UI/ESS.Api.Foundation/ESS.Api.Foundation.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Api.Foundation)" Label="ESS.Api.Foundation.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="37d9caf4-fac7-4111-a6af-29e0851fd97e" name="ESS.UI.Web">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="7aa6faed-45f5-49f2-81cf-f67b8f66e98f" direction="Forward">
+              <layerMoniker Id="ac021f8a-9349-482f-aafc-1ac0a5aba549" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="5f041a20-928f-4006-92d5-b77a5f7be29f" direction="Forward">
+              <layerMoniker Id="4539a758-24eb-4c17-9998-f880af0d1dcf" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="cd833993-907a-408f-a62c-6189b9f1d05e" direction="Forward">
+              <layerMoniker Id="6098b209-8ce6-46e8-8188-ca83cbd3934f" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="281557e0-ddff-4b82-a373-796836396178" direction="Forward">
+              <layerMoniker Id="1fa59dc1-fc5b-492c-b2db-505c35ad60fe" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+          <references>
+            <reference Id="1b5f848f-e2cc-4cb3-a289-4b7e97adf2d5" name="ESS.UI.Web">
+              <ArtifactNode Label="ESS.UI.Web" Category="CodeSchema_Project" Id="(Assembly=../../0.UI/ESS.UI.Web/ESS.UI.Web.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.UI.Web)" Label="ESS.UI.Web.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+    <layer Id="f55326ab-ccf3-449e-bb6e-5431eb68d96e" name="Layer2">
+      <childLayers>
+        <layer Id="db05c720-ce1f-473a-9e96-2bc8c2715f7e" name="ESS.Domain.Common">
+          <references>
+            <reference Id="5c2096fc-0661-4412-8e8c-91f87893d06f" name="ESS.Domain.Common">
+              <ArtifactNode Label="ESS.Domain.Common" Category="CodeSchema_Project" Id="(Assembly=../../1.BusinessLogic/ESS.Domain.Common/ESS.Domain.Common.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Domain.Common)" Label="ESS.Domain.Common.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="0cc1d1f1-e9bd-4b50-8ed0-902a09862ea0" name="ESS.Domain.Foundation">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="83e54171-6018-4a69-a898-8e422e326ed0" direction="Forward">
+              <layerMoniker Id="ac021f8a-9349-482f-aafc-1ac0a5aba549" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="9a30c3c5-96ee-4959-833d-c6b8e5cdb6a9" direction="Forward">
+              <layerMoniker Id="4539a758-24eb-4c17-9998-f880af0d1dcf" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+          <references>
+            <reference Id="2a3baec0-ffe5-40fc-a23e-5f2726906dec" name="ESS.Domain.Foundation">
+              <ArtifactNode Label="ESS.Domain.Foundation" Category="CodeSchema_Project" Id="(Assembly=../../1.BusinessLogic/ESS.Domain.Foundation/ESS.Domain.Foundation.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Domain.Foundation)" Label="ESS.Domain.Foundation.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+    <layer Id="5373426a-4417-4155-b99b-7bce7880ac9b" name="Framework">
+      <childLayers>
+        <layer Id="6098b209-8ce6-46e8-8188-ca83cbd3934f" name="ESS.Framework.UI">
+          <references>
+            <reference Id="94b95b35-8a97-4a0c-8936-f829294329d3" name="ESS.Framework.UI">
+              <ArtifactNode Label="ESS.Framework.UI" Category="CodeSchema_Project" Id="(Assembly=../ESS.Framework.UI/ESS.Framework.UI.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Framework.UI)" Label="ESS.Framework.UI.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="4539a758-24eb-4c17-9998-f880af0d1dcf" name="ESS.Framework.Data">
+          <references>
+            <reference Id="22acd014-c38a-4627-9a7e-00fd9e7c7109" name="ESS.Framework.Data">
+              <ArtifactNode Label="ESS.Framework.Data" Category="CodeSchema_Project" Id="(Assembly=../ESS.Framework.Data/ESS.Framework.Data.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Framework.Data)" Label="ESS.Framework.Data.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="ac021f8a-9349-482f-aafc-1ac0a5aba549" name="ESS.Framework.CQRS">
+          <references>
+            <reference Id="371268ae-5fe9-4441-ba05-661f3244aef6" name="ESS.Framework.CQRS">
+              <ArtifactNode Label="ESS.Framework.CQRS" Category="CodeSchema_Project" Id="(Assembly=../ESS.Framework.CQRS/ESS.Framework.CQRS.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Framework.CQRS)" Label="ESS.Framework.CQRS.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="9e40666a-cafd-4a97-bbdd-ab80952bab8e" name="ESS.Framework.Licensing">
+          <references>
+            <reference Id="28b9b638-842f-49f4-a164-4597373803ab" name="ESS.Framework.Licensing">
+              <ArtifactNode Label="ESS.Framework.Licensing" Category="CodeSchema_Project" Id="(Assembly=../ESS.Framework.Licensing/ESS.Framework.Licensing.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=ESS.Framework.Licensing)" Label="ESS.Framework.Licensing.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+  </layers>
+</layerModel>

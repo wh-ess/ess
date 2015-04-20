@@ -1,0 +1,102 @@
+﻿<div>
+    <div class="col-md-4">
+
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption" data-toggle="collapse" data-target=".portlet-body">
+                    <span class="caption-subject font-green-sharp bold uppercase">Users </span>
+                    <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view user list</span>
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="btn green-haze btn-circle  btn-sm " href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="icon-settings"></i> &nbsp; <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a ng-click="addUser()">
+                                    <i class="fa fa-plus"></i> New User
+                                </a>
+                            </li>
+                            <li class="divider">
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    ALL <span class="badge badge-primary">
+                                        {{users.length}}
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    Unlocked <span class="badge badge-success">
+                                        12
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    Locked <span class="badge badge-warning">
+                                        9
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <div list-view models="users" title="UserName" sub-title="UserNo" selected="current" mode="mode"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-8">
+        <div class="portlet light">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <i class="icon-bar-chart font-green-sharp hide"></i>
+                    <span class="caption-helper">User:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase">{{current.item.UserName}}</span>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-target="#tabInfo" data-toggle="tab">
+                            基本信息
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target="#tabAvatar" data-toggle="tab">
+                            更改头像
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target="#tabPassword" data-toggle="tab">
+                            更改密码
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target="#tabPrvacy" data-toggle="tab">
+                            个性化设置
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="portlet-body">
+                <!--BEGIN TABS-->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tabInfo" form-view="User.changeUserInfo" model="current.item" mode="mode" save-click="changeUserInfo()" ok-button-text="SaveUser"></div>
+                    <div class="tab-pane" id="tabAvatar">
+
+                    </div>
+                    <div class="tab-pane" id="tabPassword" form-view="User.ChangePassword" model="current.item" save-click="changePassword()" ok-button-text="ChangePassword"></div>
+
+                    <div class="tab-pane" id="tabHistory">
+
+                    </div>
+                    <!--END TABS-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

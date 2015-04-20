@@ -1,0 +1,92 @@
+﻿<div class=" col-md-4">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" data-target=".portlet-body">
+                <span class="caption-subject font-green-sharp bold uppercase">Banks </span>
+                <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view bank list</span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+                    <a class="btn green-haze btn-circle  btn-sm " href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <i class="icon-settings"></i> &nbsp; <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a ng-click="addBank()">
+                                <i class="fa fa-plus"></i> New Bank
+                            </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                ALL <span class="badge badge-primary">
+                                    {{banks.length}}
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                Unlocked <span class="badge badge-success">
+                                    12
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                Locked <span class="badge badge-warning">
+                                    9
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div list-view models="banks" title="Name" sub-title="" selected="current" mode="mode"></div>
+        </div>
+    </div>
+</div>
+
+<div class=" col-md-8">
+    <div class="portlet light">
+        <div class="portlet-title tabbable-line">
+            <div class="caption">
+                <i class="icon-bar-chart font-green-sharp hide"></i>
+                <span class="caption-helper">Bank:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase">{{current.item.Name}}</span>
+            </div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-target="#tabInfo" data-toggle="tab">
+                        基本信息
+                    </a>
+                </li>
+                <li>
+                    <a data-target="#tab2" data-toggle="tab">
+                        分析
+                    </a>
+                </li>
+                <li>
+                    <a data-target="#tab3" data-toggle="tab">
+                        历史
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <!--BEGIN TABS-->
+            <div class="tab-content">
+                <div class="tab-pane active" id="tabInfo" form-view="Bank.editBank" model="current.item" mode="mode" save-click="editBank()" ok-button-text="SaveBank"></div>
+                
+                <div class="tab-pane" id="tab2"></div>
+
+                <div class="tab-pane" id="tab3">
+
+                </div>
+                <!--END TABS-->
+            </div>
+        </div>
+    </div>
+</div>

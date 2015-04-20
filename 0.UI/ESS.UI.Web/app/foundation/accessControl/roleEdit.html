@@ -1,0 +1,47 @@
+﻿<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption">
+            <i class="icon-bar-chart font-green-sharp hide"></i>
+            <span class="caption-helper">Role:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase">{{current.role.RoleName}}</span>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-target="#tabInfo" data-toggle="tab">
+                    基本信息
+                </a>
+            </li>
+            <li>
+                <a data-target="#tabUser" data-toggle="tab">
+                    用户分配
+                </a>
+            </li>
+            <li>
+                <a data-target="#tabPrivilege" data-toggle="tab">
+                    权限分配
+                </a>
+            </li>
+            <li>
+                <a data-target="#tabHistory" data-toggle="tab">
+                    历史
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <!--BEGIN TABS-->
+        <div class="tab-content">
+            <div class="tab-pane active" id="tabInfo" >
+                <div form-view="Role.changeRoleInfo" model="current.role" save-click="changeRoleInfo()" ok-button-text="SaveRole"></div>
+            </div>
+            <div class="tab-pane" id="tabUser" ng-include="'/app/foundation/accesscontrol/roleUser.html'">
+
+            </div>
+            <div class="tab-pane" id="tabPrivilege"></div>
+
+            <div class="tab-pane" id="tabHistory" table-view="Role.get" models="roles">
+
+            </div>
+            <!--END TABS-->
+        </div>
+    </div>
+</div>

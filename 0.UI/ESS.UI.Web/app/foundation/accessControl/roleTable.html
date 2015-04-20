@@ -1,0 +1,43 @@
+﻿<div class="portlet light">
+    <div class="portlet-title ">
+        <div class="caption">
+            <i class="icon-bar-chart font-green-sharp hide"></i>
+            <span class="caption-helper">Role</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"></span>
+        </div>
+        <div class="actions">
+            <div class="input-icon btn-group">
+                <i class="fa fa-search"></i>
+                <input class="form-control" ng-model="q" type="text" placeholder="搜索">
+            </div>
+            <a class="btn default yellow-stripe" href="#/role/add" ui-sref="role.add"><i class="fa fa-plus"></i> Add</a>
+           
+            <div class="btn-group">
+                <a class="btn default yellow-stripe dropdown-toggle" href="javascript:;" data-toggle="dropdown">
+                    <i class="fa fa-share"></i> More <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;">
+                            Duplicate
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            Delete
+                        </a>
+                    </li>
+                    <li class="divider">
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            Print
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div table-view="Role.Get" models="roles" q="q"></div>
+    </div>
+</div>

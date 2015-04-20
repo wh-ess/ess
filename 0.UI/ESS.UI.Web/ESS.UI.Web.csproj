@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F698475F-89B1-4723-82C0-3574A33D72EF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ESS.UI.Web</RootNamespace>
+    <AssemblyName>ESS.UI.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\common\basic\basic.controller.js" />
+    <Content Include="app\common\basic\basic.service.js" />
+    <Content Include="app\common\basic\bank.controller.js" />
+    <Content Include="app\common\basic\bank.html" />
+    <Content Include="app\common\basic\brand.controller.js" />
+    <Content Include="app\common\basic\brand.html" />
+    <Content Include="app\common\basic\brandType.controller.js" />
+    <Content Include="app\common\basic\brandType.html" />
+    <Content Include="app\common\basic\floor.controller.js" />
+    <Content Include="app\common\basic\floor.html" />
+    <Content Include="app\common\category\category.html" />
+    <Content Include="app\common\category\category.controller.js" />
+    <Content Include="app\common\category\category.service.js" />
+    <Content Include="app\foundation\accessControl\login.html" />
+    <Content Include="app\foundation\accessControl\role.html" />
+    <Content Include="app\foundation\accessControl\user.html" />
+    <Content Include="app\foundation\accessControl\roleList.html" />
+    <Content Include="app\foundation\moduleConifg\fieldSelect.html" />
+    <Content Include="app\foundation\moduleConifg\formList.html" />
+    <Content Include="app\foundation\moduleConifg\module.directive.js" />
+    <Content Include="app\foundation\moduleConifg\module.service.js" />
+    <Content Include="app\foundation\moduleConifg\module.controller.js" />
+    <Content Include="app\foundation\moduleConifg\actionTable.html" />
+    <Content Include="app\foundation\moduleConifg\moduleTable.html" />
+    <Content Include="app\foundation\moduleConifg\fieldTable.html" />
+    <Content Include="app\foundation\moduleConifg\formView.html" />
+    <Content Include="app\foundation\moduleConifg\listView.html" />
+    <Content Include="app\foundation\moduleConifg\tableView.html" />
+    <Content Include="app\shared\authInterceptor.service.js" />
+    <Content Include="app\shared\auth.service.js" />
+    <Content Include="app\foundation\accessControl\role.controller.js" />
+    <Content Include="app\foundation\accessControl\role.service.js" />
+    <Content Include="app\foundation\accessControl\roleEdit.html" />
+    <Content Include="app\foundation\accessControl\roleUser.html" />
+    <Content Include="app\foundation\accessControl\rolePrivilege.html" />
+    <Content Include="app\foundation\accessControl\roleTable.html" />
+    <Content Include="app\shared\common\tree-grid-directive.js" />
+    <Content Include="app\shared\header\header.service.js" />
+    <Content Include="app\shared\header\mainMenu.html" />
+    <Content Include="app\shared\help\help.html" />
+    <Content Include="app\shared\common.directive.js" />
+    <Content Include="Content\angular-material\angular-material.css" />
+    <Content Include="Content\angular-material\angular-material.min.css" />
+    <Content Include="Content\img\select2-spinner.gif" />
+    <Content Include="Content\img\select2.png" />
+    <Content Include="Content\img\select2x2.png" />
+    <Content Include="Content\simple-line-icons.css" />
+    <Content Include="Content\treeGrid.css" />
+    <Content Include="Fields\Bank-CreateBank.xml" />
+    <Content Include="Fields\Bank-EditBank.xml" />
+    <Content Include="Fields\Brand-CreateBrand.xml" />
+    <Content Include="Fields\Brand-EditBrand.xml" />
+    <Content Include="Fields\BrandType-CreateBrandType.xml" />
+    <Content Include="Fields\BrandType-EditBrandType.xml" />
+    <Content Include="Fields\Category-Get.xml" />
+    <Content Include="Fields\Floor-CreateFloor.xml" />
+    <Content Include="Fields\Floor-EditFloor.xml" />
+    <Content Include="Fields\Module-ModuleList.xml" />
+    <Content Include="Fields\Role-ChangeRoleInfo.xml" />
+    <Content Include="Fields\Role-Get.xml" />
+    <Content Include="Fields\User-ChangePassword.xml" />
+    <Content Include="Fields\User-ChangeUserInfo.xml" />
+    <Content Include="fonts\Simple-Line-Icons.dev.svg" />
+    <Content Include="fonts\Simple-Line-Icons.svg" />
+    <Content Include="Module.xml" />
+    <Content Include="Scripts\angular-animate.js" />
+    <Content Include="Scripts\angular-animate.min.js" />
+    <Content Include="Scripts\angular-aria.js" />
+    <Content Include="Scripts\angular-aria.min.js" />
+    <Content Include="Scripts\angular-local-storage.js" />
+    <Content Include="Scripts\angular-material.js" />
+    <Content Include="Scripts\angular-material.min.js" />
+    <Content Include="Scripts\angular-messages.js" />
+    <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-resource.js" />
+    <Content Include="Scripts\angular-resource.min.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular-route.min.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular-sanitize.min.js" />
+    <Content Include="Scripts\angular-ui-tree.js" />
+    <Content Include="Scripts\angular-ui\ui-select.js" />
+    <Content Include="Scripts\angular-ui\ui-utils-ieshiv.js" />
+    <Content Include="Scripts\angular-ui\ui-utils-ieshiv.min.js" />
+    <Content Include="Scripts\angular-ui\ui-utils.js" />
+    <Content Include="Scripts\angular-ui\ui-utils.min.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\ct-ui-router-extras.js" />
+    <Content Include="app\foundation\accessControl\login.controller.js" />
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="Scripts\angular-aria.min.js.map" />
+    <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="Scripts\angular-resource.min.js.map" />
+    <Content Include="Scripts\angular-sanitize.min.js.map" />
+    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\es5-shim.js" />
+    <Content Include="Scripts\es5-shim.min.js" />
+    <Content Include="Scripts\jquery-2.1.3.js" />
+    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\restangular.js" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="app\app.js.bundle" />
+    <Content Include="Content\style.css.bundle" />
+    <Content Include="log4net.config" />
+    <Content Include="app\app.min.js.map">
+      <DependentUpon>app.min.js</DependentUpon>
+    </Content>
+    <Content Include="app\plugins.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="app\plugins.min.js.map">
+      <DependentUpon>plugins.min.js</DependentUpon>
+    </Content>
+    <Content Include="fonts\Simple-Line-Icons.woff" />
+    <Content Include="fonts\Simple-Line-Icons.eot" />
+    <Content Include="fonts\Simple-Line-Icons.ttf" />
+    <None Include="Properties\PublishProfiles\zf.pubxml" />
+    <Content Include="Scripts\restangular.min.js" />
+    <Content Include="Scripts\restangular.min.js.map">
+      <DependentUpon>restangular.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-2.1.3.min.map" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\app.js">
+      <DependentUpon>app.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="app\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
+    <Content Include="app\app.module.js" />
+    <Content Include="app\app.route.js" />
+    <Content Include="app\app.route2.js" />
+    <Content Include="app\foundation\accessControl\user.controller.js" />
+    <Content Include="app\foundation\accessControl\user.service.js" />
+    <Content Include="app\plugins.js">
+      <DependentUpon>plugins.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="app\plugins.min.js">
+      <DependentUpon>plugins.js</DependentUpon>
+    </Content>
+    <Content Include="app\shared\common\form_modal.directive.js" />
+    <Content Include="app\shared\common\form_modal.html" />
+    <Content Include="app\shared\common\oc_modal.directive.js" />
+    <Content Include="app\shared\common\oc_modal.html" />
+    <Content Include="app\shared\error\error-messages.html" />
+    <Content Include="app\shared\filters.js" />
+    <Content Include="app\shared\footer\footer.html" />
+    <Content Include="app\shared\header\header.html" />
+    <Content Include="app\shared\header\header.controller.js" />
+    <Content Include="app\shared\header\page-head.html" />
+    <Content Include="app\shared\services.js" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\img\accordion-plusminus.png" />
+    <Content Include="Content\img\avatar.png" />
+    <Content Include="Content\img\avatar1.jpg" />
+    <Content Include="Content\img\avatar2.jpg" />
+    <Content Include="Content\img\avatar3.jpg" />
+    <Content Include="Content\img\avatar3_small.jpg" />
+    <Content Include="Content\img\datatable-row-openclose.png" />
+    <Content Include="Content\img\flags\de.png" />
+    <Content Include="Content\img\flags\es.png" />
+    <Content Include="Content\img\flags\fr.png" />
+    <Content Include="Content\img\flags\ru.png" />
+    <Content Include="Content\img\flags\us.png" />
+    <Content Include="Content\img\header_search_icon_default.png" />
+    <Content Include="Content\img\icon-color-close.png" />
+    <Content Include="Content\img\icon-color.png" />
+    <Content Include="Content\img\input-spinner.gif" />
+    <Content Include="Content\img\loading-spinner-grey.gif" />
+    <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\logo-big.png" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\menu-toggler.png" />
+    <Content Include="Content\img\portlet-collapse-icon-white.png" />
+    <Content Include="Content\img\portlet-collapse-icon.png" />
+    <Content Include="Content\img\portlet-config-icon-white.png" />
+    <Content Include="Content\img\portlet-config-icon.png" />
+    <Content Include="Content\img\portlet-expand-icon-white.png" />
+    <Content Include="Content\img\portlet-expand-icon.png" />
+    <Content Include="Content\img\portlet-reload-icon-white.png" />
+    <Content Include="Content\img\portlet-reload-icon.png" />
+    <Content Include="Content\img\portlet-remove-icon-white.png" />
+    <Content Include="Content\img\portlet-remove-icon.png" />
+    <Content Include="Content\img\remove-icon-small.png" />
+    <Content Include="Content\img\sidebar-menu-arrow-reverse.png" />
+    <Content Include="Content\img\sidebar-menu-arrow.png" />
+    <Content Include="Content\img\sidebar_inline_toggler_icon_default.jpg" />
+    <Content Include="Content\img\sidebar_search_close_icon_default.png" />
+    <Content Include="Content\img\sidebar_search_icon_default.png" />
+    <Content Include="Content\img\sidebar_toggler_icon_default.png" />
+    <Content Include="Content\img\social\aboutme.png" />
+    <Content Include="Content\img\social\amazon.png" />
+    <Content Include="Content\img\social\behance.png" />
+    <Content Include="Content\img\social\blogger.png" />
+    <Content Include="Content\img\social\deviantart.png" />
+    <Content Include="Content\img\social\dribbble.png" />
+    <Content Include="Content\img\social\dropbox.png" />
+    <Content Include="Content\img\social\evernote.png" />
+    <Content Include="Content\img\social\facebook.png" />
+    <Content Include="Content\img\social\flickr.png" />
+    <Content Include="Content\img\social\forrst.png" />
+    <Content Include="Content\img\social\foursquare.png" />
+    <Content Include="Content\img\social\github.png" />
+    <Content Include="Content\img\social\googleplus.png" />
+    <Content Include="Content\img\social\gravatar.png" />
+    <Content Include="Content\img\social\instagram.png" />
+    <Content Include="Content\img\social\jolicloud.png" />
+    <Content Include="Content\img\social\klout.png" />
+    <Content Include="Content\img\social\last-fm.png" />
+    <Content Include="Content\img\social\linkedin.png" />
+    <Content Include="Content\img\social\myspace.png" />
+    <Content Include="Content\img\social\picasa.png" />
+    <Content Include="Content\img\social\pintrest.png" />
+    <Content Include="Content\img\social\quora.png" />
+    <Content Include="Content\img\social\reddit.png" />
+    <Content Include="Content\img\social\rss.png" />
+    <Content Include="Content\img\social\skype.png" />
+    <Content Include="Content\img\social\spotify.png" />
+    <Content Include="Content\img\social\stumbleupon.png" />
+    <Content Include="Content\img\social\tumblr.png" />
+    <Content Include="Content\img\social\twitter.png" />
+    <Content Include="Content\img\social\vimeo.png" />
+    <Content Include="Content\img\social\vk.png" />
+    <Content Include="Content\img\social\wordpress.png" />
+    <Content Include="Content\img\social\xing.png" />
+    <Content Include="Content\img\social\yahoo.png" />
+    <Content Include="Content\img\social\youtube.png" />
+    <Content Include="Content\img\syncfusion-icons-white.png" />
+    <Content Include="Content\img\syncfusion-icons.png" />
+    <Content Include="Content\style.css">
+      <DependentUpon>style.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Content\style.min.css">
+      <DependentUpon>style.css</DependentUpon>
+    </Content>
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="index.html" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\xeditable.js" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\mall\" />
+    <Folder Include="app\shared\form\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Common\ESS.Framework.Common.csproj">
+      <Project>{b5cddc08-747e-4460-94ff-2c81a33dc6cf}</Project>
+      <Name>ESS.Framework.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.CQRS\ESS.Framework.CQRS.csproj">
+      <Project>{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}</Project>
+      <Name>ESS.Framework.CQRS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Data\ESS.Framework.Data.csproj">
+      <Project>{e7361ade-fa40-4047-b618-b87c8f2b827c}</Project>
+      <Name>ESS.Framework.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.UI\ESS.Framework.UI.csproj">
+      <Project>{775A877C-E2DA-44AC-B61C-D4954738A71E}</Project>
+      <Name>ESS.Framework.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Api.Common\ESS.Api.Common.csproj">
+      <Project>{b3681b24-77d5-4267-8a9a-f67c22eca13c}</Project>
+      <Name>ESS.Api.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Api.Foundation\ESS.Api.Foundation.csproj">
+      <Project>{9e17e765-ed35-48d2-8836-e5d606d18558}</Project>
+      <Name>ESS.Api.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESS.Api.Mall\ESS.Api.Mall.csproj">
+      <Project>{8d7764c9-74b6-45a5-89ba-573248756ffd}</Project>
+      <Name>ESS.Api.Mall</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1925</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:7285/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。启用“NuGet 程序包还原”可下载这些程序包。有关详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

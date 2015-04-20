@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="7c726982-eee0-480c-af94-b80eded35dc7" name="Module" linkedPackageId="ffe57e62-ec49-47b7-8cfb-e958507ee44a" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="b5668563-5639-4433-a9c1-634ad315b008">
+      <profileInstance Id="a718d315-204d-4cbb-a958-13f08d11e0e4" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="57a45fa6-1570-4531-be95-fe572375fe8c">
+      <profileInstance Id="a752aafc-4e37-44e4-8d06-f80618c6486e" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="cbcff928-6672-411e-8cd0-a90561f84705" name="管理员" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="552c23fa-d5ba-4151-ab32-ba904e425be5" />
+      </actor>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="ffe57e62-ec49-47b7-8cfb-e958507ee44a" name="ESS.Domain.Foundation.UML">
+    <elementDefinition Id="4e3469f5-e581-4dc6-b528-f267d0960c14" />
+  </package>
+</useCaseModelRoot>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="排队">
+  <useCaseModelRootMoniker Id="c619d679-aa25-49cf-bf1d-fdb5a5ca9c08" />
+  <nestedChildShapes>
+    <actorShape Id="56e26209-fe1f-4e79-a713-7456c335bf2e" absoluteBounds="1.125, 1.875, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="ec238dfc-c356-4125-ac41-c036c555f08e" LastKnownName="用户" />
+      <relativeChildShapes />
+    </actorShape>
+    <useCaseShape Id="f6aef884-e47c-481c-bb80-f5ce8016cb2f" absoluteBounds="2.375, 1.375, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="d64c32f7-b727-4a5b-8a3d-4a661e50faf0" LastKnownName="预约排队" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.625 : 2.04166666666667); (2.45897485283108 : 1.76367504905631)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="aca1267b-530e-45f9-a2d1-55db1d49d1bb" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="56e26209-fe1f-4e79-a713-7456c335bf2e" />
+        <useCaseShapeMoniker Id="f6aef884-e47c-481c-bb80-f5ce8016cb2f" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="385f8ba6-3f3b-4869-8459-85cdaa27369e" absoluteBounds="2.25, 2.25, 1.25, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="6858864d-11a0-47b1-b76c-820d8c3b9867" LastKnownName="查询排队信息" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(1.625 : 2.1875); (2.34500105999682 : 2.36750026499921)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="3fe6bfd3-4a39-4e9d-82ba-7ec7f801a5ee" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="56e26209-fe1f-4e79-a713-7456c335bf2e" />
+        <useCaseShapeMoniker Id="385f8ba6-3f3b-4869-8459-85cdaa27369e" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <actorShape Id="23334a94-b570-4ffc-bae9-e8c8e6b580fe" absoluteBounds="6, 2.125, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="6d1cc173-bd62-4da7-a173-5e61c4a68eb0" LastKnownName="商户" />
+      <relativeChildShapes />
+    </actorShape>
+    <useCaseShape Id="ac459c49-3d20-4a13-a662-311ed431d540" absoluteBounds="6.75, 1.5, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="a3b8cae8-f451-4dfd-9bbd-66b903019988" LastKnownName="进人销号" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(6.5 : 2.21875); (6.93765247622279 : 1.94521720236076)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="a1b780dd-c454-444a-8ec6-de19803ac894" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="23334a94-b570-4ffc-bae9-e8c8e6b580fe" />
+        <useCaseShapeMoniker Id="ac459c49-3d20-4a13-a662-311ed431d540" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseShape Id="58eb0084-5cb6-4b21-ad0a-899bd34e249b" absoluteBounds="6.75, 2.375, 1.625, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="7d8a87fe-e305-44e5-b4ec-1e59bae8fe2c" LastKnownName="查询当前排队信息" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseAssociationConnector edgePoints="[(6.5 : 2.42261904761905); (6.87165956831611 : 2.49341134634593)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="acd9301e-d29a-49e2-85a4-80558a32082c" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="23334a94-b570-4ffc-bae9-e8c8e6b580fe" />
+        <useCaseShapeMoniker Id="58eb0084-5cb6-4b21-ad0a-899bd34e249b" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <commentShape Id="5df826ba-2648-4e5e-afc9-265b4c71ba46" absoluteBounds="3, 0.75, 1.25, 0.375" customColor="251, 247, 200">
+      <commentMoniker Id="6850b2d3-cba9-4c8d-bcc9-ee05af6fc27c" />
+      <relativeChildShapes />
+    </commentShape>
+    <commentConnector edgePoints="[(3.1875 : 1.125); (3.1875 : 1.42984381255005)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+      <relativeChildShapes />
+      <nodes>
+        <commentShapeMoniker Id="5df826ba-2648-4e5e-afc9-265b4c71ba46" />
+        <useCaseShapeMoniker Id="f6aef884-e47c-481c-bb80-f5ce8016cb2f" />
+      </nodes>
+    </commentConnector>
+    <commentShape Id="7a9cbf3f-108c-4c0c-8927-79e0e003a951" absoluteBounds="2.75, 3.125, 1.25, 0.75" customColor="251, 247, 200">
+      <commentMoniker Id="34d1e7fb-67f6-4070-8e82-d464028661c5" />
+      <relativeChildShapes />
+    </commentShape>
+    <commentConnector edgePoints="[(3.125 : 3.125); (3.125 : 2.72912878474779)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+      <relativeChildShapes />
+      <nodes>
+        <commentShapeMoniker Id="7a9cbf3f-108c-4c0c-8927-79e0e003a951" />
+        <useCaseShapeMoniker Id="385f8ba6-3f3b-4869-8459-85cdaa27369e" />
+      </nodes>
+    </commentConnector>
+    <commentShape Id="0965b11e-d71a-4991-a881-c063159eea11" absoluteBounds="7.375, 0.75, 1.625, 0.625" customColor="251, 247, 200">
+      <commentMoniker Id="1f15c6f2-6429-4676-a3de-bb28c1e2fadb" />
+      <relativeChildShapes />
+    </commentShape>
+    <commentConnector edgePoints="[(7.5625 : 1.375); (7.5625 : 1.55484381255005)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+      <relativeChildShapes />
+      <nodes>
+        <commentShapeMoniker Id="0965b11e-d71a-4991-a881-c063159eea11" />
+        <useCaseShapeMoniker Id="ac459c49-3d20-4a13-a662-311ed431d540" />
+      </nodes>
+    </commentConnector>
+    <commentShape Id="2ce78e63-e32c-4aff-8df4-fce4ebba2018" absoluteBounds="7.75, 3.375, 1.25, 0.5" customColor="251, 247, 200">
+      <commentMoniker Id="5de6e96d-5d8d-444b-86e3-2678da66976b" />
+      <relativeChildShapes />
+    </commentShape>
+    <commentConnector edgePoints="[(8.0625 : 3.375); (8.0625 : 2.82205674549922)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+      <relativeChildShapes />
+      <nodes>
+        <commentShapeMoniker Id="2ce78e63-e32c-4aff-8df4-fce4ebba2018" />
+        <useCaseShapeMoniker Id="58eb0084-5cb6-4b21-ad0a-899bd34e249b" />
+      </nodes>
+    </commentConnector>
+  </nestedChildShapes>
+</useCaseDiagram>

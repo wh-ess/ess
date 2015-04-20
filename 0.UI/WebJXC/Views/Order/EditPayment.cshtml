@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "EditPayment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="mainform" method="post" style="height: 310px">
+    <input type="hidden" name="DetailGrid" id="HDetailData" value="" />
+</form>
+<div id="detailGrid">
+</div>
+<script type="text/javascript">
+    //全局对象
+    var detailGrid = null;
+    var PaymentID = "@ViewData["id"]";
+
+    $.when($.get("/config/Columns/AccountPayableMaster")).done(function (c1) {
+
+        var config = LG.bulidData(c1);
+        var form = $("#mainform").ligerForm({ fields: config.form });
+
+
+        var option = {
+            columns: [
+                        { display: '进货单号', name: 'PurchaseID', width: 80, align: 'right' },
+                        { display: '应付金额', name: 'AccountPayable', width: 80, align: 'right', type: 'currency' },
+                        {
+                            display: '金额', name: 'Balance', width: 100, align: 'right', editor: { type: 'float', isNegative: false }, type: 'currency',
+                            totalSummary: {
+                                type: "sum"
+                            }
+                        }
+            ],
+            toolbar: getToolbar(),
+            enabledEdit: true,
+            width: '98%', heightDiff: -10,
+            usePager: false
+        };
+
+        detailGrid = $("#detailGrid").ligerGrid(option);
+
+        if (PaymentID) {
+            LG.ajax({
+                url: "/order/GetPaymentById", data: { PaymentID: PaymentID }, success: function (data) {
+                    LG.loadForm($("#mainform"), data[0]);
+                }
+            });
+            LG.ajax({
+                url: "/order/GetPaymentDetail", data: { PaymentID: PaymentID }, success: function (data) {
+                    detailGrid.loadData({ Rows: data });
+                }
+            });
+        }
+        else {
+            LG.ajax({
+                url: "/order/GetNewPaymentId", success: function (data) {
+                    LG.loadForm($("#mainform"), data);
+                }
+            });
+        }
+        //var tab = $("#tabcontainer").ligerTab();
+    });
+
+    function save(dialog) {
+        if (detailGrid) {
+            //保存订单明细 表格的JSON  后台(AjaxOrderManage.AddOrders或UpdateOrders)可接收
+            $("#HDetailData").val(JSON2.stringify(detailGrid.getData()));
+        }
+        if (PaymentID) {
+            $("#mainform").attr("action", "/order/editPayment");
+        }
+        else {
+            $("#mainform").attr("action", "/order/addPayment");
+        }
+        LG.submitForm($("#mainform"), function (data) {
+            if (!data.IsError) {
+                if (data.Message == "付款等于应付") {
+                    dialog.hidden();
+                    return;
+                }
+                $.ligerDialog.confirm(data.Message, function (yes) {
+                    if (yes) {
+                        dialog.hidden();
+                    }
+                    else {
+                        PaymentID = $("#PaymentID").val();
+                    }
+                });
+            }
+            else { LG.showError(data.Message); }
+        });
+
+    }
+
+
+
+    function getToolbar() {
+        var o = {
+            text: '引入',
+            img: '/content/icons/32X32/import.png'
+        };
+        o.click = function () {
+            LG.showSelect("/config/Columns/PurchaseMaster", '/order/getPurchase?noPaid=true', select, true);
+        };
+
+        var itemDel = {
+            text: '删除',
+            img: '/content/icons/silkicons/delete.png'
+        };
+        itemDel.click = function () {
+            if (detailGrid.getSelected()) {
+                detailGrid.remove(detailGrid.getSelected());
+            }
+            else {
+                LG.tip("请选择!");
+            }
+
+        };
+
+        return { items: [o, itemDel] };
+
+    }
+
+    function select(checked) {
+        $(checked).each(function () {
+            if (exist(this.PurchaseID)) return;
+
+            // ligerGrid _addData bug fixed
+            if (!detailGrid.currentData.Rows)
+                detailGrid.currentData.Rows = [];
+
+            detailGrid.addRow({
+                PurchaseID: this.PurchaseID,
+                AccountPayable: this.AccountPayable,
+                Balance: this.AccountPayable
+            });
+        });
+    }
+
+    function exist(PurchaseID) {
+        var rows = detailGrid.rows;
+        for (var i = 0, l = rows.length; i < l; i++) {
+            var o = rows[i];
+            if (o.PurchaseID == PurchaseID) return true;
+        }
+        return false;
+    }
+
+</script>

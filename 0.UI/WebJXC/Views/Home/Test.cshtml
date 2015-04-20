@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Test</h2>
+<input id="test" value="fdsfds" />
+<script type="text/javascript">
+    $(function () {
+        $("#test").ligerComboBox({
+            onBeforeOpen: function () { LG.showSelect("/config/Columns/ProductStock", "/manage/GetProductStock?type=1"); return false; }
+        });
+
+
+    });
+
+
+</script>

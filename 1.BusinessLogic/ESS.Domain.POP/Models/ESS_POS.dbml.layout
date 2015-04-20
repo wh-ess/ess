@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ESS_POS">
+  <DataContextMoniker Name="/ESS_POSDataContext" />
+  <nestedChildShapes>
+    <classShape Id="fc2599d9-3062-416f-85ab-81dc39aab2f4" absoluteBounds="2.875, 1.5, 2, 3.2907230631510416">
+      <DataClassMoniker Name="/ESS_POSDataContext/TemplateBody" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0c19d9be-7658-44f0-8f02-6f68098a0f7a" absoluteBounds="2.89, 1.96, 1.9700000000000002, 2.7307230631510415" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a671c2ca-2afc-41a4-9938-e232c6a03e06" absoluteBounds="0.5, 0.5, 2, 2.3356245930989585">
+      <DataClassMoniker Name="/ESS_POSDataContext/EmptyTemplate" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1121fecc-eb55-449a-9229-bab1a5d02c26" absoluteBounds="0.51500000000000012, 0.96, 1.9700000000000002, 1.7756245930989585" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e75d2302-08b6-4778-b705-fdf6c39ccf04" absoluteBounds="0.5, 3.25, 2, 2.3356245930989585">
+      <DataClassMoniker Name="/ESS_POSDataContext/TemplateHead" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b4028bc0-66d5-48ee-83ff-e5b002548d17" absoluteBounds="0.51500000000000012, 3.71, 1.9700000000000002, 1.7756245930989585" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

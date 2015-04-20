@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <settings>
+    <!--Determines if the bundle file should be automatically optimized after creation/update.-->
+    <minify>true</minify>
+    <!--Determine whether to generate/re-generate this bundle on building the solution.-->
+    <runOnBuild>true</runOnBuild>
+    <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
+    <outputDirectory />
+  </settings>
+  <!--The order of the <file> elements determines the order of the files in the bundle.-->
+  <files>
+    <file>/app/app.module.js</file>
+    <file>/app/app.route.js</file>
+    <file>/app/shared/common/tree-grid-directive.js</file>
+    <file>/app//shared/filters.js</file>
+    <file>/app//shared/services.js</file>
+    <file>/app/shared/auth.service.js</file>
+    <file>/app/shared/common.directive.js</file>
+    <file>/app/shared/authInterceptor.service.js</file>
+    <!-- shared -->
+    <file>/app/shared/header/header.service.js</file>
+    <file>/app/shared/header/header.controller.js</file>
+
+    <!-- module -->
+    <file>/app/foundation/moduleConifg/module.controller.js</file>
+    <file>/app/foundation/moduleConifg/module.service.js</file>
+    <file>/app/foundation/moduleConifg/module.directive.js</file>
+
+    <!-- accessControl -->
+    <file>/app/foundation/accessControl/user.controller.js</file>
+    <file>/app/foundation/accessControl/user.service.js</file>
+    <file>/app/foundation/accessControl/role.service.js</file>
+    <file>/app/foundation/accessControl/role.controller.js</file>
+    <file>/app/foundation/accessControl/login.controller.js</file>
+
+    <!-- common -->
+
+    <!-- category -->
+    <file>/app/common/category/category.service.js</file>
+    <file>/app/common/category/category.controller.js</file>
+    <!-- basic -->
+    <file>/app/common/basic/basic.service.js</file>
+    <file>/app/common/basic/basic.controller.js</file>
+    <file>/app/common/basic/floor.controller.js</file>
+    <file>/app/common/basic/brand.controller.js</file>
+    <file>/app/common/basic/brandType.controller.js</file>
+    <file>/app/common/basic/bank.controller.js</file>
+  </files>
+</bundle>

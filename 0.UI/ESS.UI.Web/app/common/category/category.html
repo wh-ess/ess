@@ -1,0 +1,51 @@
+﻿<div class=" col-md-4">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" data-target=".portlet-body">
+                <span class="caption-subject font-green-sharp bold uppercase">Category Type Scheme </span>
+                <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view category type scheme list</span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+
+                    <button ng-click="addCategoryTypeScheme()">
+                        <i class="fa fa-plus"></i> New
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <!--<div list-view models="categoryTypeSchemes" title="Name" sub-title="" selected="current" mode="mode"></div>-->
+            <div ng-repeat="m in categoryTypeSchemes">
+                <a href="#" editable-text="m.Name" onaftersave="editCategoryTypeScheme(m)">{{ m.Name || 'empty' }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=" col-md-4">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" data-target=".portlet-body">
+                <span class="caption-subject font-green-sharp bold uppercase">Category Type </span>
+                <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view category type list</span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+
+                    <button ng-click="addCategoryType()">
+                        <i class="fa fa-plus"></i> New
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <!--<div list-view models="categoryTypeSchemes" title="Name" sub-title="" selected="current" mode="mode"></div>-->
+            <div ng-repeat="m in categoryTypes">
+                <a href="#" editable-text="m.Name" onaftersave="editCategoryType(m)">{{ m.Name || 'empty' }}</a>
+            </div>
+        </div>
+    </div>
+</div>
