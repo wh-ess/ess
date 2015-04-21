@@ -10,7 +10,7 @@ namespace ESS.Domain.Common.Category.Events
 {
     public class CategoryCreated : Event
     {
-        public Guid CategoryTypeId;
+        public Guid TypeId;
         public DateTime EndDate;
         public DateTime FromDate;
         public string Name;
@@ -29,7 +29,7 @@ namespace ESS.Domain.Common.Category.Events
 
     public class CategoryTypeChanged : Event
     {
-        public Guid CategoryTypeId;
+        public Guid TypeId;
     }
 
     public class CategoryDateChanged : Event

@@ -5,6 +5,7 @@
 #endregion
 
 using System.Web.Http;
+using ESS.Framework.UI.Attribute;
 
 namespace ESS.Api.Common
 {
@@ -18,7 +19,8 @@ namespace ESS.Api.Common
     {
     }
 
-    public class CategoryController : ApiController
+    [Module(parentModuleNo: "", moduleNo: "Category")]
+    public class CategoryMainController : ApiController
     {
     }
 

@@ -88,6 +88,7 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
 
             //common
             //category
+            .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
             .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
 
             //basic
@@ -1605,8 +1606,8 @@ angular.module("EssApp").factory("CategoryTypeScheme", [
 "use strict";
 
 angular.module("EssApp").controller("CategoryController", [
-    "$scope", "CategoryTypeScheme","CategoryType", "$routeParams", "$timeout",
-function ($scope, CategoryTypeScheme, CategoryType,$routeParams, $timeout) {
+    "$scope", "CategoryTypeScheme", "CategoryType", "Category","$routeParams", "$timeout",
+function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $timeout) {
     //#region CategoryTypeScheme
     var fetchCategoryTypeSchemes = function () {
         $timeout(function () {
@@ -1615,22 +1616,25 @@ function ($scope, CategoryTypeScheme, CategoryType,$routeParams, $timeout) {
             });
         }, 100);
     };
-
     fetchCategoryTypeSchemes();
 
-    $scope.addCategoryTypeScheme = function () {
-        $scope.mode = "edit";
-        $scope.categoryTypeSchemes.push({});
-    }
-    $scope.editCategoryTypeScheme = function (sheme) {
-        if (sheme.Id) {
-            CategoryTypeScheme.one(sheme.Id).doPUT(sheme);
+    $scope.editCategoryTypeScheme = function (scheme) {
+        if (scheme.Id) {
+            CategoryTypeScheme.one(scheme.Id).doPUT(scheme);
         } else {
-            CategoryTypeScheme.post(sheme);
+            CategoryTypeScheme.post(scheme);
             fetchCategoryTypeSchemes();
         }
         return true;
     };
+    $scope.delCategoryTypeScheme = function (scheme) {
+        if (scheme.Id) {
+            scheme.remove({ Id: scheme.Id });
+
+            var index = $scope.categoryTypeSchemes.indexOf(scheme);
+            $scope.categoryTypeSchemes.splice(index, 1);
+        }
+    }
     //#endregion
 
     //#region CategoryType
@@ -1644,19 +1648,55 @@ function ($scope, CategoryTypeScheme, CategoryType,$routeParams, $timeout) {
 
     fetchCategoryTypes();
 
-    $scope.addCategoryType = function () {
-        $scope.mode = "edit";
-        $scope.categoryTypes.push({});
-    }
-    $scope.editCategoryType = function (sheme) {
-        if (sheme.Id) {
-            CategoryType.one(sheme.Id).doPUT(sheme);
+    $scope.editCategoryType = function (type,scheme) {
+        if (type.Id) {
+            CategoryType.one(type.Id).doPUT(type);
         } else {
-            CategoryType.post(sheme);
+            type.SchemeId = scheme.Id;
+            CategoryType.post(type);
             fetchCategoryTypes();
         }
         return true;
     };
+    $scope.delCategoryType = function (type) {
+        if (type.Id) {
+            type.remove({ Id: type.Id });
+
+            var index = $scope.categoryTypes.indexOf(type);
+            $scope.categoryTypes.splice(index, 1);
+        }
+    }
+    //#endregion
+
+    //#region Category
+    var fetchCategorys = function () {
+        $timeout(function () {
+            Category.getList().then(function (data) {
+                $scope.categorys = data;
+            });
+        }, 100);
+    };
+
+    fetchCategorys();
+
+    $scope.editCategory = function (cat, type) {
+        if (cat.Id) {
+            Category.one(cat.Id).doPUT();
+        } else {
+            cat.TypeId = type.Id;
+            Category.post(cat);
+            fetchCategorys();
+        }
+        return true;
+    };
+    $scope.delCategory = function (cat) {
+        if (cat.Id) {
+            cat.remove({ Id: cat.Id });
+
+            var index = $scope.categorys.indexOf();
+            $scope.categorys.splice(index, 1);
+        }
+    }
     //#endregion
 }
 ]);

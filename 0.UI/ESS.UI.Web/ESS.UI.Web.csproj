@@ -131,6 +131,7 @@
     <Content Include="app\common\basic\floor.controller.js" />
     <Content Include="app\common\basic\floor.html" />
     <Content Include="app\common\category\category.html" />
+    <Content Include="app\common\category\categoryType.html" />
     <Content Include="app\common\category\category.controller.js" />
     <Content Include="app\common\category\category.service.js" />
     <Content Include="app\foundation\accessControl\login.html" />

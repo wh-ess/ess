@@ -12,7 +12,6 @@ using ESS.Framework.UI.Attribute;
 
 namespace ESS.Api.Common.Category
 {
-    [Module(parentModuleNo:"Category",moduleNo:"Category")]
     public class CategoryController : ApiController
     {
         private readonly CategoryView _categoryView;
@@ -49,9 +48,9 @@ namespace ESS.Api.Common.Category
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteCategory(DeleteCategory category)
+        public IHttpActionResult DeleteCategory(Guid id)
         {
-            _messageDispatcher.SendCommand(category);
+            _messageDispatcher.SendCommand(new DeleteCategory(){Id=id});
             return Ok();
         }
     }

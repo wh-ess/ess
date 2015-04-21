@@ -47,9 +47,9 @@ namespace ESS.Api.Common.Category
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteCategoryTypeScheme(DeleteCategoryTypeScheme categoryTypeScheme)
+        public IHttpActionResult DeleteCategoryTypeScheme(Guid id)
         {
-            _messageDispatcher.SendCommand(categoryTypeScheme);
+            _messageDispatcher.SendCommand(new DeleteCategoryTypeScheme(){Id=id});
             return Ok();
         }
     }

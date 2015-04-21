@@ -9,7 +9,7 @@ namespace ESS.Domain.Common.Category.Commands
 {
     public class CreateCategory : Command
     {
-        public Guid CategoryTypeId;
+        public Guid TypeId;
         public DateTime EndDate;
         public DateTime FromDate;
         public string Name;
@@ -28,7 +28,7 @@ namespace ESS.Domain.Common.Category.Commands
 
     public class ChangeCategoryType : Command
     {
-        public Guid CategoryTypeId;
+        public Guid TypeId;
     }
 
     public class ChangeCategoryDate : Command

@@ -19,7 +19,7 @@ namespace ESS.Domain.Common.Category.Domain
             IApplyEvent<CategoryNameChanged>, IApplyEvent<CategoryDeleted>, IApplyEvent<CategoryParentChanged>, IApplyEvent<CategoryTypeChanged>,
             IApplyEvent<CategoryDateChanged>
     {
-        public Guid CategoryTypeId { get; private set; }
+        public Guid TypeId { get; private set; }
         public DateTime EndDate { get; private set; }
         public DateTime FromDate { get; private set; }
         public string Name { get; private set; }

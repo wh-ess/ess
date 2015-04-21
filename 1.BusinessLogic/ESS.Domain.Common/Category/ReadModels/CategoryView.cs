@@ -65,7 +65,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         public void Handle(CategoryTypeChanged e)
         {
-            Update(e.Id, c => c.CategoryTypeId = e.CategoryTypeId);
+            Update(e.Id, c => c.TypeId = e.TypeId);
         }
 
         public void Handle(CategoryDateChanged e)
@@ -91,7 +91,7 @@ namespace ESS.Domain.Common.Category.ReadModels
     [Serializable]
     public class CategoryItem
     {
-        public Guid CategoryTypeId;
+        public Guid TypeId;
         public DateTime EndDate;
         public DateTime FromDate;
         public Guid Id;

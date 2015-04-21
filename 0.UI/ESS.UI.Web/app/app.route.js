@@ -33,6 +33,7 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
 
             //common
             //category
+            .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
             .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
 
             //basic
