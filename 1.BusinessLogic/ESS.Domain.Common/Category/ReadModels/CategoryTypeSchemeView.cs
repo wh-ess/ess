@@ -1,16 +1,19 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
-using ESS.Domain.Common.Basic.Events;
-using ESS.Domain.Common.Category.Commands;
 using ESS.Domain.Common.Category.Events;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.Data;
 
+#endregion
+
 namespace ESS.Domain.Common.Category.ReadModels
 {
-    public class CategoryTypeSchemeView : ISubscribeTo<CategoryTypeSchemeCreated>, ISubscribeTo<CategoryTypeSchemeNameChanged>, ISubscribeTo<CategoryTypeSchemeDeleted>
+    public class CategoryTypeSchemeView
+        : ISubscribeTo<CategoryTypeSchemeCreated>, ISubscribeTo<CategoryTypeSchemeNameChanged>, ISubscribeTo<CategoryTypeSchemeDeleted>
     {
         private readonly IRepository<CategoryTypeSchemeItem, Guid> _repository;
 
@@ -18,7 +21,7 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             _repository = repository;
         }
-        
+
         public IEnumerable<CategoryTypeSchemeItem> CategoryTypeSchemeList(Expression<Func<CategoryTypeSchemeItem, bool>> condition)
         {
             return _repository.Find(condition);
@@ -35,12 +38,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         }
 
         #region handle
+
         public void Handle(CategoryTypeSchemeCreated e)
         {
             var item = Mapper.DynamicMap<CategoryTypeSchemeItem>(e);
 
             _repository.Add(e.Id, item);
-
         }
 
         public void Handle(CategoryTypeSchemeDeleted e)
@@ -61,8 +64,8 @@ namespace ESS.Domain.Common.Category.ReadModels
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
-
         }
+
         #endregion
     }
 

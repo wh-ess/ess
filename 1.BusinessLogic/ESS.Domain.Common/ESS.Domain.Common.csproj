@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Association\Commands\AssociationTypeCommands.cs" />
+    <Compile Include="Association\Commands\AssociationCommands.cs" />
+    <Compile Include="Association\Events\AssociationEvents.cs" />
+    <Compile Include="Association\Events\AssociationTypeEvents.cs" />
+    <Compile Include="Association\ReadModels\AssociationView.cs" />
+    <Compile Include="Association\ReadModels\AssociationTypeView.cs" />
     <Compile Include="Basic\Commands\SupplierCommands.cs" />
     <Compile Include="Basic\Commands\BankCommands.cs" />
     <Compile Include="Basic\Commands\BrandCommands.cs" />
@@ -117,10 +123,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Association\Commands\" />
     <Folder Include="Association\EventHandlers\" />
-    <Folder Include="Association\Events\" />
-    <Folder Include="Association\ReadModels\" />
     <Folder Include="Basic\EventHandlers\" />
     <Folder Include="BusinessRule\Commands\" />
     <Folder Include="BusinessRule\EventHandlers\" />
