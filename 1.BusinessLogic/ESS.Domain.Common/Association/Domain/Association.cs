@@ -7,14 +7,10 @@ namespace ESS.Domain.Common.Association.Domain
     public class Association
     {
         public Guid Id { get; set; }
-        public Entity EntityFrom { get; set; }
-        public Entity EntityTo { get; set; }
-        public PartyRole.Domain.PartyRole PartyRoleFrom { get; set; }
-        public PartyRole.Domain.PartyRole PartyRoleTo { get; set; }
-        public StatusType StatusTypeFrom { get; set; }
-        public StatusType StatusTypeTo { get; set; }
-        public AssociationRule EntityAssociationRule { get; set; }
-        public AssociationType EntityAssociationType { get; set; }
+        public Guid From { get; set; }
+        public Guid To { get; set; }
+        public AssociationRule AssociationRule { get; set; }
+        public Guid AssociationTypeId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime EndDate { get; set; }
 
