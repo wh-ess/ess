@@ -8,7 +8,7 @@ namespace ESS.Domain.Common.Contact.Domain
         public Guid ContactId { get; set; }
         public Guid TypeId { get; set; }
 
-        public GeographicBoundary GeographicBoundary { get; set; }
+        public Guid GeographicBoundaryId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime EndDate { get; set; }
 

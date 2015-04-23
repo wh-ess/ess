@@ -10,7 +10,7 @@ namespace ESS.Domain.Common.Contact.Domain
     public class PartyContact
     {
         public Guid Id { get; set; }
-        public Party Party { get; set; }
-        public Contact Contact { get; set; }
+        public Guid PartyId { get; set; }
+        public Guid ContactId { get; set; }
     }
 }
