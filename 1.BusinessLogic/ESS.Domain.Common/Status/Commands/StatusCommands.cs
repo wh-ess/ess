@@ -10,7 +10,7 @@ namespace ESS.Domain.Common.Status.Commands
     public class CreateStatus : Command
     {
         public Guid RelateId ;
-        public Guid StatusTypeId;
+        public Guid TypeId;
         public DateTime StatusDateTime ;
         public DateTime StatusFromDate ;
         public DateTime StatusEndDate ;

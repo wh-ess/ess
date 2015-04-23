@@ -9,8 +9,8 @@ namespace ESS.Domain.Common.PartyRole.Domain
     public class SpecificContexualRole
     {
         public Guid Id { get; set; }
-        public RoleType RoleType { get; set; }
-        public Entity Entity { get; set; }
+        public Guid RoleTypeId { get; set; }
+        public Guid EntityId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime EndDate { get; set; }
     }

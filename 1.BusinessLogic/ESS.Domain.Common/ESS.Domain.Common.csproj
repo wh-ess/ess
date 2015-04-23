@@ -54,12 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Association\Commands\AssociationTypeCommands.cs" />
     <Compile Include="Association\Commands\AssociationCommands.cs" />
     <Compile Include="Association\Events\AssociationEvents.cs" />
-    <Compile Include="Association\Events\AssociationTypeEvents.cs" />
     <Compile Include="Association\ReadModels\AssociationView.cs" />
-    <Compile Include="Association\ReadModels\AssociationTypeView.cs" />
     <Compile Include="Basic\Commands\SupplierCommands.cs" />
     <Compile Include="Basic\Commands\BankCommands.cs" />
     <Compile Include="Basic\Commands\BrandCommands.cs" />
@@ -71,11 +68,7 @@
     <Compile Include="BusinessRule\Domain\BusinessRule.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleOutCome.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleOutComeValue.cs" />
-    <Compile Include="BusinessRule\Domain\BusinessRuleOutComeType.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleFactorValue.cs" />
-    <Compile Include="BusinessRule\Domain\BusinessRuleOutComeValueType.cs" />
-    <Compile Include="BusinessRule\Domain\BusinessRuleFactorValueType.cs" />
-    <Compile Include="BusinessRule\Domain\BusinessRuleFactorType.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleFactor.cs" />
     <Compile Include="Basic\Domain\Floor.cs" />
     <Compile Include="Category\Commands\CategoryClassificationCommands.cs" />
@@ -99,12 +92,10 @@
     <Compile Include="Contact\Domain\PostalAddress.cs" />
     <Compile Include="Contact\Domain\PostalAddressPart.cs" />
     <Compile Include="Status\Commands\StatusCommands.cs" />
-    <Compile Include="Status\Commands\StatusTypeCommands.cs" />
     <Compile Include="Status\Domain\Status.cs" />
     <Compile Include="PartyRole\Domain\Entity.cs" />
     <Compile Include="Association\Domain\Association.cs" />
     <Compile Include="Association\Domain\AssociationRule.cs" />
-    <Compile Include="PartyRole\Domain\EntityType.cs" />
     <Compile Include="PartyRole\Domain\PartyRole.cs" />
     <Compile Include="Basic\Events\BankEvents.cs" />
     <Compile Include="Basic\Events\BrandEvents.cs" />
@@ -115,18 +106,11 @@
     <Compile Include="Basic\ReadModels\BrandView.cs" />
     <Compile Include="Basic\ReadModels\FloorView.cs" />
     <Compile Include="PartyRole\Domain\Party.cs" />
-    <Compile Include="Association\Domain\AssociationType.cs" />
-    <Compile Include="Contact\Domain\PostalAddressPartType.cs" />
-    <Compile Include="Contact\Domain\GeographicBoundaryType.cs" />
-    <Compile Include="Status\Domain\StatusType.cs" />
-    <Compile Include="PartyRole\Domain\RoleType.cs" />
     <Compile Include="PartyRole\Domain\GenericContexualRole.cs" />
     <Compile Include="PartyRole\Domain\SpecificContexualRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Status\Events\StatusEvents.cs" />
-    <Compile Include="Status\Events\StatusTypeEvents.cs" />
     <Compile Include="Status\ReadModels\StatusView.cs" />
-    <Compile Include="Status\ReadModels\StatusTypeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Association\EventHandlers\" />

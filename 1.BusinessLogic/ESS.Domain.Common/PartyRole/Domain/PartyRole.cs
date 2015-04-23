@@ -13,7 +13,7 @@ namespace ESS.Domain.Common.PartyRole.Domain
     {
         public Guid Id { get; set; }
         public Party Party { get; set; }
-        public RoleType RoleType { get; set; }
+        public Guid TypeId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime EndDate { get; set; }
     }

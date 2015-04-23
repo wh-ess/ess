@@ -13,7 +13,7 @@ namespace ESS.Domain.Common.Association.Events
         public Guid From;
         public Guid To;
         public AssociationRule AssociationRule;
-        public Guid AssociationTypeId;
+        public Guid TypeId;
         public DateTime FromDate;
         public DateTime EndDate;
     }

@@ -10,6 +10,5 @@ namespace ESS.Domain.Common.PartyRole.Domain
         public Guid Id { get; set; }
         public Entity Parent { get; set; }
         public PartyRole PartyRole { get; set; }
-        public EntityType EntityType { get; set; }
     }
 }
