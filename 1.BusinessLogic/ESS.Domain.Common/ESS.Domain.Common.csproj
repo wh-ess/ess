@@ -91,6 +91,18 @@
     <Compile Include="Contact\Domain\PartyContact.cs" />
     <Compile Include="Contact\Domain\PostalAddress.cs" />
     <Compile Include="Contact\Domain\PostalAddressPart.cs" />
+    <Compile Include="PartyRole\Commands\SpecificContexualRoleCommands.cs" />
+    <Compile Include="PartyRole\Commands\GenericContexualRoleCommands.cs" />
+    <Compile Include="PartyRole\Commands\PartyRoleCommands.cs" />
+    <Compile Include="PartyRole\Commands\PartyCommands.cs" />
+    <Compile Include="PartyRole\Events\SpecificContexualRoleEvents.cs" />
+    <Compile Include="PartyRole\Events\GenericContexualRoleEvents.cs" />
+    <Compile Include="PartyRole\Events\PartyEvents.cs" />
+    <Compile Include="PartyRole\Events\PartyRoleEvents.cs" />
+    <Compile Include="PartyRole\ReadModels\SpecificContexualRoleView.cs" />
+    <Compile Include="PartyRole\ReadModels\GenericContexualRoleView.cs" />
+    <Compile Include="PartyRole\ReadModels\PartyRoleView.cs" />
+    <Compile Include="PartyRole\ReadModels\PartyView.cs" />
     <Compile Include="Status\Commands\StatusCommands.cs" />
     <Compile Include="Status\Domain\Status.cs" />
     <Compile Include="PartyRole\Domain\Entity.cs" />
@@ -124,10 +136,7 @@
     <Folder Include="Contact\EventHandlers\" />
     <Folder Include="Contact\Events\" />
     <Folder Include="Contact\ReadModels\" />
-    <Folder Include="PartyRole\Commands\" />
     <Folder Include="PartyRole\EventHandlers\" />
-    <Folder Include="PartyRole\Events\" />
-    <Folder Include="PartyRole\ReadModels\" />
     <Folder Include="Status\EventHandlers\" />
   </ItemGroup>
   <ItemGroup>
