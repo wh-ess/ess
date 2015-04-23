@@ -17,7 +17,6 @@ namespace ESS.Domain.Common.Association.Domain
         : Aggregate, IHandleCommand<CreateAssociation>, IHandleCommand<DeleteAssociation>, IApplyEvent<AssociationCreated>,
             IApplyEvent<AssociationDeleted>
     {
-        public Guid Id { get; set; }
         public Guid From { get; set; }
         public Guid To { get; set; }
         public AssociationRule AssociationRule { get; set; }
