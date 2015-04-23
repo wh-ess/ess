@@ -2,7 +2,7 @@
  this is a framework use angularjs,web api,cqrs,redis.. to speed up develop speed.
  
 # Demo    
- http://54.169.144.36/
+ http://54.169.144.36/  (用户名和密码一致就行,登录后刷新下页面可以看到菜单)
  
  <pre>
    <h1>技术参考</h1>
