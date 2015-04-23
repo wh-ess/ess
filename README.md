@@ -1,6 +1,9 @@
 # ess
  this is a framework use angularjs,web api,cqrs,redis.. to speed up develop speed.
  
+# Demo    
+ http://54.169.144.36/
+ 
  <pre>
    <h1>技术参考</h1>
                 1.前台
