@@ -7,7 +7,7 @@ using ESS.Framework.CQRS.Command;
 
 namespace ESS.Domain.Common.Category.Commands
 {
-    public class AddCategoryClassification : Command
+    public class CreateCategoryClassification : Command
     {
         public Guid RelateId;
         public Guid CategoryId;

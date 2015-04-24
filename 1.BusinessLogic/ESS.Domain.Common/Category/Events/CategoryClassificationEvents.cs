@@ -7,7 +7,7 @@ using ESS.Framework.CQRS.Event;
 
 namespace ESS.Domain.Common.Category.Events
 {
-    public class CategoryClassificationAdded : Event
+    public class CategoryClassificationCreated : Event
     {
         public Guid RelateId;
         public Guid CategoryId;
