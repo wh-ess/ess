@@ -66,6 +66,7 @@
     <Compile Include="Basic\Domain\Brand.cs" />
     <Compile Include="Basic\Domain\BrandType.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRule.cs" />
+    <Compile Include="BusinessRule\Domain\BusinessRuleRelation.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleOutCome.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleOutComeValue.cs" />
     <Compile Include="BusinessRule\Domain\BusinessRuleFactorValue.cs" />

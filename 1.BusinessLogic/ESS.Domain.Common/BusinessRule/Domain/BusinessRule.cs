@@ -1,5 +1,8 @@
-﻿using System;
-using ESS.Domain.Common.Contact.Domain;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace ESS.Domain.Common.BusinessRule.Domain
 {
@@ -8,6 +11,5 @@ namespace ESS.Domain.Common.BusinessRule.Domain
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Statement { get; set; }
-        public GeographicBoundary GeographicBoundary { get; set; }
     }
 }
