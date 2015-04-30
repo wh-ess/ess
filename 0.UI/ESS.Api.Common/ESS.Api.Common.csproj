@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Association\AssociationController.cs" />
     <Compile Include="Basic\BankController.cs" />
     <Compile Include="Basic\BrandController.cs" />
     <Compile Include="Basic\BrandTypeController.cs" />

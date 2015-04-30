@@ -91,6 +91,9 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
             .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
             .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
 
+            //association
+            .when("/association", { templateUrl: "/app/common/association/association.html", controller: "AssociationController" })
+
             //basic
             .when("/bank", { templateUrl: "/app/common/basic/bank.html", controller: "BankController" })
             .when("/floor", { templateUrl: "/app/common/basic/floor.html", controller: "FloorController" })

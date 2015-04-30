@@ -10,6 +10,8 @@ namespace ESS.Api.Foundation
     /// <summary>
     /// for menu
     /// </summary>
+
+    [Module(parentModuleNo: "", moduleNo: "Foundation")]
     public class FoundationController : ApiController
     {
     }

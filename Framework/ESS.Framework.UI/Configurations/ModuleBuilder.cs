@@ -36,20 +36,14 @@ namespace ESS.Framework.UI.Configurations
                 {
                     moduleParentNo = t.Namespace.Substring(t.Namespace.LastIndexOf('.') + 1);
                 }
-                if (moduleParentNo == moduleNo)
-                {
-                    moduleParentNo = "";
-                }
                 if (moduleInfoType != null)
                 {
                     if (!string.IsNullOrEmpty(moduleInfoType.ModuleNo))
                     {
                         moduleNo = moduleInfoType.ModuleNo;
                     }
-                    if (!string.IsNullOrEmpty(moduleInfoType.ParentModuleNo))
-                    {
-                        moduleParentNo = moduleInfoType.ParentModuleNo;
-                    }
+                    moduleParentNo = moduleInfoType.ParentModuleNo;
+                    
                 }
 
                 //for menu
