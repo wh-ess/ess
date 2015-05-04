@@ -91,6 +91,10 @@
       <Project>{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}</Project>
       <Name>ESS.Framework.CQRS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.UI\ESS.Framework.UI.csproj">
+      <Project>{775A877C-E2DA-44AC-B61C-D4954738A71E}</Project>
+      <Name>ESS.Framework.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESS.Api.Common\ESS.Api.Common.csproj">
       <Project>{b3681b24-77d5-4267-8a9a-f67c22eca13c}</Project>
       <Name>ESS.Api.Common</Name>
