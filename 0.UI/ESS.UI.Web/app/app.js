@@ -1765,14 +1765,13 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delAssociation = function (a) {
+    $scope.delAssociation = function(a) {
         if (a.Id) {
             a.remove({ Id: a.Id });
-
-            var index = $scope.Associations.indexOf();
-            $scope.Associations.splice(index, 1);
         }
-    }
+        var index = $scope.Associations.indexOf();
+        $scope.Associations.splice(index, 1);
+    };
     //#endregion
 }
 ]);

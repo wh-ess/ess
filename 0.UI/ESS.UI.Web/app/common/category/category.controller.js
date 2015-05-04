@@ -22,14 +22,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategoryTypeScheme = function (scheme) {
+    $scope.delCategoryTypeScheme = function(scheme) {
         if (scheme.Id) {
             scheme.remove({ Id: scheme.Id });
 
-            var index = $scope.categoryTypeSchemes.indexOf(scheme);
-            $scope.categoryTypeSchemes.splice(index, 1);
         }
-    }
+        var index = $scope.categoryTypeSchemes.indexOf(scheme);
+        $scope.categoryTypeSchemes.splice(index, 1);
+    };
     //#endregion
 
     //#region CategoryType
@@ -53,14 +53,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategoryType = function (type) {
+    $scope.delCategoryType = function(type) {
         if (type.Id) {
             type.remove({ Id: type.Id });
 
-            var index = $scope.categoryTypes.indexOf(type);
-            $scope.categoryTypes.splice(index, 1);
         }
-    }
+        var index = $scope.categoryTypes.indexOf(type);
+        $scope.categoryTypes.splice(index, 1);
+    };
     //#endregion
 
     //#region Category
@@ -84,14 +84,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategory = function (cat) {
+    $scope.delCategory = function(cat) {
         if (cat.Id) {
             cat.remove({ Id: cat.Id });
-
-            var index = $scope.categorys.indexOf();
-            $scope.categorys.splice(index, 1);
         }
-    }
+
+        var index = $scope.categorys.indexOf();
+        $scope.categorys.splice(index, 1);
+    };
     //#endregion
 }
 ]);

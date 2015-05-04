@@ -10,12 +10,12 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
 
     $scope.rules = $scope.$parent.getDdl("AssociationRule");
 
-    $scope.queryFrom = function (query) {
+    $scope.queryFrom = function(query) {
         return Category.getList().$object;
-    }
-    $scope.queryTo = function (query) {
+    };
+    $scope.queryTo = function(query) {
         return Category.getList().$object;
-    }
+    };
 
     //#region Association
     var fetchAssociations = function () {
@@ -27,9 +27,9 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     };
 
     fetchAssociations();
-    $scope.addAssociation = function () {
+    $scope.addAssociation = function() {
         $scope.Associations.push({});
-    }
+    };
     $scope.saveAssociation = function (a, type) {
         if (a.Id) {
             Association.one(a.Id).doPUT();
@@ -40,14 +40,13 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delAssociation = function (a) {
+    $scope.delAssociation = function(a) {
         if (a.Id) {
             a.remove({ Id: a.Id });
-
-            var index = $scope.Associations.indexOf();
-            $scope.Associations.splice(index, 1);
         }
-    }
+        var index = $scope.Associations.indexOf();
+        $scope.Associations.splice(index, 1);
+    };
     //#endregion
 }
 ]);
