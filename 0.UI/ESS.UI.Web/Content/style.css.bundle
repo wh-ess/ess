@@ -16,5 +16,6 @@
 	  <file>/Content/css/font-awesome.css</file>
     <file>/Content/simple-line-icons.css</file>
 	  <file>/Content/treeGrid.css</file>
+	<file>/Content/custome.css</file>
   </files>
 </bundle>

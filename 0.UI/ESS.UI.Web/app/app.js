@@ -13,9 +13,19 @@ angular.module("EssApp", [
     "ui.utils",
     "ui.tree",
     "LocalStorageModule"
-]).run(["$rootScope", function ($rootScope) {
+]).run(["$rootScope", "DDL", function ($rootScope, DDL) {
     $rootScope.pageTitle = "Title";
     $rootScope.pageSubTitle = "subTitle";
+
+        $rootScope.ddl = {};
+        $rootScope.getDdl = function (key) {
+            $rootScope.ddl[key] = [];
+            DDL.one(key).getList().then(function(data) {
+                $rootScope.ddl[key] = data;
+                return data;
+            });
+        }
+
 }]).config(["$httpProvider", function ($httpProvider) {
     $httpProvider.interceptors.push(["$q", function ($q) {
         return {
@@ -40,7 +50,7 @@ angular.module("EssApp", [
     RestangularProvider.setBaseUrl("/api");
     // add a response intereceptor
     RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
-        
+
         return data;
     });
 
@@ -1716,12 +1726,22 @@ angular.module("EssApp").factory("Association", [
 "use strict";
 
 angular.module("EssApp").controller("AssociationController", [
-    "$scope", "CategoryTypeScheme", "Association", "$routeParams", "$timeout",
-function ($scope, CategoryTypeScheme, Association, $routeParams, $timeout) {
+    "$scope", "Association", "CategoryTypeScheme", "Category", "$routeParams", "$timeout",
+function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $timeout) {
 
     CategoryTypeScheme.one("Association").getList("CategoryType").then(function (data) {
         $scope.categoryTypes = data;
     });
+
+    $scope.rules = $scope.$parent.getDdl("AssociationRule");
+
+    $scope.queryFrom = function (query) {
+        return Category.getList().$object;
+    }
+    $scope.queryTo = function (query) {
+        return Category.getList().$object;
+    }
+
     //#region Association
     var fetchAssociations = function () {
         $timeout(function () {
@@ -1732,20 +1752,22 @@ function ($scope, CategoryTypeScheme, Association, $routeParams, $timeout) {
     };
 
     fetchAssociations();
-
-    $scope.editAssociation = function (cat, type) {
-        if (cat.Id) {
-            Association.one(cat.Id).doPUT();
+    $scope.addAssociation = function () {
+        $scope.Associations.push({});
+    }
+    $scope.saveAssociation = function (a, type) {
+        if (a.Id) {
+            Association.one(a.Id).doPUT();
         } else {
-            cat.TypeId = type.Id;
-            Association.post(cat);
+            a.TypeId = type.Id;
+            Association.post(a);
             fetchAssociations();
         }
         return true;
     };
-    $scope.delAssociation = function (cat) {
-        if (cat.Id) {
-            cat.remove({ Id: cat.Id });
+    $scope.delAssociation = function (a) {
+        if (a.Id) {
+            a.remove({ Id: a.Id });
 
             var index = $scope.Associations.indexOf();
             $scope.Associations.splice(index, 1);

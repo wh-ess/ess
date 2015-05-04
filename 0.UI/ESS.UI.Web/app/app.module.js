@@ -12,9 +12,19 @@ angular.module("EssApp", [
     "ui.utils",
     "ui.tree",
     "LocalStorageModule"
-]).run(["$rootScope", function ($rootScope) {
+]).run(["$rootScope", "DDL", function ($rootScope, DDL) {
     $rootScope.pageTitle = "Title";
     $rootScope.pageSubTitle = "subTitle";
+
+        $rootScope.ddl = {};
+        $rootScope.getDdl = function (key) {
+            $rootScope.ddl[key] = [];
+            DDL.one(key).getList().then(function(data) {
+                $rootScope.ddl[key] = data;
+                return data;
+            });
+        }
+
 }]).config(["$httpProvider", function ($httpProvider) {
     $httpProvider.interceptors.push(["$q", function ($q) {
         return {
@@ -39,7 +49,7 @@ angular.module("EssApp", [
     RestangularProvider.setBaseUrl("/api");
     // add a response intereceptor
     RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
-        
+
         return data;
     });
 

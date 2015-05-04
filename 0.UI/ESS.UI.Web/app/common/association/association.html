@@ -1,13 +1,42 @@
-﻿
-<md-content>
-    <md-tabs >
+﻿<md-content>
+    <md-tabs>
         <md-tab ng-repeat="type in categoryTypes" label="{{type.Name}}">
-            <md-content class="md-padding">
+            <md-content flex>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Rule</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat=" a in Associations">
+                            <td>
+                                <md-autocomplete md-selected-item="a.From" md-search-text="searchText"
+                                                 md-items="item in queryFrom(searchText)"
+                                                 md-item-text="item.Name">
+                                    <span md-highlight-text="searchText">{{item.Name}}</span>
+                                </md-autocomplete>
+                            </td>
+                            <td></td>
+                            <td>
+                                <md-select ng-model="a.Rule">
+                                    <md-option ng-value="opt.Value" ng-repeat="opt in ddl['AssociationRule']">{{ opt.Text }}</md-option>
+                                </md-select>
+                            </td>
+                            <td>
+                                <md-button class="md-primary" ng-click="saveAssociation(a,type)">Save</md-button><md-button ng-click="delAssociation(a)">Del</md-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                
-
+                <md-button class="md-fab" aria-label="Add {{type.Name}}" ng-click="addAssociation()">
+                    <i class="fa fa-2x fa-plus"></i>
+                </md-button>
             </md-content>
         </md-tab>
     </md-tabs>
-
 </md-content>

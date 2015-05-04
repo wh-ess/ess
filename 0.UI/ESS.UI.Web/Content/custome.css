@@ -1,0 +1,14 @@
+﻿td {
+    -moz-min-width: 80px;
+    -ms-min-width: 80px;
+    -o-min-width: 80px;
+    -webkit-min-width: 80px;
+    min-width: 80px;
+}
+th{
+    -moz-min-width: 80px;
+    -ms-min-width: 80px;
+    -o-min-width: 80px;
+    -webkit-min-width: 80px;
+    min-width: 80px;
+}
