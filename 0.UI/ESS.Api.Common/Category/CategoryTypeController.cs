@@ -11,6 +11,7 @@ using ESS.Framework.CQRS;
 
 namespace ESS.Api.Common.Category
 {
+    [RoutePrefix("api/CategoryType")]
     public class CategoryTypeController : ApiController
     {
         private readonly CategoryTypeView _categoryTypeView;
@@ -30,6 +31,12 @@ namespace ESS.Api.Common.Category
         public CategoryTypeItem Get(Guid id)
         {
             return _categoryTypeView.GetCategoryType(id);
+        }
+
+        [Route("~/api/CategoryTypeScheme/{scheme}/CategoryType")]
+        public IEnumerable<CategoryTypeItem> GetByScheme(string scheme)
+        {
+            return _categoryTypeView.GetCategoryTypeByScheme(scheme);
         }
 
         [HttpPost]

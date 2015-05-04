@@ -1,9 +1,12 @@
 ﻿"use strict";
 
 angular.module("EssApp").controller("AssociationController", [
-    "$scope", "Association", "$routeParams", "$timeout",
-function ($scope, Association, $routeParams, $timeout) {
+    "$scope", "CategoryTypeScheme", "Association", "$routeParams", "$timeout",
+function ($scope, CategoryTypeScheme, Association, $routeParams, $timeout) {
 
+    CategoryTypeScheme.one("Association").getList("CategoryType").then(function (data) {
+        $scope.categoryTypes = data;
+    });
     //#region Association
     var fetchAssociations = function () {
         $timeout(function () {

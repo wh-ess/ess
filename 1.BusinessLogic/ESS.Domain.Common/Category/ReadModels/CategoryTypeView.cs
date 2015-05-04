@@ -17,10 +17,12 @@ namespace ESS.Domain.Common.Category.ReadModels
             ISubscribeTo<CategoryTypeParentChanged>, ISubscribeTo<CategoryTypeSchemeChanged>
     {
         private readonly IRepository<CategoryTypeItem, Guid> _repository;
+        private readonly IRepository<CategoryTypeSchemeItem, Guid> _schemeRepository;
 
-        public CategoryTypeView(IRepository<CategoryTypeItem, Guid> repository)
+        public CategoryTypeView(IRepository<CategoryTypeItem, Guid> repository, IRepository<CategoryTypeSchemeItem, Guid> schemeRepository)
         {
             _repository = repository;
+            _schemeRepository = schemeRepository;
         }
 
         public IEnumerable<CategoryTypeItem> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
@@ -36,6 +38,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         public CategoryTypeItem GetCategoryType(Guid id)
         {
             return _repository.Get(id);
+        }
+
+        public IEnumerable<CategoryTypeItem> GetCategoryTypeByScheme(string name)
+        {
+            var scheme = _schemeRepository.Single(c => c.Name == name);
+            return _repository.Find(c => c.SchemeId == scheme.Id);
         }
 
         #region handle

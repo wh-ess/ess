@@ -39,6 +39,10 @@
     <!-- category -->
     <file>/app/common/category/category.service.js</file>
     <file>/app/common/category/category.controller.js</file>
+
+    <!-- association -->
+    <file>/app/common/association/association.service.js</file>
+    <file>/app/common/association/association.controller.js</file>
     <!-- basic -->
     <file>/app/common/basic/basic.service.js</file>
     <file>/app/common/basic/basic.controller.js</file>

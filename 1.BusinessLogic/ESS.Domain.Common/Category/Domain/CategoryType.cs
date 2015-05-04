@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using AutoMapper;
 using ESS.Domain.Common.Category.Commands;
 using ESS.Domain.Common.Category.Events;
-using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Command;
 using ESS.Framework.CQRS.Domain;
 using ESS.Framework.CQRS.Event;

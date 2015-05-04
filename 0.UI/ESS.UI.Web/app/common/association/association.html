@@ -4,19 +4,7 @@
         <md-tab ng-repeat="type in categoryTypes" label="{{type.Name}}">
             <md-content class="md-padding">
 
-                <ul>
-                    <li ng-repeat="t in categorys | filter:type.Id">{{t.Name}}<md-button ng-click="delCategory(t)" aria-label="delete"><i class="fa fa-close"></i></md-button></li>
-                </ul>
-
-                <form ng-submit="editCategory(current,type)" layout="column" class="md-padding" name="form">
-                    <div layout="row" layout-sm="column">
-                        <md-input-container>
-                            <label for="Name">Name</label>
-                            <input type="text" id="Name" ng-model="current.Name" required>
-                        </md-input-container>
-                        <md-button class="md-primary md-raised" ng-disabled="form.$invalid" type="submit">Add {{type.Name}}</md-button>
-                    </div>
-                </form>
+                
 
             </md-content>
         </md-tab>
