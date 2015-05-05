@@ -8,15 +8,12 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         $scope.categoryTypes = data;
     });
 
+    Category.getList().then(function (data) {
+        $scope.categorys = data;
+    });
+
     $scope.rules = $scope.$parent.getDdl("AssociationRule");
-
-    $scope.queryFrom = function(query) {
-        return Category.getList().$object;
-    };
-    $scope.queryTo = function(query) {
-        return Category.getList().$object;
-    };
-
+    
     //#region Association
     var fetchAssociations = function () {
         $timeout(function () {
@@ -32,7 +29,7 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     };
     $scope.saveAssociation = function (a, type) {
         if (a.Id) {
-            Association.one(a.Id).doPUT();
+            Association.one(a.Id).doPUT(a);
         } else {
             a.TypeId = type.Id;
             Association.post(a);

@@ -112,6 +112,7 @@
     <Compile Include="PartyRole\Events\GenericContexualRoleEvents.cs" />
     <Compile Include="PartyRole\Events\PartyEvents.cs" />
     <Compile Include="PartyRole\Events\PartyRoleEvents.cs" />
+    <Compile Include="PartyRole\ReadModels\EntityView.cs" />
     <Compile Include="PartyRole\ReadModels\SpecificContexualRoleView.cs" />
     <Compile Include="PartyRole\ReadModels\GenericContexualRoleView.cs" />
     <Compile Include="PartyRole\ReadModels\PartyRoleView.cs" />

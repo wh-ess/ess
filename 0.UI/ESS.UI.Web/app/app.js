@@ -1640,14 +1640,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategoryTypeScheme = function (scheme) {
+    $scope.delCategoryTypeScheme = function(scheme) {
         if (scheme.Id) {
             scheme.remove({ Id: scheme.Id });
 
-            var index = $scope.categoryTypeSchemes.indexOf(scheme);
-            $scope.categoryTypeSchemes.splice(index, 1);
         }
-    }
+        var index = $scope.categoryTypeSchemes.indexOf(scheme);
+        $scope.categoryTypeSchemes.splice(index, 1);
+    };
     //#endregion
 
     //#region CategoryType
@@ -1671,14 +1671,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategoryType = function (type) {
+    $scope.delCategoryType = function(type) {
         if (type.Id) {
             type.remove({ Id: type.Id });
 
-            var index = $scope.categoryTypes.indexOf(type);
-            $scope.categoryTypes.splice(index, 1);
         }
-    }
+        var index = $scope.categoryTypes.indexOf(type);
+        $scope.categoryTypes.splice(index, 1);
+    };
     //#endregion
 
     //#region Category
@@ -1702,14 +1702,14 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delCategory = function (cat) {
+    $scope.delCategory = function(cat) {
         if (cat.Id) {
             cat.remove({ Id: cat.Id });
-
-            var index = $scope.categorys.indexOf();
-            $scope.categorys.splice(index, 1);
         }
-    }
+
+        var index = $scope.categorys.indexOf();
+        $scope.categorys.splice(index, 1);
+    };
     //#endregion
 }
 ]);
@@ -1733,15 +1733,12 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         $scope.categoryTypes = data;
     });
 
+    Category.getList().then(function (data) {
+        $scope.categorys = data;
+    });
+
     $scope.rules = $scope.$parent.getDdl("AssociationRule");
-
-    $scope.queryFrom = function (query) {
-        return Category.getList().$object;
-    }
-    $scope.queryTo = function (query) {
-        return Category.getList().$object;
-    }
-
+    
     //#region Association
     var fetchAssociations = function () {
         $timeout(function () {
@@ -1752,12 +1749,12 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     };
 
     fetchAssociations();
-    $scope.addAssociation = function () {
+    $scope.addAssociation = function() {
         $scope.Associations.push({});
-    }
+    };
     $scope.saveAssociation = function (a, type) {
         if (a.Id) {
-            Association.one(a.Id).doPUT();
+            Association.one(a.Id).doPUT(a);
         } else {
             a.TypeId = type.Id;
             Association.post(a);

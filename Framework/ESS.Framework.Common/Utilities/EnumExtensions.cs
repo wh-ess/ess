@@ -25,13 +25,13 @@ namespace ESS.Framework.Common.Utilities
 
         public static IEnumerable ToEnumClass(Type t)
         {
-            return from object v in Enum.GetValues((t)) select new EnumClass { Value = v.ToString().ToCamelCase(), Text = Enum.GetName(t, v) };
+            return from object v in Enum.GetValues((t)) select new EnumClass { Id = v.ToString().ToCamelCase(), Name = Enum.GetName(t, v) };
         }
 
         public class EnumClass
         {
-            public string Value { get; set; }
-            public string Text { get; set; }
+            public string Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

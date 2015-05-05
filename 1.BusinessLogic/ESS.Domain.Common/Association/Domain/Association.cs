@@ -14,8 +14,8 @@ using ESS.Framework.CQRS.Event;
 namespace ESS.Domain.Common.Association.Domain
 {
     public class Association
-        : Aggregate, IHandleCommand<CreateAssociation>, IHandleCommand<DeleteAssociation>, IApplyEvent<AssociationCreated>,
-            IApplyEvent<AssociationDeleted>
+        : Aggregate, IHandleCommand<CreateAssociation>,IHandleCommand<EditAssociation>, IHandleCommand<DeleteAssociation>, IApplyEvent<AssociationCreated>,
+            IApplyEvent<AssociationDeleted>,IApplyEvent<AssociationEdited>
     {
         public Guid From { get; set; }
         public Guid To { get; set; }
@@ -31,7 +31,11 @@ namespace ESS.Domain.Common.Association.Domain
             var item = Mapper.DynamicMap<AssociationCreated>(c);
             yield return item;
         }
-
+        public IEnumerable Handle(EditAssociation c)
+        {
+            var item = Mapper.DynamicMap<AssociationEdited>(c);
+            yield return item;
+        }
         public IEnumerable Handle(DeleteAssociation c)
         {
             var item = Mapper.DynamicMap<AssociationDeleted>(c);
@@ -45,7 +49,9 @@ namespace ESS.Domain.Common.Association.Domain
         public void Apply(AssociationCreated e)
         {
         }
-
+        public void Apply(AssociationEdited e)
+        {
+        }
         public void Apply(AssociationDeleted e)
         {
         }

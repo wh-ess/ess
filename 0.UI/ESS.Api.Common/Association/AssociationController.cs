@@ -39,6 +39,13 @@ namespace ESS.Api.Common.Association
             return Ok();
         }
 
+        [HttpPut]
+        public IHttpActionResult EditAssociation(EditAssociation association)
+        {
+            _messageDispatcher.SendCommand(association);
+            return Ok();
+        }
+
         [HttpDelete]
         public IHttpActionResult DeleteAssociation(Guid id)
         {

@@ -2,7 +2,7 @@
     <md-tabs>
         <md-tab ng-repeat="type in categoryTypes" label="{{type.Name}}">
             <md-content >
-                <table height="500px">
+                <table>
                     <thead>
                         <tr>
                             <th>From</th>
@@ -14,22 +14,18 @@
                     <tbody>
                         <tr ng-repeat=" a in Associations">
                             <td>
-                                <md-autocomplete md-selected-item="from" md-search-text="fromText"
-                                                 md-items="item in queryFrom(fromText)"
-                                                 md-item-text="item.Name" ng-model="a.From">
-                                    <span md-highlight-text="searchText">{{item.Name}}</span>
-                                </md-autocomplete>
+                                <md-select ng-model="a.From">
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
+                                </md-select>
                             </td>
                             <td>
-                                <md-autocomplete md-selected-item="to" md-search-text="toText"
-                                                 md-items="item in queryTo(toText)"
-                                                 md-item-text="item.Name"  md-item-value="a.To">
-                                    <span md-highlight-text="searchText">{{item.Name}}</span>
-                                </md-autocomplete>
+                                <md-select ng-model="a.To">
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
+                                </md-select>
                             </td>
                             <td>
                                 <md-select ng-model="a.AssociationRule">
-                                    <md-option ng-value="opt.Value" ng-repeat="opt in ddl['AssociationRule']">{{ opt.Text }}</md-option>
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in ddl['AssociationRule']">{{ opt.Name }}</md-option>
                                 </md-select>
                             </td>
                             <td>

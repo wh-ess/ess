@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Common.Association.Domain;
 using ESS.Domain.Common.Association.Events;
+using ESS.Domain.Common.PartyRole.ReadModels;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.Data;
 
@@ -14,7 +15,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.Association.ReadModels
 {
     public class AssociationView
-        : ISubscribeTo<AssociationCreated>,  ISubscribeTo<AssociationDeleted>
+        : ISubscribeTo<AssociationCreated>, ISubscribeTo<AssociationDeleted>, ISubscribeTo<AssociationEdited>
     {
         private readonly IRepository<AssociationItem, Guid> _repository;
 
@@ -45,6 +46,12 @@ namespace ESS.Domain.Common.Association.ReadModels
             var item = Mapper.DynamicMap<AssociationItem>(e);
 
             _repository.Add(e.Id, item);
+        }
+        public void Handle(AssociationEdited e)
+        {
+            var item = Mapper.DynamicMap<AssociationItem>(e);
+
+            _repository.Update(e.Id, item);
         }
 
         public void Handle(AssociationDeleted e)
@@ -78,4 +85,5 @@ namespace ESS.Domain.Common.Association.ReadModels
         public DateTime FromDate;
         public DateTime EndDate;
     }
+    
 }
