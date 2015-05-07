@@ -16,7 +16,7 @@ namespace ESS.Domain.Common.PartyRole.Domain
     /// <summary>
     ///     PartyRole角色,如客户,供应商
     /// </summary>
-    public class PartyRoleRole: Aggregate, IHandleCommand<CreatePartyRole>, IHandleCommand<DeletePartyRole>, IApplyEvent<PartyRoleCreated>, IApplyEvent<PartyRoleDeleted>
+    public class PartyRole: Aggregate, IHandleCommand<CreatePartyRole>, IHandleCommand<DeletePartyRole>, IApplyEvent<PartyRoleCreated>, IApplyEvent<PartyRoleDeleted>
     {
         public Guid Id { get; set; }
         public Guid PartyRoleId { get; set; }

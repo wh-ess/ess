@@ -8,7 +8,7 @@ namespace ESS.Framework.CQRS.Domain
     /// Aggregate base class, which factors out some common infrastructure that
     /// all aggregates have (ID and event application).
     /// </summary>
-    public class Aggregate : IAggregate
+    public abstract class Aggregate : IAggregate
     {
         /// <summary>
         /// The unique ID of the aggregate.
