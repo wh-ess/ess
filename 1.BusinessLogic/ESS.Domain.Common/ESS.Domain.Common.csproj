@@ -119,7 +119,7 @@
     <Compile Include="PartyRole\ReadModels\PartyView.cs" />
     <Compile Include="Status\Commands\StatusCommands.cs" />
     <Compile Include="Status\Domain\Status.cs" />
-    <Compile Include="PartyRole\Domain\Entity.cs" />
+    <Compile Include="Product\Domain\Product.cs" />
     <Compile Include="Association\Domain\Association.cs" />
     <Compile Include="Association\Domain\AssociationRule.cs" />
     <Compile Include="PartyRole\Domain\PartyRole.cs" />
@@ -147,7 +147,16 @@
     <Folder Include="BusinessRule\ReadModels\" />
     <Folder Include="Category\EventHandlers\" />
     <Folder Include="Contact\EventHandlers\" />
+    <Folder Include="Order\Commands\" />
+    <Folder Include="Order\Domain\" />
+    <Folder Include="Order\EventHandlers\" />
+    <Folder Include="Order\Events\" />
+    <Folder Include="Order\ReadModels\" />
     <Folder Include="PartyRole\EventHandlers\" />
+    <Folder Include="Product\Commands\" />
+    <Folder Include="Product\EventHandlers\" />
+    <Folder Include="Product\Events\" />
+    <Folder Include="Product\ReadModels\" />
     <Folder Include="Status\EventHandlers\" />
   </ItemGroup>
   <ItemGroup>

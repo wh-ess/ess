@@ -20,7 +20,7 @@ namespace ESS.Domain.Common.Association.Domain
         public Guid From { get; set; }
         public Guid To { get; set; }
         public AssociationRule AssociationRule { get; set; }
-        public Guid AssociationId { get; set; }
+        public Guid TypeId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime EndDate { get; set; }
 
