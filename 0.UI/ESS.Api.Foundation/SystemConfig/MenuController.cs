@@ -44,8 +44,8 @@ namespace ESS.Api.Foundation.SystemConfig
                                Actions = g.Actions,
                                Order = g.Order
                            };
-            //防止后面菜单覆盖
-            return list.Where(c => c.IsMenu).OrderByDescending(c=>c.ParentModuleNo).ThenBy(c => c.Order);
+            //防止后面菜单覆盖,父菜单要在后面
+            return list.Where(c => c.IsMenu).OrderBy(c => c.Order);
         }
 
     }

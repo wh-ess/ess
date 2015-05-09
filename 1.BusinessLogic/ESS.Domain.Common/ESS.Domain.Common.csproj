@@ -104,16 +104,10 @@
     <Compile Include="Contact\ReadModels\PartyContactView.cs" />
     <Compile Include="Contact\ReadModels\GeographicBoundaryView.cs" />
     <Compile Include="Contact\ReadModels\ContactView.cs" />
-    <Compile Include="PartyRole\Commands\SpecificContexualRoleCommands.cs" />
-    <Compile Include="PartyRole\Commands\GenericContexualRoleCommands.cs" />
     <Compile Include="PartyRole\Commands\PartyRoleCommands.cs" />
     <Compile Include="PartyRole\Commands\PartyCommands.cs" />
-    <Compile Include="PartyRole\Events\SpecificContexualRoleEvents.cs" />
-    <Compile Include="PartyRole\Events\GenericContexualRoleEvents.cs" />
     <Compile Include="PartyRole\Events\PartyEvents.cs" />
     <Compile Include="PartyRole\Events\PartyRoleEvents.cs" />
-    <Compile Include="PartyRole\ReadModels\SpecificContexualRoleView.cs" />
-    <Compile Include="PartyRole\ReadModels\GenericContexualRoleView.cs" />
     <Compile Include="PartyRole\ReadModels\PartyRoleView.cs" />
     <Compile Include="PartyRole\ReadModels\PartyView.cs" />
     <Compile Include="Status\Commands\StatusCommands.cs" />
@@ -131,8 +125,6 @@
     <Compile Include="Basic\ReadModels\BrandView.cs" />
     <Compile Include="Basic\ReadModels\FloorView.cs" />
     <Compile Include="PartyRole\Domain\Party.cs" />
-    <Compile Include="PartyRole\Domain\GenericContexualRole.cs" />
-    <Compile Include="PartyRole\Domain\SpecificContexualRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Status\Events\StatusEvents.cs" />
     <Compile Include="Status\ReadModels\StatusView.cs" />

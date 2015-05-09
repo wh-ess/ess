@@ -12,7 +12,6 @@
   <files>
     <file>/app/app.module.js</file>
     <file>/app/app.route.js</file>
-    <file>/Scripts/angular-messages.js</file>
     <file>/app/shared/common/tree-grid-directive.js</file>
     <file>/app//shared/filters.js</file>
     <file>/app//shared/services.js</file>
@@ -44,6 +43,11 @@
     <!-- association -->
     <file>/app/common/association/association.service.js</file>
     <file>/app/common/association/association.controller.js</file>
+    
+    <!-- partyrole -->
+    <file>/app/common/partyRole/partyRole.service.js</file>
+    <file>/app/common/partyRole/partyRole.controller.js</file>
+    <file>/app/common/partyRole/party.controller.js</file>
     <!-- basic -->
     <file>/app/common/basic/basic.service.js</file>
     <file>/app/common/basic/basic.controller.js</file>

@@ -4,8 +4,8 @@ angular.module("EssApp").controller("AssociationController", [
     "$scope", "Association", "CategoryTypeScheme", "Category", "$routeParams", "$timeout",
 function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $timeout) {
 
-    CategoryTypeScheme.one("Association").getList("CategoryType").then(function (data) {
-        $scope.categoryTypes = data;
+    CategoryTypeScheme.one("Association").one("CategoryType", "Brand").getList().then(function (data) {
+        $scope.types = data;
     });
 
     Category.getList().then(function (data) {
@@ -13,7 +13,7 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     });
 
     $scope.rules = $scope.$parent.getDdl("AssociationRule");
-    
+
     //#region Association
     var fetchAssociations = function () {
         $timeout(function () {
@@ -24,7 +24,7 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     };
 
     fetchAssociations();
-    $scope.addAssociation = function() {
+    $scope.addAssociation = function () {
         $scope.Associations.push({});
     };
     $scope.saveAssociation = function (a, type) {
@@ -37,7 +37,7 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         }
         return true;
     };
-    $scope.delAssociation = function(a) {
+    $scope.delAssociation = function (a) {
         if (a.Id) {
             a.remove({ Id: a.Id });
         }

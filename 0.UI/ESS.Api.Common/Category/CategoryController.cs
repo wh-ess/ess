@@ -32,7 +32,11 @@ namespace ESS.Api.Common.Category
         {
             return _categoryView.GetCategory(id);
         }
-
+        [Route("~/api/CategoryTypeScheme/{scheme}/CategoryType/{type}")]
+        public IEnumerable<CategoryItem> GetByScheme(string scheme,string type)
+        {
+            return _categoryView.GetCategoryBySchemeType(scheme,type);
+        }
         [HttpPost]
         public IHttpActionResult CreateCategory(CreateCategory category)
         {

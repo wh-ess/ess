@@ -1,48 +1,42 @@
 ﻿"use strict";
 
-angular.module("EssApp").controller("AssociationController", [
-    "$scope", "Association", "CategoryTypeScheme", "Category", "$routeParams", "$timeout",
-function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $timeout) {
+angular.module("EssApp").controller("PartyRoleController", [
+    "$scope", "PartyRole", "CategoryTypeScheme", "Category", "$routeParams", "$timeout",
+function ($scope, PartyRole, CategoryTypeScheme, Category, $routeParams, $timeout) {
 
-    CategoryTypeScheme.one("Association").getList("CategoryType").then(function (data) {
-        $scope.categoryTypes = data;
+    CategoryTypeScheme.one("PartyRole").one("CategoryType", "PartyRole").getList().then(function (data) {
+        $scope.types = data;
     });
-
-    Category.getList().then(function (data) {
-        $scope.categorys = data;
-    });
-
-    $scope.rules = $scope.$parent.getDdl("AssociationRule");
     
-    //#region Association
-    var fetchAssociations = function () {
+    //#region PartyRole
+    var fetchPartyRoles = function () {
         $timeout(function () {
-            Association.getList().then(function (data) {
-                $scope.Associations = data;
+            PartyRole.getList().then(function (data) {
+                $scope.partyRoles = data;
             });
         }, 100);
     };
 
-    fetchAssociations();
-    $scope.addAssociation = function() {
-        $scope.Associations.push({});
+    fetchPartyRoles();
+    $scope.addPartyRole = function() {
+        $scope.partyRoles.push({});
     };
-    $scope.saveAssociation = function (a, type) {
+    $scope.savePartyRole = function (a, type) {
         if (a.Id) {
-            Association.one(a.Id).doPUT(a);
+            PartyRole.one(a.Id).doPUT(a);
         } else {
             a.TypeId = type.Id;
-            Association.post(a);
-            fetchAssociations();
+            PartyRole.post(a);
+            fetchPartyRoles();
         }
         return true;
     };
-    $scope.delAssociation = function(a) {
+    $scope.delPartyRole = function(a) {
         if (a.Id) {
             a.remove({ Id: a.Id });
         }
-        var index = $scope.Associations.indexOf();
-        $scope.Associations.splice(index, 1);
+        var index = $scope.partyRoles.indexOf();
+        $scope.partyRoles.splice(index, 1);
     };
     //#endregion
 }

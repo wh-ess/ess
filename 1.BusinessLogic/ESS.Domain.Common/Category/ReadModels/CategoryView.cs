@@ -17,10 +17,14 @@ namespace ESS.Domain.Common.Category.ReadModels
             ISubscribeTo<CategoryTypeChanged>, ISubscribeTo<CategoryDateChanged>
     {
         private readonly IRepository<CategoryItem, Guid> _repository;
+        private readonly IRepository<CategoryTypeSchemeItem, Guid> _categoryTypeSchemeRepository;
+        private readonly IRepository<CategoryTypeItem, Guid> _categoryTypeRepository;
 
-        public CategoryView(IRepository<CategoryItem, Guid> repository)
+        public CategoryView(IRepository<CategoryItem, Guid> repository, IRepository<CategoryTypeSchemeItem, Guid> categoryTypeSchemeRepository, IRepository<CategoryTypeItem, Guid> categoryTypeRepository)
         {
             _repository = repository;
+            _categoryTypeSchemeRepository = categoryTypeSchemeRepository;
+            _categoryTypeRepository = categoryTypeRepository;
         }
 
         public IEnumerable<CategoryItem> CategoryList(Expression<Func<CategoryItem, bool>> condition)
@@ -37,7 +41,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             return _repository.Get(id);
         }
-
+        public IEnumerable<CategoryItem> GetCategoryBySchemeType(string schemeName, string typeName)
+        {
+            var scheme = _categoryTypeSchemeRepository.Single(c => c.Name == schemeName);
+            var type = _categoryTypeRepository.Single(c => c.SchemeId ==scheme.Id && c.Name == typeName);
+            return _repository.Find(c => c.TypeId == type.Id);
+        }
         #region handle
 
         public void Handle(CategoryCreated e)
@@ -86,6 +95,8 @@ namespace ESS.Domain.Common.Category.ReadModels
         }
 
         #endregion
+
+        
     }
 
     [Serializable]

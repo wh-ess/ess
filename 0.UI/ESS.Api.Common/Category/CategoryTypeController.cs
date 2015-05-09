@@ -11,7 +11,6 @@ using ESS.Framework.CQRS;
 
 namespace ESS.Api.Common.Category
 {
-    [RoutePrefix("api/CategoryType")]
     public class CategoryTypeController : ApiController
     {
         private readonly CategoryTypeView _categoryTypeView;
