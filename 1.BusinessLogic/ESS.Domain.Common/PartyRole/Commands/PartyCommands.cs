@@ -16,6 +16,11 @@ namespace ESS.Domain.Common.PartyRole.Commands
         public string Photo ;
     }
 
+    public class EditParty : CreateParty
+    {
+        
+    }
+
 
     public class DeleteParty : Command
     {

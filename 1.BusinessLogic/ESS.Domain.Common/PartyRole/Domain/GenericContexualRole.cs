@@ -13,7 +13,8 @@ namespace ESS.Domain.Common.PartyRole.Domain
     /// contexual role
     /// 一般和SpecificContexualRole 2选1
     /// </summary>
-    public class GenericContexualRole: Aggregate, IHandleCommand<CreateGenericContexualRole>, IHandleCommand<DeleteGenericContexualRole>, IApplyEvent<GenericContexualRoleCreated>, IApplyEvent<GenericContexualRoleDeleted>
+    public class GenericContexualRole : Aggregate, IHandleCommand<CreateGenericContexualRole>, IHandleCommand<EditGenericContexualRole>, IHandleCommand<DeleteGenericContexualRole>,
+        IApplyEvent<GenericContexualRoleCreated>, IApplyEvent<GenericContexualRoleEdited>, IApplyEvent<GenericContexualRoleDeleted>
     {
         public Guid PartyId { get; set; }
         public Guid EntityId { get; set; }
@@ -26,7 +27,11 @@ namespace ESS.Domain.Common.PartyRole.Domain
             var item = Mapper.DynamicMap<GenericContexualRoleCreated>(c);
             yield return item;
         }
-
+        public IEnumerable Handle(EditGenericContexualRole c)
+        {
+            var item = Mapper.DynamicMap<GenericContexualRoleEdited>(c);
+            yield return item;
+        }
         public IEnumerable Handle(DeleteGenericContexualRole c)
         {
             var item = Mapper.DynamicMap<GenericContexualRoleDeleted>(c);
@@ -40,11 +45,17 @@ namespace ESS.Domain.Common.PartyRole.Domain
         public void Apply(GenericContexualRoleCreated e)
         {
         }
-
+        public void Apply(GenericContexualRoleEdited e)
+        {
+        }
         public void Apply(GenericContexualRoleDeleted e)
         {
         }
 
         #endregion
+
+
+
+
     }
 }

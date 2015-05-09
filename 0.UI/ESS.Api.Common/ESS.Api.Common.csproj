@@ -67,6 +67,10 @@
     <Compile Include="Category\CategoryController.cs" />
     <Compile Include="InitData.cs" />
     <Compile Include="CommonController.cs" />
+    <Compile Include="PartyRole\SpecificContexualRoleController.cs" />
+    <Compile Include="PartyRole\GenericContexualRoleController.cs" />
+    <Compile Include="PartyRole\PartyRoleController.cs" />
+    <Compile Include="PartyRole\PartyController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

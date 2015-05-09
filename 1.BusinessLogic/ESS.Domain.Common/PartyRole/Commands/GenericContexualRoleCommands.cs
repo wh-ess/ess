@@ -15,6 +15,10 @@ namespace ESS.Domain.Common.PartyRole.Commands
         public DateTime FromDate ;
         public DateTime EndDate ;
     }
+    public class EditGenericContexualRole : CreateGenericContexualRole
+    {
+
+    }
 
 
     public class DeleteGenericContexualRole : Command

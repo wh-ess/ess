@@ -137,6 +137,9 @@
     <Content Include="app\common\category\categoryType.html" />
     <Content Include="app\common\category\category.controller.js" />
     <Content Include="app\common\category\category.service.js" />
+    <Content Include="app\common\partyRole\partyRole.controller.js" />
+    <Content Include="app\common\partyRole\partyRole.html" />
+    <Content Include="app\common\partyRole\partyRole.service.js" />
     <Content Include="app\foundation\accessControl\login.html" />
     <Content Include="app\foundation\accessControl\role.html" />
     <Content Include="app\foundation\accessControl\user.html" />

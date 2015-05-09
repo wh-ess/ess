@@ -12,6 +12,7 @@
   <files>
     <file>/app/app.module.js</file>
     <file>/app/app.route.js</file>
+    <file>/Scripts/angular-messages.js</file>
     <file>/app/shared/common/tree-grid-directive.js</file>
     <file>/app//shared/filters.js</file>
     <file>/app//shared/services.js</file>

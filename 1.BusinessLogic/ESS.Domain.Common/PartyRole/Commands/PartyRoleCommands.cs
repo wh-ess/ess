@@ -15,7 +15,10 @@ namespace ESS.Domain.Common.PartyRole.Commands
         public DateTime FromDate ;
         public DateTime EndDate ;
     }
+    public class EditPartyRole : CreatePartyRole
+    {
 
+    }
 
     public class DeletePartyRole : Command
     {

@@ -14,7 +14,10 @@ namespace ESS.Domain.Common.PartyRole.Events
         public DateTime FromDate ;
         public DateTime EndDate ;
     }
+    public class GenericContexualRoleEdited : GenericContexualRoleCreated
+    {
 
+    }
 
     public class GenericContexualRoleDeleted : Event
     {

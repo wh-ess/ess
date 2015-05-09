@@ -16,7 +16,8 @@ namespace ESS.Domain.Common.PartyRole.Domain
     /// <summary>
     ///     PartyRole角色,如客户,供应商
     /// </summary>
-    public class PartyRole: Aggregate, IHandleCommand<CreatePartyRole>, IHandleCommand<DeletePartyRole>, IApplyEvent<PartyRoleCreated>, IApplyEvent<PartyRoleDeleted>
+    public class PartyRole : Aggregate, IHandleCommand<CreatePartyRole>, IHandleCommand<EditPartyRole>, IHandleCommand<DeletePartyRole>,
+        IApplyEvent<PartyRoleCreated>, IApplyEvent<PartyRoleEdited>, IApplyEvent<PartyRoleDeleted>
     {
         public Guid Id { get; set; }
         public Guid PartyRoleId { get; set; }
@@ -31,7 +32,11 @@ namespace ESS.Domain.Common.PartyRole.Domain
             var item = Mapper.DynamicMap<PartyRoleCreated>(c);
             yield return item;
         }
-
+        public IEnumerable Handle(EditPartyRole c)
+        {
+            var item = Mapper.DynamicMap<PartyRoleEdited>(c);
+            yield return item;
+        }
         public IEnumerable Handle(DeletePartyRole c)
         {
             var item = Mapper.DynamicMap<PartyRoleDeleted>(c);
@@ -45,7 +50,9 @@ namespace ESS.Domain.Common.PartyRole.Domain
         public void Apply(PartyRoleCreated e)
         {
         }
-
+        public void Apply(PartyRoleEdited e)
+        {
+        }
         public void Apply(PartyRoleDeleted e)
         {
         }

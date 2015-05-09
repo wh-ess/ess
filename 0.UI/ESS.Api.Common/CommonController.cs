@@ -30,5 +30,8 @@ namespace ESS.Api.Common
     public class AssociationMainController : ApiController
     {
     }
-
+    [Module(parentModuleNo: "Common", moduleNo: "PartyRole")]
+    public class PartyRoleMainController : ApiController
+    {
+    }
 }

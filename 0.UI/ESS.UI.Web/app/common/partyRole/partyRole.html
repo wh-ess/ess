@@ -1,0 +1,44 @@
+﻿<md-content>
+    <md-tabs>
+        <md-tab ng-repeat="type in categoryTypes" label="{{type.Name}}">
+            <md-content >
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Rule</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat=" a in Associations">
+                            <td>
+                                <md-select ng-model="a.From">
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
+                                </md-select>
+                            </td>
+                            <td>
+                                <md-select ng-model="a.To">
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
+                                </md-select>
+                            </td>
+                            <td>
+                                <md-select ng-model="a.AssociationRule">
+                                    <md-option ng-value="opt.Id" ng-repeat="opt in ddl['AssociationRule']">{{ opt.Name }}</md-option>
+                                </md-select>
+                            </td>
+                            <td>
+                                <md-button class="md-primary" ng-click="saveAssociation(a,type)">Save</md-button><md-button ng-click="delAssociation(a)">Del</md-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </md-content>
+        </md-tab>
+    </md-tabs>
+</md-content><md-button class="md-fab md-fab-bottom-right" aria-label="Add {{type.Name}}" ng-click="addAssociation()">
+    <i class="fa fa-2x fa-plus"></i>
+</md-button>

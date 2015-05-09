@@ -13,7 +13,8 @@ namespace ESS.Domain.Common.PartyRole.Domain
     /// The Data Model Resource Book Vol.3
     /// 人或组织
     /// </summary>
-    public class Party : Aggregate, IHandleCommand<CreateParty>, IHandleCommand<DeleteParty>, IApplyEvent<PartyCreated>, IApplyEvent<PartyDeleted>
+    public class Party : Aggregate, IHandleCommand<CreateParty>, IHandleCommand<EditParty>, IHandleCommand<DeleteParty>,
+        IApplyEvent<PartyCreated>, IApplyEvent<PartyEdited>, IApplyEvent<PartyDeleted>
     {
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
@@ -27,7 +28,11 @@ namespace ESS.Domain.Common.PartyRole.Domain
             var item = Mapper.DynamicMap<PartyCreated>(c);
             yield return item;
         }
-
+        public IEnumerable Handle(EditParty c)
+        {
+            var item = Mapper.DynamicMap<PartyEdited>(c);
+            yield return item;
+        }
         public IEnumerable Handle(DeleteParty c)
         {
             var item = Mapper.DynamicMap<PartyDeleted>(c);
@@ -41,7 +46,9 @@ namespace ESS.Domain.Common.PartyRole.Domain
         public void Apply(PartyCreated e)
         {
         }
-
+        public void Apply(PartyEdited e)
+        {
+        }
         public void Apply(PartyDeleted e)
         {
         }

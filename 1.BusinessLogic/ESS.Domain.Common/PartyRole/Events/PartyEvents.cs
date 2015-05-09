@@ -14,7 +14,10 @@ namespace ESS.Domain.Common.PartyRole.Events
         //员工相片路径
         public string Photo ;
     }
+    public class PartyEdited : PartyCreated
+    {
 
+    }
 
     public class PartyDeleted : Event
     {
