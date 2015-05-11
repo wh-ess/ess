@@ -2,39 +2,13 @@
     <md-tabs>
         <md-tab ng-repeat="type in types" label="{{type.Name}}">
             <md-content>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Rule</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat=" a in partyRoles">
-                            <td>
-                                <md-select ng-model="a.From">
-                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
-                                </md-select>
-                            </td>
-                            <td>
-                                <md-select ng-model="a.To">
-                                    <md-option ng-value="opt.Id" ng-repeat="opt in categorys">{{ opt.Name }}</md-option>
-                                </md-select>
-                            </td>
-                            <td>
-                                <md-select ng-model="a.PartyRoleRule">
-                                    <md-option ng-value="opt.Id" ng-repeat="opt in ddl['PartyRoleRule']">{{ opt.Name }}</md-option>
-                                </md-select>
-                            </td>
-                            <td>
-                                <md-button class="md-primary" ng-click="savePartyRole(a,type)">Save</md-button><md-button ng-click="delPartyRole(a)">Del</md-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                <md-list>
+                    <md-subheader>test</md-subheader>
+                    <md-list-item ng-repeat="p in partyRoles">
+                        <p ng-click="addPartyRole()">test</p>
+                        <md-checkbox ng-model="p.Name" class="md-secondary"></md-checkbox>
+                    </md-list-item>
+                </md-list>
 
             </md-content>
         </md-tab>
