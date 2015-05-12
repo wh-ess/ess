@@ -1078,14 +1078,13 @@ angular.module("EssApp").controller("ModuleController", [
             $scope.fields.splice(index, 1);
         };
 
-        $scope.select = function() {
+        $scope.select = function (ev) {
 
-            var modalInstance = $mdDialog.open({
-                templateUrl: '/app/foundation/moduleConifg/fieldSelect.html',
-                controller: 'FieldSelectController',
-            });
-
-            modalInstance.result.then(function(selectedItem) {
+            $mdDialog.show({
+                templateUrl: "/app/foundation/moduleConifg/fieldSelect.html",
+                controller: "FieldSelectController",
+                targetEvent: ev
+            }).then(function(selectedItem) {
                 $scope.fields.push(selectedItem);
             });
         };
@@ -1095,8 +1094,8 @@ angular.module("EssApp").controller("ModuleController", [
         };
 
     }
-]).controller('FieldSelectController', [
-    '$scope', '$mdDialogInstance', 'Fields', function($scope, $mdDialogInstance, Fields) {
+]).controller("FieldSelectController", [
+    "$scope", "$mdDialog", "Fields", function($scope, $mdDialog, Fields) {
         $scope.selected = {
             item: {}
         };
@@ -1105,11 +1104,11 @@ angular.module("EssApp").controller("ModuleController", [
         });
 
         $scope.ok = function() {
-            $mdDialogInstance.close($scope.selected.item);
+            $mdDialog.hide($scope.selected.item);
         };
 
         $scope.cancel = function() {
-            $mdDialogInstance.dismiss('cancel');
+            $mdDialog.cancel();
         };
 
     }
@@ -1859,9 +1858,10 @@ function ($scope, Party, CategoryTypeScheme, Category, $routeParams, $timeout) {
         }, 100);
     };
 
+    $scope.cur = { item:{ }};
     fetchPartys();
-    $scope.addParty = function() {
-        $scope.partys.push({});
+    $scope.addParty = function () {
+        $scope.cur = { item: {} };
     };
     $scope.saveParty = function (a, type) {
         if (a.Id) {

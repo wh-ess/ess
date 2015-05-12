@@ -13,7 +13,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.PartyRole.ReadModels
 {
     public class PartyView
-        : ISubscribeTo<PartyCreated>,  ISubscribeTo<PartyDeleted>
+        : ISubscribeTo<PartyCreated>,ISubscribeTo<PartyEdited>,  ISubscribeTo<PartyDeleted>
     {
         private readonly IRepository<PartyItem, Guid> _repository;
 
@@ -45,13 +45,17 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
             _repository.Add(e.Id, item);
         }
-
+        public void Handle(PartyEdited e)
+        {
+            Update(e.Id,c=>
+            {
+                c.Name = e.Name;
+            });
+        }
         public void Handle(PartyDeleted e)
         {
             _repository.Delete(e.Id);
         }
-
-
 
 
         private void Update(Guid id, Action<PartyItem> action)

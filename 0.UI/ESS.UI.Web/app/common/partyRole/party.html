@@ -1,17 +1,24 @@
-﻿<md-content>
-    <md-tabs>
-        <md-tab ng-repeat="type in types" label="{{type.Name}}">
-            <md-content>
+﻿
+<md-tabs md-dynamic-height="true">
+    <md-tab ng-repeat="type in types" label="{{type.Name}}">
+        <div layout="row">
+            <md-content flex="25">
                 <md-list>
-                    <md-subheader>test</md-subheader>
                     <md-list-item ng-repeat="p in partys">
-                        <p ng-click="addParty()">test</p>
-                        <md-checkbox ng-model="p.Name" class="md-secondary"></md-checkbox>
+                        <p ng-click="cur.item = p">{{p.Name}}</p>
+                        <md-button class="md-secondary" ng-click="delParty(p)">
+                            <i class="fa fa-times"></i>
+                        </md-button>
                     </md-list-item>
                 </md-list>
             </md-content>
-        </md-tab>
-    </md-tabs>
-</md-content><md-button class="md-fab md-fab-bottom-right" aria-label="Add {{type.Name}}" ng-click="addParty()">
+
+            <md-content flex="75">
+                <div form-view="party.get" model="cur.item" save-click="saveParty(cur.item,type)"></div>
+            </md-content>
+        </div>
+    </md-tab>
+</md-tabs>
+<md-button class="md-fab md-fab-bottom-right" aria-label="Add {{type.Name}}" ng-click="addParty()">
     <i class="fa fa-2x fa-plus"></i>
 </md-button>

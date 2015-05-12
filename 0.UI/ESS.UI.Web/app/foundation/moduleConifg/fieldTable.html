@@ -1,18 +1,16 @@
-﻿
-<div class="portlet light">
-    <div class="portlet-title ">
-        <div class="caption">
-            <i class="icon-bar-chart font-green-sharp hide"></i>
-            <span class="caption-helper">{{$stateParams.moduleNo}}</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"></span>
+﻿<md-content>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <div>
+                <i class="icon-bar-chart"></i>
+                <span>{{$routeParams.moduleNo}}</span>
+            </div>
+            <div flex></div>
+            <md-button back ui-sref="module.list"><i class="fa fa-angle-left"></i> Back</md-button>
+            <md-button ng-click="add()"><i class="fa fa-plus"></i> Add</md-button>
+            <md-button ng-click="select($event)"><i class="fa fa-plus"></i> Select</md-button>
+            <md-button ng-click="save()"><i class="fa fa-save"></i> save</md-button>
         </div>
-        <div class="actions">
-            <button class="btn default " back ui-sref="module.list"><i class="fa fa-angle-left"></i> Back</button>
-            <button class="btn default green-haze" ng-click="add()"><i class="fa fa-plus"></i> Add</button>
-            <button class="btn default green-haze" ng-click="select()"><i class="fa fa-plus"></i> Select</button>
-            <button class="btn default green-haze" ng-click="save()"><i class="fa fa-save"></i> save</button>
-        </div>
-    </div>
-    <div class="portlet-body">
-        <div form-list="Module.ModuleList" models="fields"></div>
-    </div>
-</div>
+    </md-toolbar>
+    <div form-list="Module.ModuleList" models="fields"></div>
+</md-content>

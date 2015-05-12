@@ -191,6 +191,7 @@
     <Content Include="Fields\Floor-CreateFloor.xml" />
     <Content Include="Fields\Floor-EditFloor.xml" />
     <Content Include="Fields\Module-ModuleList.xml" />
+    <Content Include="Fields\Party-Get.xml" />
     <Content Include="Fields\Role-ChangeRoleInfo.xml" />
     <Content Include="Fields\Role-Get.xml" />
     <Content Include="Fields\User-ChangePassword.xml" />
