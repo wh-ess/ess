@@ -19,7 +19,6 @@ namespace ESS.Domain.Common.PartyRole.Domain
     public class PartyRole : Aggregate, IHandleCommand<CreatePartyRole>, IHandleCommand<EditPartyRole>, IHandleCommand<DeletePartyRole>,
         IApplyEvent<PartyRoleCreated>, IApplyEvent<PartyRoleEdited>, IApplyEvent<PartyRoleDeleted>
     {
-        public Guid Id { get; set; }
         public Guid PartyRoleId { get; set; }
         public Guid TypeId { get; set; }
         public DateTime FromDate { get; set; }

@@ -67,13 +67,13 @@ namespace ESS.Framework.Data.InMemory
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return Find(predicate)
-                .Single();
+                .SingleOrDefault();
         }
 
         public TEntity First(Expression<Func<TEntity, bool>> predicate)
         {
             return Find(predicate)
-                .First();
+                .FirstOrDefault();
         }
 
         public int Count()

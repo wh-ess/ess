@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
+using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Common.PartyRole.Events;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.Data;
@@ -16,27 +18,55 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
         : ISubscribeTo<PartyRoleCreated>, ISubscribeTo<PartyRoleEdited>, ISubscribeTo<PartyRoleDeleted>
     {
         private readonly IRepository<PartyRoleItem, Guid> _repository;
+        private readonly IRepository<PartyItem, Guid> _partyRepository;
+        private readonly IRepository<CategoryItem, Guid> _categoryRepository;
 
-        public PartyRoleView(IRepository<PartyRoleItem, Guid> repository)
+        public PartyRoleView(IRepository<PartyRoleItem, Guid> repository, IRepository<PartyItem, Guid> partyRepository, IRepository<CategoryItem, Guid> categoryRepository)
         {
             _repository = repository;
+            _partyRepository = partyRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public IEnumerable<PartyRoleItem> PartyRoleList(Expression<Func<PartyRoleItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            var partyRoles = _repository.Find(condition)
+                   .ToList();
+            foreach (var p in partyRoles)
+            {
+                AddRelation(p);
+            }
+            return partyRoles;
         }
 
         public IEnumerable<PartyRoleItem> PartyRoleList()
         {
-            return _repository.GetAll();
+            var partyRoles = _repository.GetAll()
+                .ToList();
+            foreach (var p in partyRoles)
+            {
+                AddRelation(p);
+            }
+            return partyRoles;
         }
 
         public PartyRoleItem GetPartyRole(Guid id)
         {
-            return _repository.Get(id);
+            var p =  _repository.Get(id);
+            AddRelation(p);
+            return p;
         }
+        private void AddRelation(PartyRoleItem p)
+        {
+            var r = _partyRepository.First(c => c.Id == p.PartyId);
+            if (r != null)
+            {
+                p.PartyName = r.Name;
 
+                var c = _categoryRepository.Get(p.TypeId);
+                p.TypeName = c.Name;
+            }
+        }
         #region handle
 
         public void Handle(PartyRoleCreated e)
@@ -70,7 +100,10 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
     {
         public Guid Id;
         public Guid PartyId;
+        public string PartyName;
+
         public Guid TypeId;
+        public string TypeName;
         public DateTime FromDate;
         public DateTime EndDate;
     }

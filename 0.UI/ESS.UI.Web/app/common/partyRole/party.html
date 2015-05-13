@@ -2,18 +2,21 @@
 <md-tabs md-dynamic-height="true">
     <md-tab ng-repeat="type in types" label="{{type.Name}}">
         <div layout="row">
-            <md-content flex="25">
+            <md-content flex="33">
                 <md-list>
                     <md-list-item ng-repeat="p in partys">
-                        <p ng-click="cur.item = p">{{p.Name}}</p>
-                        <md-button class="md-secondary" ng-click="delParty(p)">
+                        <div class="md-list-item-text" ng-click="cur.item = p">
+                            <h4>{{p.Name}}</h4>
+                            <p ng-repeat="r in p.PartyRoles">{{r}}</p>
+                        </div>
+                        <md-button class="md-secondary" ng-click="delParty(p)" aria-label="del">
                             <i class="fa fa-times"></i>
                         </md-button>
                     </md-list-item>
                 </md-list>
             </md-content>
 
-            <md-content flex="75">
+            <md-content flex="66">
                 <div form-view="party.get" model="cur.item" save-click="saveParty(cur.item,type)"></div>
             </md-content>
         </div>
