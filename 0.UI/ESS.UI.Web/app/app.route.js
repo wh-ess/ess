@@ -22,13 +22,11 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
 
             //user
             .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
-            .when("/user/add", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController", })
-            .when("/user/edit/:id", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController", })
 
             //role
-            .when("/role", { templateUrl: "/app/foundation/AccessControl/roleTable.html", controller: "RoleController" })
-            .when("/role/add", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController", })
-            .when("/role/edit/:id", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController", })
+            .when("/role", { templateUrl: "/app/foundation/AccessControl/role.html", controller: "RoleController" })
+
+            //help
             .when("/help", { templateUrl: "/app/shared/help/help.html" })
 
             //common

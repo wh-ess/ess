@@ -145,7 +145,6 @@
     <Content Include="app\foundation\accessControl\login.html" />
     <Content Include="app\foundation\accessControl\role.html" />
     <Content Include="app\foundation\accessControl\user.html" />
-    <Content Include="app\foundation\accessControl\roleList.html" />
     <Content Include="app\foundation\moduleConifg\fieldSelect.html" />
     <Content Include="app\foundation\moduleConifg\formList.html" />
     <Content Include="app\foundation\moduleConifg\module.directive.js" />
@@ -161,10 +160,7 @@
     <Content Include="app\shared\auth.service.js" />
     <Content Include="app\foundation\accessControl\role.controller.js" />
     <Content Include="app\foundation\accessControl\role.service.js" />
-    <Content Include="app\foundation\accessControl\roleEdit.html" />
-    <Content Include="app\foundation\accessControl\roleUser.html" />
     <Content Include="app\foundation\accessControl\rolePrivilege.html" />
-    <Content Include="app\foundation\accessControl\roleTable.html" />
     <Content Include="app\shared\common\tree-grid-directive.js" />
     <Content Include="app\shared\header\header.service.js" />
     <Content Include="app\shared\header\mainMenu.html" />

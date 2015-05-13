@@ -3,11 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Foundation.AccessControl.Events;
-using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.Data;
 
@@ -26,7 +24,6 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
             _repository = repository;
         }
 
-
         public IEnumerable<UserItem> UserList(Expression<Func<UserItem, bool>> condition)
         {
             return _repository.Find(condition);
@@ -36,17 +33,19 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         {
             return _repository.GetAll();
         }
+
         public UserItem GetUser(Guid id)
         {
             return _repository.Get(id);
         }
+
         #region handle
+
         public void Handle(UserCreated e)
         {
             var item = Mapper.DynamicMap<UserItem>(e);
 
             _repository.Add(e.Id, item);
-
         }
 
         public void Handle(UserLocked e)
@@ -56,7 +55,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
         public void Handle(UserInfoChanged e)
         {
-            Update(e.Id, c => c.UserName = e.UserName);
+            Update(e.Id, c => c.Name = e.Name);
         }
 
         public void Handle(UserPasswordChanged e)
@@ -75,11 +74,9 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
-
         }
-        #endregion
 
-        
+        #endregion
     }
 
     [Serializable]
@@ -87,11 +84,15 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
     {
         [Required]
         public Guid Id;
+
         public bool Locked;
+
+        [Required]
+        public string Name;
+
+        [Required]
+        public string No;
+
         public string Password;
-        [Required]
-        public string UserName;
-        [Required]
-        public string UserNo;
     }
 }

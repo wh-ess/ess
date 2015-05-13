@@ -9,7 +9,7 @@ namespace ESS.Domain.Foundation.AccessControl.Commands
     public class CreateRole : Command
     {
         public string Note;
-        public string RoleName;
+        public string Name;
     }
 
     public class ChangeRoleInfo : CreateRole

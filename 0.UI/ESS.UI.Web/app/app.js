@@ -91,13 +91,11 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
 
             //user
             .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
-            .when("/user/add", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController", })
-            .when("/user/edit/:id", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController", })
 
             //role
-            .when("/role", { templateUrl: "/app/foundation/AccessControl/roleTable.html", controller: "RoleController" })
-            .when("/role/add", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController", })
-            .when("/role/edit/:id", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController", })
+            .when("/role", { templateUrl: "/app/foundation/AccessControl/role.html", controller: "RoleController" })
+
+            //help
             .when("/help", { templateUrl: "/app/shared/help/help.html" })
 
             //common
@@ -1438,17 +1436,17 @@ angular.module("EssApp").directive("tableView", ["Module",
 "use strict";
 
 angular.module("EssApp").controller("UserController", [
-    "$scope", "User", "$routeParams","$timeout",
+    "$scope", "User", "$routeParams", "$timeout",
 function ($scope, User, $routeParams, $timeout) {
     var fetchUsers = function () {
-        $timeout(function() {
-            User.getList().then(function(data) {
+        $timeout(function () {
+            User.getList().then(function (data) {
                 $scope.users = data;
             });
         }, 100);
     };
     $scope.mode = "view";
-    $scope.current = { item: {}};
+    $scope.current = { item: {} };
 
     if ($routeParams.id) {
         User.one($routeParams.id).get().then(function (user) {
@@ -1468,13 +1466,20 @@ function ($scope, User, $routeParams, $timeout) {
             User.changeUserInfo($scope.current.item);
         } else {
             User.createUser($scope.current.item);
-            fetchUsers();
         }
+        fetchUsers();
     };
 
     $scope.changePassword = function () {
         User.changePassword($scope.current.item);
     };
+    $scope.lock = function (user) {
+        User.lock(user);
+    }
+
+    $scope.unlock = function (user) {
+        User.unlock(user);
+    }
 }
 ]);
 ///#source 1 1 /app/foundation/accessControl/user.service.js
@@ -1540,18 +1545,18 @@ angular.module('EssApp').factory('Role', ['Restangular',
 'use strict';
 
 angular.module('EssApp').controller('RoleController', [
-    '$scope', 'toastr', 'Role',"User", '$routeParams',
-function ($scope, toastr, Role, User, $routeParams) {
+    '$scope', 'Role', "User", '$routeParams',
+function ($scope, Role, User, $routeParams) {
 
     var fetchRoles = function () {
         Role.getList().then(function (data) {
             $scope.roles = data;
         });
     };
-    $scope.current.role = {};
+    $scope.current = { item: {} };
     if ($routeParams.id) {
         Role.one($routeParams.id).get().then(function (role) {
-            $scope.current.role = role;
+            $scope.current.item = role;
         });
     } else {
         fetchRoles();
@@ -1559,19 +1564,25 @@ function ($scope, toastr, Role, User, $routeParams) {
 
     $scope.users = User.getList().$object;
 
-    $scope.changeRoleInfo = function () {
-        if ($routeParams.id) {
-            Role.changeRoleInfo($scope.current.role);
-        } else {
-            Role.createRole($scope.current.role);
-        }
-    };
-
-    $scope.assignUser = function() {
-        Role.assignUser($scope.current.role);
+    $scope.addRole = function () {
+        $scope.mode = "edit";
+        $scope.current.item = {};
     }
 
-    $scope.lock = function(role) {
+    $scope.changeRoleInfo = function (role) {
+        if (role.id) {
+            Role.changeRoleInfo(role);
+        } else {
+            Role.createRole(role);
+        }
+        fetchRoles();
+    };
+
+    $scope.assignUser = function (role) {
+        Role.assignUser(role);
+    }
+
+    $scope.lock = function (role) {
         Role.lock(role);
     }
 

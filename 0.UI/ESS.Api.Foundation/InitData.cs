@@ -19,10 +19,10 @@ namespace ESS.Api.Foundation
             var ran = new Random().Next();
              
             //role
-            _messageDispatcher.SendCommand(new CreateRole() { RoleName = "RoleName" + ran });
+            _messageDispatcher.SendCommand(new CreateRole() { Name = "RoleName" + ran });
 
             //user
-            _messageDispatcher.SendCommand(new CreateUser() { UserName = "UserName" + ran, UserNo = "UserNo" + ran });
+            _messageDispatcher.SendCommand(new CreateUser() { Name = "UserName" + ran, No = "UserNo" + ran });
 
             //ddl
             _messageDispatcher.SendCommand(new CreateDropDown() { Key = "Type", Text = "ddl" + ran, Value = "ddl" + ran });

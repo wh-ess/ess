@@ -1,17 +1,17 @@
 ﻿"use strict";
 
 angular.module("EssApp").controller("UserController", [
-    "$scope", "User", "$routeParams","$timeout",
+    "$scope", "User", "$routeParams", "$timeout",
 function ($scope, User, $routeParams, $timeout) {
     var fetchUsers = function () {
-        $timeout(function() {
-            User.getList().then(function(data) {
+        $timeout(function () {
+            User.getList().then(function (data) {
                 $scope.users = data;
             });
         }, 100);
     };
     $scope.mode = "view";
-    $scope.current = { item: {}};
+    $scope.current = { item: {} };
 
     if ($routeParams.id) {
         User.one($routeParams.id).get().then(function (user) {
@@ -31,12 +31,19 @@ function ($scope, User, $routeParams, $timeout) {
             User.changeUserInfo($scope.current.item);
         } else {
             User.createUser($scope.current.item);
-            fetchUsers();
         }
+        fetchUsers();
     };
 
     $scope.changePassword = function () {
         User.changePassword($scope.current.item);
     };
+    $scope.lock = function (user) {
+        User.lock(user);
+    }
+
+    $scope.unlock = function (user) {
+        User.unlock(user);
+    }
 }
 ]);

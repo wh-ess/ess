@@ -51,7 +51,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         {
             Update(e.Id, c =>
             {
-                c.RoleName = e.RoleName;
+                c.Name = e.Name;
                 c.Note = e.Note;
             });
        
@@ -59,12 +59,12 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
         public void Handle(RoleLocked e)
         {
-            Update(e.Id, c => c.IsActive = false);
+            Update(e.Id, c => c.Locked = false);
         }
 
         public void Handle(RoleUnlocked e)
         {
-            Update(e.Id, c => c.IsActive = true);
+            Update(e.Id, c => c.Locked = true);
         }
 
         public void Handle(UserAssigned e)
@@ -91,9 +91,9 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
     public class RoleItem
     {
         public Guid Id;
-        public string RoleName;
+        public string Name;
         public string Note;
-        public bool IsActive;
+        public bool Locked;
 
         public List<UserItem> Users;
         public List<Privige> Priviges;
@@ -105,7 +105,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         }
         public string UserNames
         {
-            get { return string.Join(",", Users.Select(c => c.UserName)); }
+            get { return string.Join(",", Users.Select(c => c.Name)); }
         }
     }
 

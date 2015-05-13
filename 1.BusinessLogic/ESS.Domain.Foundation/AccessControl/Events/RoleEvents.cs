@@ -8,7 +8,7 @@ namespace ESS.Domain.Foundation.AccessControl.Events
 {
     public class RoleCreated : Event
     {
-        public string RoleName;
+        public string Name;
         public string Note;
     }
 
