@@ -12,24 +12,29 @@ angular.module("EssApp", [
     "ui.utils",
     "ui.tree",
     "LocalStorageModule"
-]).run(["$rootScope","$mdSidenav", "DDL", function ($rootScope,$mdSidenav, DDL) {
-    $rootScope.pageTitle = "Title";
-    $rootScope.pageSubTitle = "subTitle";
+]).run(["$rootScope", "$mdSidenav", "DDL", function ($rootScope, $mdSidenav, DDL) {
+    $rootScope.pageTitle = "Index";
+    $rootScope.pageSubTitle = "";
+
+    $rootScope.changeTitle = function (title, subTitle) {
+        $rootScope.pageTitle = title;
+        $rootScope.pageSubTitle = subTitle;
+    };
 
     $rootScope.toggleSidenav = function (menuId) {
         $mdSidenav(menuId).toggle();
     };
 
-        $rootScope.ddl = {};
-        $rootScope.getDdl = function(key) {
-            $rootScope.ddl[key] = [];
-            DDL.one(key).getList().then(function(data) {
-                $rootScope.ddl[key] = data;
-                return data;
-            });
-        };
+    $rootScope.ddl = {};
+    $rootScope.getDdl = function (key) {
+        $rootScope.ddl[key] = [];
+        DDL.one(key).getList().then(function (data) {
+            $rootScope.ddl[key] = data;
+            return data;
+        });
+    };
 
-    }]).config(["$httpProvider", function ($httpProvider) {
+}]).config(["$httpProvider", function ($httpProvider) {
     $httpProvider.interceptors.push(["$q", function ($q) {
         return {
             responseError: function (rejection) {

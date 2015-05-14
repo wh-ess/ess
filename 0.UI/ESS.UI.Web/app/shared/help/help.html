@@ -1,8 +1,8 @@
-﻿<md-tabs >
+﻿<md-tabs md-dynamic-height>
     <md-tab label="技术参考">
         <md-content>
             <pre>
-    <h1>技术参考</h1>
+            <h1>技术参考</h1>
                 1.前台
                 angularjs : <a href="https://angularjs.org/">https://angularjs.org/</a>
                 angular ui : <a href="https://angular-ui.github.io/">http://angular-ui.github.io/</a>
@@ -37,7 +37,7 @@
     <md-tab label="开发流程">
         <md-content>
             <pre>
-    <h1>开发流程</h1>
+            <h1>开发流程</h1>
                 1.首先在domain项目中写聚合根，继承Aggregate类。
                 2.然后根据需求写对于的command，如CreateUser，LockUser，继承Command类，并写对应的Event。
                 3.写unit test，测试功能是否正确。
@@ -48,5 +48,6 @@
                 8.把新加的js加入app.bundle文件中。
                 9.再运行程序，在模块定义中配置目录和action对应的字段。
                     </pre>
-        </md-content></md-tab>
+        </md-content>
+    </md-tab>
 </md-tabs>

@@ -13,24 +13,29 @@ angular.module("EssApp", [
     "ui.utils",
     "ui.tree",
     "LocalStorageModule"
-]).run(["$rootScope","$mdSidenav", "DDL", function ($rootScope,$mdSidenav, DDL) {
-    $rootScope.pageTitle = "Title";
-    $rootScope.pageSubTitle = "subTitle";
+]).run(["$rootScope", "$mdSidenav", "DDL", function ($rootScope, $mdSidenav, DDL) {
+    $rootScope.pageTitle = "Index";
+    $rootScope.pageSubTitle = "";
+
+    $rootScope.changeTitle = function (title, subTitle) {
+        $rootScope.pageTitle = title;
+        $rootScope.pageSubTitle = subTitle;
+    };
 
     $rootScope.toggleSidenav = function (menuId) {
         $mdSidenav(menuId).toggle();
     };
 
-        $rootScope.ddl = {};
-        $rootScope.getDdl = function(key) {
-            $rootScope.ddl[key] = [];
-            DDL.one(key).getList().then(function(data) {
-                $rootScope.ddl[key] = data;
-                return data;
-            });
-        };
+    $rootScope.ddl = {};
+    $rootScope.getDdl = function (key) {
+        $rootScope.ddl[key] = [];
+        DDL.one(key).getList().then(function (data) {
+            $rootScope.ddl[key] = data;
+            return data;
+        });
+    };
 
-    }]).config(["$httpProvider", function ($httpProvider) {
+}]).config(["$httpProvider", function ($httpProvider) {
     $httpProvider.interceptors.push(["$q", function ($q) {
         return {
             responseError: function (rejection) {
@@ -91,9 +96,11 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
 
             //user
             .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
+            .when("/user/edit/:id", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController" })
 
             //role
             .when("/role", { templateUrl: "/app/foundation/AccessControl/role.html", controller: "RoleController" })
+            .when("/role/edit/:id", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController" })
 
             //help
             .when("/help", { templateUrl: "/app/shared/help/help.html" })
@@ -1475,10 +1482,12 @@ function ($scope, User, $routeParams, $timeout) {
     };
     $scope.lock = function (user) {
         User.lock(user);
+        user.Locked = true;
     }
 
     $scope.unlock = function (user) {
         User.unlock(user);
+        user.Locked = false;
     }
 }
 ]);
@@ -1606,7 +1615,7 @@ angular.module('EssApp').controller('loginController', ['$scope', '$location', '
 
         authService.login($scope.loginData).then(function (response) {
 
-            $location.path('/user/list');
+            $location.path('/');
 
         });
     };
@@ -1835,7 +1844,7 @@ function ($scope, PartyRole, CategoryTypeScheme, Category, $routeParams, $timeou
             targetEvent: ev
         }).then(function (item) {
             var p = {
-                Name: item.Name,
+                PartyName: item.Name,
                 PartyId: item.Id
             }
             $scope.cur = { item: p };

@@ -1,4 +1,4 @@
-﻿<form name="form" layout="row">
+﻿<form name="form">
     <div ng-repeat="f in fields| orderBy:'Index'" ng-switch="f.Type">
 
         <!-- select -->
@@ -44,6 +44,6 @@
 
     <div ng-hide="mode=='view'">
         <!--<button type="reset" ng-click="goPrevious()">Cancel</button>-->
-        <md-button type="submit" ng-disabled="form.$invalid" ng-click="saveClick()">{{okButtonText|default:'Save'}}</md-button>
+        <md-button type="submit" class="md-primary" ng-disabled="form.$invalid" ng-click="saveClick()">{{okButtonText|default:'Save'}}</md-button>
     </div>
 </form>

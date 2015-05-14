@@ -40,10 +40,12 @@ function ($scope, User, $routeParams, $timeout) {
     };
     $scope.lock = function (user) {
         User.lock(user);
+        user.Locked = true;
     }
 
     $scope.unlock = function (user) {
         User.unlock(user);
+        user.Locked = false;
     }
 }
 ]);

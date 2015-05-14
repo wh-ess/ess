@@ -9,7 +9,7 @@
                 <i class="{{m.Icon}}"></i>{{m.Text}}
                 <ul>
                     <li ng-repeat="mm in m.children">
-                        <a href="#{{mm.Url}}">
+                        <a href="#{{mm.Url}}" ng-click="changeTitle(m.Text,mm.Text)">
                             <i class="{{mm.Icon}}"></i> {{mm.Text}}
                         </a>
                     </li>

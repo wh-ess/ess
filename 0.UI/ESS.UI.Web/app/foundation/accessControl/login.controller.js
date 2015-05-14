@@ -12,7 +12,7 @@ angular.module('EssApp').controller('loginController', ['$scope', '$location', '
 
         authService.login($scope.loginData).then(function (response) {
 
-            $location.path('/user/list');
+            $location.path('/');
 
         });
     };

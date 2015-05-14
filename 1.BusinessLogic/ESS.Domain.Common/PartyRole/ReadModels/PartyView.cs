@@ -57,8 +57,8 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         private void AddRelation(PartyItem p)
         {
-            var r = _partyRoleRepository.First(c => c.PartyId == p.Id);
-            if (r != null)
+            var partyRoles = _partyRoleRepository.Find(c => c.PartyId == p.Id);
+            foreach (var r in partyRoles)
             {
                 var c = _categoryRepository.Get(r.TypeId);
                 p.PartyRoles.Add(c.Name);

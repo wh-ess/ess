@@ -2,7 +2,7 @@
 <md-tabs md-dynamic-height="true">
     <md-tab ng-repeat="type in types" label="{{type.Name}}">
         <div layout="row">
-            <md-content flex="25">
+            <md-content flex="33">
                 <md-list>
                     <md-list-item ng-repeat="p in partyRoles">
                         <div class="md-list-item-text">
@@ -14,7 +14,7 @@
                     </md-list-item></md-list>
             </md-content>
             
-            <md-content flex="75">
+            <md-content flex="66">
                 <div form-view="partyrole.get" model="cur.item" save-click="savePartyRole(cur.item,type)"></div>
             </md-content>
         </div>

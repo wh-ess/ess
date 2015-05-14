@@ -43,31 +43,62 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body id="ng-app" ng-app="EssApp" layout="column">
+<body id="ng-app" ng-app="EssApp" layout="row">
 
-    <!-- BEGIN HEADER -->
-    <md-toolbar layout="row">
-        <button ng-click="toggleSidenav('left')" hide-gt-sm class="md-icon-button menuBtn">
-            <span class="md-visually-hidden">Menu</span>
-        </button>
-        <h4>Angular Material</h4>
-    </md-toolbar>
-    <!-- END HEADER -->
-    <!-- BEGIN CONTAINER -->
-    <div flex="flex" layout="row">
+    <md-sidenav class=" md-sidenav-left md-whiteframe-z2"
+                md-component-id="left"
+                md-is-locked-open="$mdMedia('gt-sm')">
 
-        <md-sidenav class="md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+        <md-toolbar class="md-whiteframe-glow-z2">
+            <h1 class="md-toolbar-tools">
+                <a ng-href="#/" layout="row" flex>
+                    <md-icon md-svg-src="md-menu"></md-icon>
+                    <div>ESS</div>
+                </a>
+            </h1>
+        </md-toolbar>
+        <md-content flex role="navigation">
             <div data-ng-include="'/app/shared/header/mainMenu.html'"></div>
-        </md-sidenav>
-
-        <md-content flex ng-view class="md-padding">
         </md-content>
+    </md-sidenav>
+
+    <!-- BEGIN CONTAINER -->
+
+    <div layout="column" tabindex="-1" role="main" flex>
+        <md-toolbar class="md-whiteframe-glow-z2">
+
+            <div class="md-toolbar-tools" tabindex="-1" ng-click="toggleSidenav('left')">
+                <md-button class="md-icon-button" hide-gt-sm aria-label="Toggle Menu">
+                    <md-icon md-svg-src="/content/img/icons/ic_menu_24px.svg"></md-icon>
+                </md-button>
+                <div layout="row" flex class="fill-height">
+                    <h2 class="md-toolbar-item md-breadcrumb">
+                        <span hide-sm hide-md>{{pageTitle}}</span>
+                        <span hide-sm hide-md style="transform: translate3d(0, 1px, 0)">
+                            <i class="fa fa-angle-right"></i>
+                        </span>
+                        <span class="md-breadcrumb-page">{{pageSubTitle }}</span>
+                    </h2>
+
+                    <span flex></span> <!-- use up the empty space -->
+
+                    <div class="md-toolbar-item" layout="column" layout-gt-md="row">
+                        <md-button>
+                            SHA
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+
+        </md-toolbar>
+
+        <md-content ng-view md-scroll-y flex layout-padding></md-content>
 
     </div>
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->
-    <div layout="row" data-ng-include="'/app/shared/footer/footer.html'">
-    </div>
+    <!--<div layout="row" data-ng-include="'/app/shared/footer/footer.html'">
+    </div>-->
     <!-- END FOOTER -->
     <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
     <!-- BEGIN CORE PLUGINS -->
