@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Web.Http;
+using ESS.Domain.Foundation.AccessControl.ReadModels;
 using ESS.Domain.Foundation.EntityConfig.Commands;
 using ESS.Domain.Foundation.EntityConfig.ReadModels;
 using ESS.Framework.Common.Utilities;
@@ -18,17 +19,26 @@ namespace ESS.Api.Foundation.EntityConfig
     {
         private readonly MessageDispatcher _messageDispatcher;
         private readonly DropDownView _dropDownView;
+        private readonly UserView _userView;
 
-        public DdlController(MessageDispatcher messageDispatcher, DropDownView dropDownView)
+        public DdlController(MessageDispatcher messageDispatcher, DropDownView dropDownView, UserView userView)
         {
             _messageDispatcher = messageDispatcher;
             _dropDownView = dropDownView;
+            _userView = userView;
         }
         public IEnumerable Get(string id)
         {
             if (ModuleBuilder.Enums.Any(c => c.Name == id))
             {
                 return EnumExtensions.ToEnumClass(ModuleBuilder.Enums.First(c => c.Name == id));
+            }
+
+            switch (id)
+            {
+                case "Users":
+                    return _userView.UserList();
+                        
             }
             return _dropDownView.GetDropDown(id);
         }

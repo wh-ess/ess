@@ -40,7 +40,7 @@
             <!-- input -->
             <md-input-container ng-switch-default>
                 <label>{{f.Name}}</label>
-                <input type="{{f.Type|default:'text'}}" ng-model="model[f.Name]" ng-required="contains(f.Feature,'required')">
+                <input type="{{f.Type||'text'}}" ng-model="model[f.Name]" ng-required="contains(f.Feature,'required')">
             </md-input-container>
         </div>
     </fieldset>

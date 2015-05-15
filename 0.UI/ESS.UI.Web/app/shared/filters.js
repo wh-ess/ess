@@ -15,11 +15,4 @@ angular.module('EssApp')
         }
         return input;
     };
-}).filter('default', function () {
-    return function (input,value) {
-        if (angular.isUndefinedOrNull(input)) {
-            return value;
-        }
-        return input;
-    };
 });

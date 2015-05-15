@@ -18,5 +18,5 @@
 <div class="row">
     <div pagination total-items="ms.length" ng-model="bigCurrentPage" class="pagination-sm col-sm-8" boundary-links="false" rotate="false" num-pages="numPages"></div>
 
-    <div class="pagination col-sm-4 text-right">显示 {{bigCurrentPage | default:1}} / {{numPages}} 的 {{ms.length}} 条记录</div>
+    <div class="pagination col-sm-4 text-right">显示 {{bigCurrentPage ||1}} / {{numPages}} 的 {{ms.length}} 条记录</div>
 </div>

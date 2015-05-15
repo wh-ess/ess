@@ -18,7 +18,7 @@ function ($scope, Role, User, $routeParams) {
         fetchRoles();
     }
 
-    $scope.users = User.getList().$object;
+    $scope.ddl["Users"] = User.getList().$object;
 
     $scope.addRole = function () {
         $scope.mode = "edit";

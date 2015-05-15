@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Foundation.AccessControl.Events;
@@ -17,26 +18,48 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         : ISubscribeTo<UserCreated>, ISubscribeTo<UserInfoChanged>, ISubscribeTo<UserPasswordChanged>, ISubscribeTo<UserLocked>,
             ISubscribeTo<UserUnlocked>
     {
-        private readonly IRepository<UserItem, Guid> _repository;
+        private readonly IRepository<UserItem, Guid> _repository; 
+        private readonly IRepository<RoleItem, Guid> _roleRepository;
 
-        public UserView(IRepository<UserItem, Guid> repository)
+        public UserView(IRepository<UserItem, Guid> repository, IRepository<RoleItem, Guid> roleRepository)
         {
             _repository = repository;
+            _roleRepository = roleRepository;
         }
 
         public IEnumerable<UserItem> UserList(Expression<Func<UserItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            var users = _repository.Find(condition)
+                .ToList();
+            foreach (var u in users)
+            {
+                AddRelation(u);
+            }
+            return users;
         }
 
         public IEnumerable<UserItem> UserList()
         {
-            return _repository.GetAll();
+            var users = _repository.GetAll()
+                 .ToList();
+            foreach (var u in users)
+            {
+                AddRelation(u);
+            }
+            return users;
         }
 
         public UserItem GetUser(Guid id)
         {
-            return _repository.Get(id);
+            var user = _repository.Get(id);
+            AddRelation(user);
+            return user;
+        }
+
+        public void AddRelation(UserItem user)
+        {
+            var roles = _roleRepository.Find(c => c.Users.Any(d => d.Id == user.Id));
+            user.Roles = roles.Select(c=>c.Name).ToList();
         }
 
         #region handle
@@ -84,15 +107,17 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
     {
         [Required]
         public Guid Id;
-
         public bool Locked;
-
         [Required]
         public string Name;
-
         [Required]
         public string No;
-
         public string Password;
+        public List<string> Roles;
+
+        public UserItem()
+        {
+            Roles = new List<string>();
+        }
     }
 }

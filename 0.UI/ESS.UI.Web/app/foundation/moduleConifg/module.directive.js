@@ -22,6 +22,12 @@ function formField(scope, Module, DDL, module) {
     scope.ddl = {};
     if (moduleNo) {
         var Field = Module.one(moduleNo).one("actions", actionName);
+
+        scope.querySearch = function(source, search) {
+            var results = source;
+            return results;
+        }
+
         Field.getList("Fields").then(function (data) {
             angular.forEach(data, function (d, i) {
                 if (d.ShowIn && d.ShowIn.indexOf(Enums.fieldShowType.inForm) >= 0) {

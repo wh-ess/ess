@@ -762,13 +762,6 @@ angular.module('EssApp')
         }
         return input;
     };
-}).filter('default', function () {
-    return function (input,value) {
-        if (angular.isUndefinedOrNull(input)) {
-            return value;
-        }
-        return input;
-    };
 });
 
 ///#source 1 1 /app//shared/services.js
@@ -1182,6 +1175,12 @@ function formField(scope, Module, DDL, module) {
     scope.ddl = {};
     if (moduleNo) {
         var Field = Module.one(moduleNo).one("actions", actionName);
+
+        scope.querySearch = function(source, search) {
+            var results = source;
+            return results;
+        }
+
         Field.getList("Fields").then(function (data) {
             angular.forEach(data, function (d, i) {
                 if (d.ShowIn && d.ShowIn.indexOf(Enums.fieldShowType.inForm) >= 0) {
@@ -1571,7 +1570,7 @@ function ($scope, Role, User, $routeParams) {
         fetchRoles();
     }
 
-    $scope.users = User.getList().$object;
+    $scope.ddl["Users"] = User.getList().$object;
 
     $scope.addRole = function () {
         $scope.mode = "edit";
