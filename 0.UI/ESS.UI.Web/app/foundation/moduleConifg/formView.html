@@ -25,6 +25,7 @@
                                  md-search-text="searchText"
                                  md-items="item in querySearch(ddl[f.SourceName],searchText)"
                                  md-item-text="item.Name"
+                                 md-min-length = "0"
                                  placeholder="Add for a {{f.Name}}">
                     <span md-highlight-text="searchText">{{item.Name}} :: {{item.No}}</span>
                 </md-autocomplete>

@@ -15,7 +15,7 @@ function contains(arr, item) {
     return false;
 }
 
-function formField(scope, Module, DDL, module) {
+function formField(scope, Module, DDL, module, filterFilter) {
     var moduleNo = module.split(".")[0];
     var actionName = module.split(".")[1];
     scope.fields = [];
@@ -23,8 +23,8 @@ function formField(scope, Module, DDL, module) {
     if (moduleNo) {
         var Field = Module.one(moduleNo).one("actions", actionName);
 
-        scope.querySearch = function(source, search) {
-            var results = source;
+        scope.querySearch = function (source, search,selected) {
+            var results = search ? filterFilter(source, search) : source;
             return results;
         }
 
@@ -84,19 +84,19 @@ angular.module("EssApp").directive("tableView", ["Module",
     function () {
         return {
             scope: {
-                models:"=",
+                models: "=",
                 selected: "=",
                 icon: "@",
                 title: "@",
                 subTitle: "@",
                 mode: "=",
-                editable:"@"
+                editable: "@"
             },
             transclude: true,
             templateUrl: "/app/foundation/moduleConifg/listView.html",
             controller: ["$scope", "$element", "$attrs",
                 function ($scope, $element, $attrs) {
-                    $scope.edit = function() {
+                    $scope.edit = function () {
                         $scope.mode = "edit";
                     }
 
@@ -112,16 +112,16 @@ angular.module("EssApp").directive("tableView", ["Module",
                 okButtonText: "@",
                 saveClick: "&",
                 model: "=",
-                mode:"="
+                mode: "="
             },
             transclude: true,
             replace: true,
             templateUrl: "/app/foundation/moduleConifg/formView.html",
-            controller: ["$scope", "$element", "$attrs",
-                function ($scope, $element, $attrs) {
+            controller: ["$scope", "$element", "$attrs", "filterFilter",
+                function ($scope, $element, $attrs, filterFilter) {
                     var module = $attrs["formView"];
 
-                    formField($scope, Module, DDL, module);
+                    formField($scope, Module, DDL, module, filterFilter);
                     $scope.contains = contains;
                     $scope.style = function () {
                         return {
@@ -141,15 +141,15 @@ angular.module("EssApp").directive("tableView", ["Module",
             },
             transclude: true,
             templateUrl: "/app/foundation/moduleConifg/formList.html",
-            controller: ["$scope", "$element", "$attrs",
-                function ($scope, $element, $attrs) {
-                    var module = $attrs["formList"];
+            controller: ["$scope", "$element", "$attrs", "filterFilter",
+        function ($scope, $element, $attrs, filterFilter) {
+            var module = $attrs["formList"];
 
-                    formField($scope, Module, DDL, module);
-                    $scope.del = function (index) {
-                        $scope.models.splice(index, 1);
-                    };
-                }
+            formField($scope, Module, DDL, module, filterFilter);
+            $scope.del = function (index) {
+                $scope.models.splice(index, 1);
+            };
+        }
             ]
         };
     }
