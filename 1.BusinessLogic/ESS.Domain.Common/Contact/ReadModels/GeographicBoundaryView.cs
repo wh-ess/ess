@@ -78,7 +78,7 @@ namespace ESS.Domain.Common.Contact.ReadModels
         public string Name;
         public string Code;
         //缩写
-        public string Abbreviation;
+        public string Abbr;
         public string InternetRegionCode;
     }
 }

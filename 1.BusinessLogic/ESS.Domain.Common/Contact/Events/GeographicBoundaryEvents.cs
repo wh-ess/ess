@@ -10,19 +10,13 @@ namespace ESS.Domain.Common.Contact.Events
         public string Name ;
         public string Code ;
         //缩写
-        public string Abbreviation ;
+        public string Abbr ;
         public string InternetRegionCode ;
 
     }
 
-    public class GeographicBoundaryChanged : Event
+    public class GeographicBoundaryChanged : GeographicBoundaryCreated
     {
-        public Guid TypeId;
-        public string Name;
-        public string Code;
-        //缩写
-        public string Abbreviation;
-        public string InternetRegionCode;
     }
     public class GeographicBoundaryDeleted : Event
     {

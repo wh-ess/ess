@@ -14,6 +14,10 @@ namespace ESS.Api.Foundation
     [Module(parentModuleNo: "", moduleNo: "Foundation")]
     public class FoundationController : ApiController
     {
+        public void Init()
+        {
+            new InitData();
+        }
     }
 
     public class AccessControlController : ApiController

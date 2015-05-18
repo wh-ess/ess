@@ -84,6 +84,9 @@ namespace ESS.Domain.Common.Association.ReadModels
         public Guid TypeId;
         public DateTime FromDate;
         public DateTime EndDate;
+
+        public string Code;
+        public bool IsSystem;
     }
     
 }

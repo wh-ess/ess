@@ -10,19 +10,13 @@ namespace ESS.Domain.Common.Contact.Commands
         public string Name ;
         public string Code ;
         //缩写
-        public string Abbreviation ;
+        public string Abbr ;
         public string InternetRegionCode ;
 
     }
 
-    public class ChangeGeographicBoundary : Command
+    public class ChangeGeographicBoundary : CreateGeographicBoundary
     {
-        public Guid TypeId;
-        public string Name;
-        public string Code;
-        //缩写
-        public string Abbreviation;
-        public string InternetRegionCode;
     }
     public class DeleteGeographicBoundary : Command
     {

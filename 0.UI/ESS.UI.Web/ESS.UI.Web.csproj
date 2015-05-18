@@ -239,6 +239,7 @@
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
+    <None Include="Scripts\jquery-2.1.3-vsdoc.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\respond.js" />

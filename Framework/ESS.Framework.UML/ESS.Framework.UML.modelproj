@@ -64,10 +64,6 @@
       <Name>ESS.UI.Web</Name>
       <Project>{f698475f-89b1-4723-82c0-3574a33d72ef}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\0.UI\WebJXC\WebJquery.csproj">
-      <Name>WebJquery</Name>
-      <Project>{02cecb3f-a28d-4c9f-b683-50b937563c5c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Car\ESS.Domain.Car.csproj">
       <Name>ESS.Domain.Car</Name>
       <Project>{f40cbe0d-8e69-4185-a6c7-754a7ab69ad0}</Project>
@@ -88,10 +84,6 @@
       <Name>ESS.Domain.Foundation</Name>
       <Project>{418a6464-3081-4af8-b1fa-b54945a16f87}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.JXC\ESS.Domain.JXC.csproj">
-      <Name>ESS.Domain.JXC</Name>
-      <Project>{0ced35c0-f156-405c-940d-f27cc45b0ea9}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Loan.Test\ESS.Domain.Loan.Test.csproj">
       <Name>ESS.Domain.Loan.Test</Name>
       <Project>{cb38c01d-236b-452f-87e0-83b4f0866d0e}</Project>
@@ -99,10 +91,6 @@
     <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Loan\ESS.Domain.Loan.csproj">
       <Name>ESS.Domain.Loan</Name>
       <Project>{e7c1d891-1043-424e-89fa-411f640cc7f2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.POP\ESS.Domain.POP.csproj">
-      <Name>ESS.Domain.POP</Name>
-      <Project>{c54a915a-3b12-4263-9cf5-cb867e47713c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ESS.Framework.Common\ESS.Framework.Common.csproj">
       <Name>ESS.Framework.Common</Name>

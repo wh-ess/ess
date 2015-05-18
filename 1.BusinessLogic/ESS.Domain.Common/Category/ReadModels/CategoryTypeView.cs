@@ -95,5 +95,7 @@ namespace ESS.Domain.Common.Category.ReadModels
         public string Name;
         public Guid ParentId;
         public Guid SchemeId;
+        public string Code;
+        public bool IsSystem;
     }
 }

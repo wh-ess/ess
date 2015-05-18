@@ -13,6 +13,8 @@ namespace ESS.Domain.Common.Category.Events
         public Guid CategoryId;
         public DateTime FromDate;
         public DateTime EndDate;
+        public string Code;
+        public bool IsSystem;
     }
 
 

@@ -9,6 +9,8 @@ namespace ESS.Domain.Common.Category.Events
         public string Name;
         public Guid ParentId;
         public Guid SchemeId;
+        public string Code;
+        public bool IsSystem;
 
     }
 

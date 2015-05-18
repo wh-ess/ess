@@ -15,6 +15,8 @@ namespace ESS.Domain.Common.Category.Events
         public DateTime FromDate;
         public string Name;
         public Guid ParentId;
+        public string Code;
+        public bool IsSystem;
     }
 
     public class CategoryNameChanged : Event

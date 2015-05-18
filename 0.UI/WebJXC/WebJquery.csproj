@@ -325,14 +325,6 @@
       <Project>{418a6464-3081-4af8-b1fa-b54945a16f87}</Project>
       <Name>ESS.Domain.Foundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.JXC\ESS.Domain.JXC.csproj">
-      <Project>{0ced35c0-f156-405c-940d-f27cc45b0ea9}</Project>
-      <Name>ESS.Domain.JXC</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.POP\ESS.Domain.POP.csproj">
-      <Project>{c54a915a-3b12-4263-9cf5-cb867e47713c}</Project>
-      <Name>ESS.Domain.POP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Framework\ESS.Framework.Common\ESS.Framework.Common.csproj">
       <Project>{b5cddc08-747e-4460-94ff-2c81a33dc6cf}</Project>
       <Name>ESS.Framework.Common</Name>

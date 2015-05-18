@@ -26,16 +26,16 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 When(new CreateUser()
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }),
                 Then(new UserCreated
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }));
@@ -48,23 +48,23 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }),
                 When(new ChangeUserInfo()
                 {
                     Id = id,
-                    UserName = "zff",
-                    UserNo = "zf",
+                    Name = "zff",
+                    No = "zf",
 
                 }),
                 Then(new UserInfoChanged
                 {
                     Id = id,
-                    UserName = "zff",
-                    UserNo = "zf"
+                    Name = "zff",
+                    No = "zf"
 
                 }));
         }
@@ -76,8 +76,8 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }),
@@ -104,8 +104,8 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }),
@@ -126,8 +126,8 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    UserName = "zf",
-                    UserNo = "z",
+                    Name = "zf",
+                    No = "z",
                     Password = "1"
 
                 }, new UserLocked

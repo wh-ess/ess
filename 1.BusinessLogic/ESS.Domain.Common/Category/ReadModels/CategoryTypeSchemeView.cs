@@ -74,5 +74,7 @@ namespace ESS.Domain.Common.Category.ReadModels
     {
         public Guid Id;
         public string Name;
+        public string Code;
+        public bool IsSystem;
     }
 }

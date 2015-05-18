@@ -17,6 +17,8 @@ namespace ESS.Domain.Common.Association.Commands
         public Guid TypeId;
         public DateTime FromDate;
         public DateTime EndDate;
+        public string Code;
+        public bool IsSystem;
     }
     public class EditAssociation : CreateAssociation
     {

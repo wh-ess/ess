@@ -16,6 +16,10 @@ namespace ESS.Api.Common
     [Module(parentModuleNo: "", moduleNo: "Common")]
     public class CommonController : ApiController
     {
+        public void Init()
+        {
+            new InitData();
+        }
     }
     public class BasicController : ApiController
     {

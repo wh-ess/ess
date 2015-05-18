@@ -27,13 +27,13 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 When(new CreateRole
                 {
                     Id = id,
-                    RoleName = "zf",
+                    Name = "zf",
                     Note = "z",
                 }),
                 Then(new RoleCreated
                 {
                     Id = id,
-                    RoleName = "zf",
+                    Name = "zf",
                     Note = "z",
                 }));
         }
@@ -45,7 +45,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new RoleCreated
                 {
                     Id = id,
-                    RoleName = "zf",
+                    Name = "zf",
                     Note = "z",
                 }),
                 When(new LockRole
@@ -61,7 +61,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new RoleCreated
                 {
                     Id = id,
-                    RoleName = "zf",
+                    Name = "zf",
                     Note = "z",
                 }, new RoleLocked { Id = id }),
                 When(new LockRole

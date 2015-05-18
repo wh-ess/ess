@@ -16,7 +16,7 @@ namespace ESS.Domain.Common.Contact.Domain
         public string Name { get; set; }
         public string Code { get; set; }
         //缩写
-        public string Abbreviation { get; set; }
+        public string Abbr { get; set; }
         public string InternetRegionCode { get; set; }
         #region handle
 

@@ -5,6 +5,8 @@ namespace ESS.Domain.Common.Category.Events
     public class CategoryTypeSchemeCreated : Event
     {
         public string Name;
+        public string Code;
+        public bool IsSystem;
 
     }
 
