@@ -1,4 +1,5 @@
-﻿using System;
+﻿#region
+
 using System.Collections;
 using AutoMapper;
 using ESS.Domain.Common.PartyRole.Commands;
@@ -7,19 +8,20 @@ using ESS.Framework.CQRS.Command;
 using ESS.Framework.CQRS.Domain;
 using ESS.Framework.CQRS.Event;
 
+#endregion
+
 namespace ESS.Domain.Common.PartyRole.Domain
 {
     /// <summary>
-    /// The Data Model Resource Book Vol.3
-    /// 人或组织
+    ///     The Data Model Resource Book Vol.3
+    ///     人或组织
     /// </summary>
-    public class Party : Aggregate, IHandleCommand<CreateParty>, IHandleCommand<EditParty>, IHandleCommand<DeleteParty>,
-        IApplyEvent<PartyCreated>, IApplyEvent<PartyEdited>, IApplyEvent<PartyDeleted>
+    public class Party
+        : Aggregate, IHandleCommand<CreateParty>, IHandleCommand<ChangePartyName>, IHandleCommand<ChangePartyPhoto>, IHandleCommand<DeleteParty>,
+        IApplyEvent<PartyCreated>, IApplyEvent<PartyNameChanged>, IApplyEvent<PartyPhotoChanged>, IApplyEvent<PartyDeleted>
     {
-        public string Name { get; set; }
-        public DateTime BirthDay { get; set; }
-        //员工相片路径
-        public string Photo { get; set; }
+        public string Name { get; private set; }
+        public string Photo { get; private set; }
 
         #region handle
 
@@ -28,11 +30,18 @@ namespace ESS.Domain.Common.PartyRole.Domain
             var item = Mapper.DynamicMap<PartyCreated>(c);
             yield return item;
         }
-        public IEnumerable Handle(EditParty c)
+
+        public IEnumerable Handle(ChangePartyName c)
         {
-            var item = Mapper.DynamicMap<PartyEdited>(c);
+            var item = Mapper.DynamicMap<PartyNameChanged>(c);
             yield return item;
         }
+        public IEnumerable Handle(ChangePartyPhoto c)
+        {
+            var item = Mapper.DynamicMap<PartyPhotoChanged>(c);
+            yield return item;
+        }
+
         public IEnumerable Handle(DeleteParty c)
         {
             var item = Mapper.DynamicMap<PartyDeleted>(c);
@@ -45,15 +54,23 @@ namespace ESS.Domain.Common.PartyRole.Domain
 
         public void Apply(PartyCreated e)
         {
+            Name = e.Name;
+            Photo = e.Photo;
         }
-        public void Apply(PartyEdited e)
+
+        public void Apply(PartyNameChanged e)
         {
+            Name = e.Name;
         }
+        public void Apply(PartyPhotoChanged e)
+        {
+            Photo = e.Photo;
+        }
+
         public void Apply(PartyDeleted e)
         {
         }
 
         #endregion
     }
-
 }

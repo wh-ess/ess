@@ -11,14 +11,16 @@ namespace ESS.Domain.Common.PartyRole.Commands
     public class CreateParty : Command
     {
         public string Name ;
-        public DateTime BirthDay ;
-        //员工相片路径
         public string Photo ;
     }
 
-    public class EditParty : CreateParty
+    public class ChangePartyName : Command
     {
-        
+        public string Name;
+    }
+    public class ChangePartyPhoto : Command
+    {
+        public string Photo;
     }
 
 

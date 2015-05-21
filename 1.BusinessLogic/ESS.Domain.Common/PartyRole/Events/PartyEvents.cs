@@ -10,12 +10,16 @@ namespace ESS.Domain.Common.PartyRole.Events
     public class PartyCreated : Event
     {
         public string Name ;
-        public DateTime BirthDay ;
-        //员工相片路径
         public string Photo ;
     }
-    public class PartyEdited : PartyCreated
+    public class PartyNameChanged : Event
     {
+        public string Name;
+
+    }
+    public class PartyPhotoChanged : Event
+    {
+        public string Photo;
 
     }
 

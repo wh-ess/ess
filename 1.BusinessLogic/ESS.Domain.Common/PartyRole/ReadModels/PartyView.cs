@@ -15,7 +15,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.PartyRole.ReadModels
 {
     public class PartyView
-        : ISubscribeTo<PartyCreated>,ISubscribeTo<PartyEdited>,  ISubscribeTo<PartyDeleted>
+        : ISubscribeTo<PartyCreated>, ISubscribeTo<PartyNameChanged>, ISubscribeTo<PartyDeleted>
     {
         private readonly IRepository<PartyItem, Guid> _repository;
         private readonly IRepository<PartyRoleItem, Guid> _partyRoleRepository;
@@ -72,7 +72,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
             _repository.Add(e.Id, item);
         }
-        public void Handle(PartyEdited e)
+        public void Handle(PartyNameChanged e)
         {
             Update(e.Id,c=>
             {

@@ -12,10 +12,10 @@ namespace ESS.Framework.CQRS.Event
         protected Event()
         {
             Id = ObjectId.GetNextGuid();
-            Date = DateTime.Now;
+            EventDate = DateTime.Now;
         }
 
         public Guid Id { get; set; }
-        public DateTime Date { get; private set; }
+        public DateTime EventDate { get; private set; }
     }
 }
