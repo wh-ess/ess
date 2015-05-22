@@ -1,21 +1,20 @@
-﻿using System;
+﻿#region
+
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Foundation.EntityConfig.Commands;
 using ESS.Domain.Foundation.EntityConfig.Events;
-using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Command;
 using ESS.Framework.CQRS.Domain;
 using ESS.Framework.CQRS.Event;
 
+#endregion
+
 namespace ESS.Domain.Foundation.EntityConfig.Domain
 {
-    class Entity : Aggregate,IHandleCommand<CreateEntity>, IHandleCommand<EditEntity>, IHandleCommand<DeleteEntity>, IApplyEvent<EntityCreated>, IApplyEvent<EntityEdited>,
-            IApplyEvent<EntityDeleted>
+    public class Entity
+        : Aggregate, IHandleCommand<CreateEntity>, IHandleCommand<EditEntity>, IHandleCommand<DeleteEntity>, IApplyEvent<EntityCreated>,
+            IApplyEvent<EntityEdited>, IApplyEvent<EntityDeleted>
     {
         #region handle
 
@@ -27,7 +26,7 @@ namespace ESS.Domain.Foundation.EntityConfig.Domain
 
         public IEnumerable Handle(DeleteEntity c)
         {
-            yield return new EntityDeleted {Id = c.Id };
+            yield return new EntityDeleted { Id = c.Id };
         }
 
         public IEnumerable Handle(EditEntity c)

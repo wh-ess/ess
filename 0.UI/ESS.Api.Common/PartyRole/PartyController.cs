@@ -40,7 +40,7 @@ namespace ESS.Api.Common.PartyRole
         }
 
         [HttpPut]
-        public IHttpActionResult EditParty(EditParty party)
+        public IHttpActionResult EditParty(ChangePartyName party)
         {
             _messageDispatcher.SendCommand(party);
             return Ok();
