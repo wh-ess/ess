@@ -17,14 +17,10 @@ namespace ESS.Domain.Common.Category.ReadModels
             ISubscribeTo<CategoryTypeChanged>, ISubscribeTo<CategoryDateChanged>
     {
         private readonly IRepository<CategoryItem, Guid> _repository;
-        private readonly IRepository<CategoryTypeSchemeItem, Guid> _categoryTypeSchemeRepository;
-        private readonly IRepository<CategoryTypeItem, Guid> _categoryTypeRepository;
 
-        public CategoryView(IRepository<CategoryItem, Guid> repository, IRepository<CategoryTypeSchemeItem, Guid> categoryTypeSchemeRepository, IRepository<CategoryTypeItem, Guid> categoryTypeRepository)
+        public CategoryView(IRepository<CategoryItem, Guid> repository)
         {
             _repository = repository;
-            _categoryTypeSchemeRepository = categoryTypeSchemeRepository;
-            _categoryTypeRepository = categoryTypeRepository;
         }
 
         public IEnumerable<CategoryItem> CategoryList(Expression<Func<CategoryItem, bool>> condition)
@@ -43,9 +39,7 @@ namespace ESS.Domain.Common.Category.ReadModels
         }
         public IEnumerable<CategoryItem> GetCategoryBySchemeType(string schemeName, string typeName)
         {
-            var scheme = _categoryTypeSchemeRepository.Single(c => c.Name == schemeName);
-            var type = _categoryTypeRepository.Single(c => c.SchemeId ==scheme.Id && c.Name == typeName);
-            return _repository.Find(c => c.TypeId == type.Id);
+            return _repository.Find(c => c.Type.Scheme.Name==schemeName && c.Type.Name == typeName);
         }
         #region handle
 
@@ -74,7 +68,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         public void Handle(CategoryTypeChanged e)
         {
-            Update(e.Id, c => c.TypeId = e.TypeId);
+            Update(e.Id, c => c.Type = e.Type);
         }
 
         public void Handle(CategoryDateChanged e)
@@ -102,7 +96,7 @@ namespace ESS.Domain.Common.Category.ReadModels
     [Serializable]
     public class CategoryItem
     {
-        public Guid TypeId;
+        public CategoryTypeItem Type;
         public DateTime EndDate;
         public DateTime FromDate;
         public Guid Id;

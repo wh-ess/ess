@@ -47,7 +47,7 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         if (type.Id) {
             CategoryType.one(type.Id).doPUT(type);
         } else {
-            type.SchemeId = scheme.Id;
+            type.Scheme = scheme;
             CategoryType.post(type);
             fetchCategoryTypes();
         }
@@ -78,7 +78,7 @@ function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $time
         if (cat.Id) {
             Category.one(cat.Id).doPUT();
         } else {
-            cat.TypeId = type.Id;
+            cat.Type = type;
             Category.post(cat);
             fetchCategorys();
         }

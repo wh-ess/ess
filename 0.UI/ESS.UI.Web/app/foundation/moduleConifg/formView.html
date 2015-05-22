@@ -3,7 +3,7 @@
 
         <!-- select -->
         <div ng-switch-when="select">
-            <label>{{f.Name}}</label>
+            <label>{{f.Text}}</label>
             <select ng-model="model[f.Name]" ng-options="d[f.SourceIdField] as d[f.SourceTextField] for d in ddl[f.SourceName]" ng-required="contains(f.Feature,'Required')">
                 <option value="">-- choose --</option>
             </select>
@@ -11,7 +11,7 @@
 
         <!-- checkList -->
         <div ng-switch-when="checkList">
-            <label>{{f.Name}}</label>
+            <label>{{f.Text}}</label>
             <label ng-repeat="d in ddl[f.SourceName]" ng-required="contains(f.Feature,'Required')">
                 <input type="checkbox" checklist-model="model[f.Name]" checklist-value="d[f.SourceIdField]"> {{d[f.SourceTextField]}}
             </label>
@@ -19,14 +19,14 @@
 
         <!-- selectMulti -->
         <div ng-switch-when="selectMulti">
-            <label>{{f.Name}}</label>
+            <label>{{f.Text}}</label>
             <md-chips ng-model="model[f.Name]" md-autocomplete-snap md-require-match>
                 <md-autocomplete md-selected-item="selectedItem"
                                  md-search-text="searchText"
                                  md-items="item in querySearch(ddl[f.SourceName],searchText)"
                                  md-item-text="item.Name"
-                                 md-min-length = "0"
-                                 placeholder="Add for a {{f.Name}}">
+                                 md-min-length="0"
+                                 placeholder="Add for a {{f.Text}}">
                     <span md-highlight-text="searchText">{{item.Name}} :: {{item.No}}</span>
                 </md-autocomplete>
                 <md-chip-template>
@@ -38,9 +38,15 @@
             </md-chips>
         </div>
 
+        <!-- label -->
+        <md-input-container ng-switch-when="label">
+            <label>{{f.Text}}</label>
+            <label>{{model[f.Name]}}</label>
+        </md-input-container>
+
         <!-- input -->
         <md-input-container ng-switch-default>
-            <label>{{f.Name}}</label>
+            <label>{{f.Text}}</label>
             <input type="{{f.Type||'text'}}" ng-model="model[f.Name]" ng-required="contains(f.Feature,'required')">
         </md-input-container>
     </div>

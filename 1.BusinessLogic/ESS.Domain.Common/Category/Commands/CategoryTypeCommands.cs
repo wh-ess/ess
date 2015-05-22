@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using ESS.Domain.Common.Category.ReadModels;
 using ESS.Framework.CQRS.Command;
 
 #endregion
@@ -13,7 +14,7 @@ namespace ESS.Domain.Common.Category.Commands
         public bool IsSystem;
         public string Name;
         public Guid ParentId;
-        public Guid SchemeId;
+        public CategoryTypeSchemeItem Scheme;
     }
 
     public class ChangeCategoryTypeName : Command

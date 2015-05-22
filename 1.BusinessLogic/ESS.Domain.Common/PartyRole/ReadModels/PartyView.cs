@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
@@ -57,11 +58,10 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         private void AddRelation(PartyItem p)
         {
-            var partyRoles = _partyRoleRepository.Find(c => c.PartyId == p.Id);
+            var partyRoles = _partyRoleRepository.Find(c => c.Party.Id == p.Id);
             foreach (var r in partyRoles)
             {
-                var c = _categoryRepository.Get(r.TypeId);
-                p.PartyRoles.Add(c.Name);
+                p.PartyRoles.Add(r.Type.Name);
             }
         }
         #region handle
@@ -101,6 +101,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
     {
 
         public Guid Id;
+        [Required]
         public string Name;
         public string Photo;
 

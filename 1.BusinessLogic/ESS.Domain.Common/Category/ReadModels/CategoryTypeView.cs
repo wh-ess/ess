@@ -14,15 +14,14 @@ namespace ESS.Domain.Common.Category.ReadModels
 {
     public class CategoryTypeView
         : ISubscribeTo<CategoryTypeCreated>, ISubscribeTo<CategoryTypeNameChanged>, ISubscribeTo<CategoryTypeDeleted>,
-            ISubscribeTo<CategoryTypeParentChanged>, ISubscribeTo<CategoryTypeSchemeChanged>
+            ISubscribeTo<CategoryTypeParentChanged>, ISubscribeTo<CategoryTypeSchemeChanged>,
+            ISubscribeTo<CategoryTypeSchemeNameChanged>
     {
         private readonly IRepository<CategoryTypeItem, Guid> _repository;
-        private readonly IRepository<CategoryTypeSchemeItem, Guid> _schemeRepository;
 
-        public CategoryTypeView(IRepository<CategoryTypeItem, Guid> repository, IRepository<CategoryTypeSchemeItem, Guid> schemeRepository)
+        public CategoryTypeView(IRepository<CategoryTypeItem, Guid> repository)
         {
             _repository = repository;
-            _schemeRepository = schemeRepository;
         }
 
         public IEnumerable<CategoryTypeItem> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
@@ -42,8 +41,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         public IEnumerable<CategoryTypeItem> GetCategoryTypeByScheme(string name)
         {
-            var scheme = _schemeRepository.Single(c => c.Name == name);
-            return _repository.Find(c => c.SchemeId == scheme.Id);
+            return _repository.Find(c => c.Scheme.Name == name);
         }
 
         #region handle
@@ -82,9 +80,12 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         public void Handle(CategoryTypeSchemeChanged e)
         {
-            Update(e.Id, c => c.SchemeId = e.SchemeId);
+            Update(e.Id, c => c.Scheme = e.Scheme);
         }
-
+        public void Handle(CategoryTypeSchemeNameChanged e)
+        {
+            Update(e.Id, c => c.Scheme.Name = e.Name);
+        }
         #endregion
     }
 
@@ -94,7 +95,7 @@ namespace ESS.Domain.Common.Category.ReadModels
         public Guid Id;
         public string Name;
         public Guid ParentId;
-        public Guid SchemeId;
+        public CategoryTypeSchemeItem Scheme;
         public string Code;
         public bool IsSystem;
     }

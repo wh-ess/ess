@@ -1,9 +1,11 @@
 ﻿
 <md-content>
     <md-tabs md-dynamic-height>
-        <md-tab ng-repeat="type in categoryTypes" label="{{type.Name}}">
-            <md-content class="md-padding">
-
+        <md-tab ng-repeat="type in categoryTypes">
+            <md-tab-label>
+                {{type.Name}}<small>({{type.Scheme.Name}})</small>
+            </md-tab-label>
+            <md-tab-body>
                 <ul>
                     <li ng-repeat="t in categorys | filter:type.Id">{{t.Name}}<md-button ng-click="delCategory(t)" aria-label="delete"><i class="fa fa-close"></i></md-button></li>
                 </ul>
@@ -17,8 +19,7 @@
                         <md-button class="md-primary md-raised" ng-disabled="form.$invalid" type="submit">Add {{type.Name}}</md-button>
                     </div>
                 </form>
-
-            </md-content>
+            </md-tab-body>
         </md-tab>
     </md-tabs>
 

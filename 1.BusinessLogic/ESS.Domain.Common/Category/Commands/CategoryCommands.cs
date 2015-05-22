@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using ESS.Domain.Common.Category.ReadModels;
 using ESS.Framework.CQRS.Command;
 
 #endregion
@@ -9,7 +10,7 @@ namespace ESS.Domain.Common.Category.Commands
 {
     public class CreateCategory : Command
     {
-        public Guid TypeId;
+        public CategoryTypeItem Type;
         public DateTime EndDate;
         public DateTime FromDate;
         public string Name;
@@ -30,7 +31,7 @@ namespace ESS.Domain.Common.Category.Commands
 
     public class ChangeCategoryType : Command
     {
-        public Guid TypeId;
+        public CategoryTypeItem Type;
     }
 
     public class ChangeCategoryDate : Command

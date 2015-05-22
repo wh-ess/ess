@@ -27,8 +27,7 @@ function ($scope, PartyRole, CategoryTypeScheme, Category, $routeParams, $timeou
             targetEvent: ev
         }).then(function (item) {
             var p = {
-                PartyName: item.Name,
-                PartyId: item.Id
+                Party: item
             }
             $scope.cur = { item: p };
         });
