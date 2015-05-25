@@ -7,6 +7,9 @@
                     <md-list-item ng-repeat="p in partys">
                         <div class="md-list-item-text" ng-click="cur.item = p">
                             <h4>{{p.Name}}</h4>
+                            <!--<md-chips>
+                                <md-chip ng-repeat="r in p.PartyRoles">{{r}}</md-chip>
+                            </md-chips>-->
                             <p ng-repeat="r in p.PartyRoles">{{r}}</p>
                         </div>
                         <md-button class="md-secondary" ng-click="delParty(p)" aria-label="del">

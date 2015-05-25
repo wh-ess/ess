@@ -41,7 +41,7 @@
         <!-- label -->
         <md-input-container ng-switch-when="label">
             <label>{{f.Text}}</label>
-            <label>{{getModelParent(model,f.Name)[ getModelLeaf(f.Name)] }}</label>
+            <input type="text" ng-model="getModelParent(model,f.Name)[ getModelLeaf(f.Name)]" disabled>
         </md-input-container>
 
         <!-- input -->

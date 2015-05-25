@@ -10,6 +10,9 @@
                 <h4>{{u.Name}}</h4>
                 <small>{{u.No}}</small>
                 <p>{{u.Locked?'Locked':'Unlocked'}}</p>
+                <!--<md-chips>
+                    <md-chip ng-repeat="r in u.Roles">{{r}}</md-chip>
+                </md-chips>-->
                 <p ng-repeat="r in u.Roles">{{r}}</p>
             </div>
         </md-card-content>
