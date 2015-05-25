@@ -1168,24 +1168,6 @@ function contains(arr, item) {
     return false;
 }
 
-function getModelParent(model,path) {
-    var segs = path.split(".");
-    var root = model;
-
-    while (segs.length > 1) {
-        var pathStep = segs.shift();
-        if (typeof root[pathStep] === "undefined") {
-            root[pathStep] = {};
-        }
-        root = root[pathStep];
-    }
-    return root;
-};
-
-function getModelLeaf (path) {
-        var segs = path.split(".");
-        return segs[segs.length-1];
-    };
 
 function formField(scope, Module, DDL, module, filterFilter) {
     var moduleNo = module.split(".")[0];
@@ -1199,6 +1181,25 @@ function formField(scope, Module, DDL, module, filterFilter) {
             var results = search ? filterFilter(source, search) : source;
             return results;
         }
+
+        scope.getModelParent = function (model, path) {
+            var segs = path.split(".");
+            var root = model;
+
+            while (segs.length > 1) {
+                var pathStep = segs.shift();
+                if (typeof root[pathStep] === "undefined") {
+                    root[pathStep] = {};
+                }
+                root = root[pathStep];
+            }
+            return root;
+        };
+
+        scope.getModelLeaf = function (path) {
+            var segs = path.split(".");
+            return segs[segs.length - 1];
+        };
 
         Field.getList("Fields").then(function (data) {
             angular.forEach(data, function (d, i) {

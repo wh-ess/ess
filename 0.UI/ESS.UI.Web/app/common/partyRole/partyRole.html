@@ -6,7 +6,7 @@
                 <md-list>
                     <md-list-item ng-repeat="p in partyRoles">
                         <div class="md-list-item-text">
-                            <p ng-click="cur.item = p">{{p.PartyName}}</p>
+                            <p ng-click="cur.item = p">{{p.Party.Name}}</p>
                         </div>
                         <md-button class="md-secondary" ng-click="delPartyRole(p)" aria-label="del">
                             <i class="fa fa-times"></i>
