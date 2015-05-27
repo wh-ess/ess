@@ -31,7 +31,7 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
         if (a.Id) {
             Association.one(a.Id).doPUT(a);
         } else {
-            a.TypeId = type.Id;
+            a.Type = type;
             Association.post(a);
             fetchAssociations();
         }

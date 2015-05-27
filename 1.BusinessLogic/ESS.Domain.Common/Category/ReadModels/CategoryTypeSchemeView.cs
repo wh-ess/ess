@@ -77,4 +77,9 @@ namespace ESS.Domain.Common.Category.ReadModels
         public string Code;
         public bool IsSystem;
     }
+
+    public static class CategoryTypeSchemeType
+    {
+        public const string Association = "Association";
+    }
 }

@@ -99,4 +99,9 @@ namespace ESS.Domain.Common.Category.ReadModels
         public string Code;
         public bool IsSystem;
     }
+
+    public static class CategoryTypeType
+    {
+        public const string Party = "Party";
+    }
 }

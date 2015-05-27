@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using System.Web.Http;
+using ESS.Domain.Common.Association.ReadModels;
+using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Foundation.EntityConfig.Commands;
 using ESS.Domain.Foundation.EntityConfig.ReadModels;
 using ESS.Framework.CQRS;
@@ -14,20 +16,23 @@ namespace ESS.Api.Foundation.EntityConfig
     public class FieldController : ApiController
     {
         private readonly FieldView _fieldView;
+        private readonly CategoryView _categoryView;
         private readonly MessageDispatcher _messageDispatcher;
 
-        public FieldController(MessageDispatcher messageDispatcher, FieldView fieldView)
+        public FieldController(MessageDispatcher messageDispatcher, FieldView fieldView, CategoryView categoryView)
         {
             _messageDispatcher = messageDispatcher;
             _fieldView = fieldView;
-            
+            _categoryView = categoryView;
         }
 
         [HttpGet]
         [Route("Fields")]
         public IEnumerable<FieldItem> Fields(string moduleNo,string actionName)
         {
-            return _fieldView.FieldList(moduleNo, actionName);
+            var fields = _fieldView.FieldList(moduleNo, actionName);
+            var association = _categoryView.GetCategoryBySchemeType(CategoryTypeSchemeType.Association, CategoryTypeType.Party);
+            return fields;
         }
 
         [HttpGet]

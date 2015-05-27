@@ -83,6 +83,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Common\ESS.Domain.Common.csproj">
+      <Project>{743D850B-33A1-487C-9A48-1B51A4C6F546}</Project>
+      <Name>ESS.Domain.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\1.BusinessLogic\ESS.Domain.Foundation\ESS.Domain.Foundation.csproj">
       <Project>{418A6464-3081-4AF8-B1FA-B54945A16F87}</Project>
       <Name>ESS.Domain.Foundation</Name>
