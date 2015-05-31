@@ -55042,19 +55042,11 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
 })(window, window.angular);
 ///#source 1 1 /Scripts/angular-messages.js
 /**
- * @license AngularJS v1.4.0
- * (c) 2010-2015 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.3.15
+ * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
-
-/* jshint ignore:start */
-// this code is in the core, but not in angular-messages.js
-var isArray = angular.isArray;
-var forEach = angular.forEach;
-var isString = angular.isString;
-var jqLite = angular.element;
-/* jshint ignore:end */
 
 /**
  * @ngdoc module
@@ -55068,8 +55060,8 @@ var jqLite = angular.element;
  * `ngMessage` directives are designed to handle the complexity, inheritance and priority
  * sequencing based on the order of how the messages are defined in the template.
  *
- * Currently, the ngMessages module only contains the code for the `ngMessages`, `ngMessagesInclude`
- * `ngMessage` and `ngMessageExp` directives.
+ * Currently, the ngMessages module only contains the code for the `ngMessages`
+ * and `ngMessage` directives.
  *
  * # Usage
  * The `ngMessages` directive listens on a key/value collection which is set on the ngMessages attribute.
@@ -55079,15 +55071,10 @@ var jqLite = angular.element;
  *
  * ```html
  * <form name="myForm">
- *   <label>
- *     Enter text:
- *     <input type="text" ng-model="field" name="myField" required minlength="5" />
- *   </label>
- *   <div ng-messages="myForm.myField.$error" role="alert">
+ *   <input type="text" ng-model="field" name="myField" required minlength="5" />
+ *   <div ng-messages="myForm.myField.$error">
  *     <div ng-message="required">You did not enter a field</div>
- *     <div ng-message="minlength, maxlength">
- *       Your email must be between 5 and 100 characters long
- *     </div>
+ *     <div ng-message="minlength">The value entered is too short</div>
  *   </div>
  * </form>
  * ```
@@ -55113,11 +55100,7 @@ var jqLite = angular.element;
  * ngMessages directive to make this happen.
  *
  * ```html
- * <!-- attribute-style usage -->
  * <div ng-messages="myForm.myField.$error" ng-messages-multiple>...</div>
- *
- * <!-- element-style usage -->
- * <ng-messages for="myForm.myField.$error" multiple>...</ng-messages>
  * ```
  *
  * ## Reusing and Overriding Messages
@@ -55130,15 +55113,12 @@ var jqLite = angular.element;
  *   <div ng-message="required">This field is required</div>
  *   <div ng-message="minlength">This field is too short</div>
  * </script>
- *
- * <div ng-messages="myForm.myField.$error" role="alert">
- *   <div ng-messages-include="error-messages"></div>
- * </div>
+ * <div ng-messages="myForm.myField.$error" ng-messages-include="error-messages"></div>
  * ```
  *
  * However, including generic messages may not be useful enough to match all input fields, therefore,
  * `ngMessages` provides the ability to override messages defined in the remote template by redefining
- * them within the directive container.
+ * then within the directive container.
  *
  * ```html
  * <!-- a generic template of error messages known as "my-custom-messages" -->
@@ -55148,26 +55128,19 @@ var jqLite = angular.element;
  * </script>
  *
  * <form name="myForm">
- *   <label>
- *     Email address
- *     <input type="email"
- *            id="email"
- *            name="myEmail"
- *            ng-model="email"
- *            minlength="5"
- *            required />
- *   </label>
- *   <!-- any ng-message elements that appear BEFORE the ng-messages-include will
- *        override the messages present in the ng-messages-include template -->
- *   <div ng-messages="myForm.myEmail.$error" role="alert">
+ *   <input type="email"
+ *          id="email"
+ *          name="myEmail"
+ *          ng-model="email"
+ *          minlength="5"
+ *          required />
+ *
+ *   <div ng-messages="myForm.myEmail.$error" ng-messages-include="my-custom-messages">
  *     <!-- this required message has overridden the template message -->
  *     <div ng-message="required">You did not enter your email address</div>
  *
  *     <!-- this is a brand new message and will appear last in the prioritization -->
  *     <div ng-message="email">Your email address is invalid</div>
- *
- *     <!-- and here are the generic error messages -->
- *     <div ng-messages-include="my-custom-messages"></div>
  *   </div>
  * </form>
  * ```
@@ -55177,80 +55150,20 @@ var jqLite = angular.element;
  * email addresses, date fields, autocomplete inputs, etc...), specialized error messages can be applied
  * while more generic messages can be used to handle other, more general input errors.
  *
- * ## Dynamic Messaging
- * ngMessages also supports using expressions to dynamically change key values. Using arrays and
- * repeaters to list messages is also supported. This means that the code below will be able to
- * fully adapt itself and display the appropriate message when any of the expression data changes:
- *
- * ```html
- * <form name="myForm">
- *   <label>
- *     Email address
- *     <input type="email"
- *            name="myEmail"
- *            ng-model="email"
- *            minlength="5"
- *            required />
- *   </label>
- *   <div ng-messages="myForm.myEmail.$error" role="alert">
- *     <div ng-message="required">You did not enter your email address</div>
- *     <div ng-repeat="errorMessage in errorMessages">
- *       <!-- use ng-message-exp for a message whose key is given by an expression -->
- *       <div ng-message-exp="errorMessage.type">{{ errorMessage.text }}</div>
- *     </div>
- *   </div>
- * </form>
- * ```
- *
- * The `errorMessage.type` expression can be a string value or it can be an array so
- * that multiple errors can be associated with a single error message:
- *
- * ```html
- *   <label>
- *     Email address
- *     <input type="email"
- *            ng-model="data.email"
- *            name="myEmail"
- *            ng-minlength="5"
- *            ng-maxlength="100"
- *            required />
- *   </label>
- *   <div ng-messages="myForm.myEmail.$error" role="alert">
- *     <div ng-message-exp="'required'">You did not enter your email address</div>
- *     <div ng-message-exp="['minlength', 'maxlength']">
- *       Your email must be between 5 and 100 characters long
- *     </div>
- *   </div>
- * ```
- *
- * Feel free to use other structural directives such as ng-if and ng-switch to further control
- * what messages are active and when. Be careful, if you place ng-message on the same element
- * as these structural directives, Angular may not be able to determine if a message is active
- * or not. Therefore it is best to place the ng-message on a child element of the structural
- * directive.
- *
- * ```html
- * <div ng-messages="myForm.myEmail.$error" role="alert">
- *   <div ng-if="showRequiredError">
- *     <div ng-message="required">Please enter something</div>
- *   </div>
- * </div>
- * ```
- *
  * ## Animations
- * If the `ngAnimate` module is active within the application then the `ngMessages`, `ngMessage` and
- * `ngMessageExp` directives will trigger animations whenever any messages are added and removed from
- * the DOM by the `ngMessages` directive.
+ * If the `ngAnimate` module is active within the application then both the `ngMessages` and
+ * `ngMessage` directives will trigger animations whenever any messages are added and removed
+ * from the DOM by the `ngMessages` directive.
  *
  * Whenever the `ngMessages` directive contains one or more visible messages then the `.ng-active` CSS
  * class will be added to the element. The `.ng-inactive` CSS class will be applied when there are no
- * messages present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
+ * animations present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
  * hook into the animations whenever these classes are added/removed.
  *
  * Let's say that our HTML code for our messages container looks like so:
  *
  * ```html
- * <div ng-messages="myMessages" class="my-messages" role="alert">
+ * <div ng-messages="myMessages" class="my-messages">
  *   <div ng-message="alert" class="some-message">...</div>
  *   <div ng-message="fail" class="some-message">...</div>
  * </div>
@@ -55306,7 +55219,7 @@ angular.module('ngMessages', [])
     * messages use the `ngMessage` directive and will be inserted/removed from the page depending
     * on if they're present within the key/value object. By default, only one message will be displayed
     * at a time and this depends on the prioritization of the messages within the template. (This can
-    * be changed by using the `ng-messages-multiple` or `multiple` attribute on the directive container.)
+    * be changed by using the ng-messages-multiple on the directive container.)
     *
     * A remote template can also be used to promote message reusability and messages can also be
     * overridden.
@@ -55316,23 +55229,24 @@ angular.module('ngMessages', [])
     * @usage
     * ```html
     * <!-- using attribute directives -->
-    * <ANY ng-messages="expression" role="alert">
-    *   <ANY ng-message="stringValue">...</ANY>
-    *   <ANY ng-message="stringValue1, stringValue2, ...">...</ANY>
-    *   <ANY ng-message-exp="expressionValue">...</ANY>
+    * <ANY ng-messages="expression">
+    *   <ANY ng-message="keyValue1">...</ANY>
+    *   <ANY ng-message="keyValue2">...</ANY>
+    *   <ANY ng-message="keyValue3">...</ANY>
     * </ANY>
     *
     * <!-- or by using element directives -->
-    * <ng-messages for="expression" role="alert">
-    *   <ng-message when="stringValue">...</ng-message>
-    *   <ng-message when="stringValue1, stringValue2, ...">...</ng-message>
-    *   <ng-message when-exp="expressionValue">...</ng-message>
+    * <ng-messages for="expression">
+    *   <ng-message when="keyValue1">...</ng-message>
+    *   <ng-message when="keyValue2">...</ng-message>
+    *   <ng-message when="keyValue3">...</ng-message>
     * </ng-messages>
     * ```
     *
     * @param {string} ngMessages an angular expression evaluating to a key/value object
     *                 (this is typically the $error object on an ngModel instance).
     * @param {string=} ngMessagesMultiple|multiple when set, all messages will be displayed with true
+    * @param {string=} ngMessagesInclude|include when set, the specified template will be included into the ng-messages container
     *
     * @example
     * <example name="ngMessages-directive" module="ngMessagesExample"
@@ -55340,18 +55254,17 @@ angular.module('ngMessages', [])
     *          animations="true" fixBase="true">
     *   <file name="index.html">
     *     <form name="myForm">
-    *       <label>
-    *         Enter your name:
-    *         <input type="text"
-    *                name="myName"
-    *                ng-model="name"
-    *                ng-minlength="5"
-    *                ng-maxlength="20"
-    *                required />
-    *       </label>
+    *       <label>Enter your name:</label>
+    *       <input type="text"
+    *              name="myName"
+    *              ng-model="name"
+    *              ng-minlength="5"
+    *              ng-maxlength="20"
+    *              required />
+    *
     *       <pre>myForm.myName.$error = {{ myForm.myName.$error | json }}</pre>
     *
-    *       <div ng-messages="myForm.myName.$error" style="color:maroon" role="alert">
+    *       <div ng-messages="myForm.myName.$error" style="color:maroon">
     *         <div ng-message="required">You did not enter a field</div>
     *         <div ng-message="minlength">Your field is too short</div>
     *         <div ng-message="maxlength">Your field is too long</div>
@@ -55363,220 +55276,91 @@ angular.module('ngMessages', [])
     *   </file>
     * </example>
     */
-   .directive('ngMessages', ['$animate', function($animate) {
-     var ACTIVE_CLASS = 'ng-active';
-     var INACTIVE_CLASS = 'ng-inactive';
+  .directive('ngMessages', ['$compile', '$animate', '$templateRequest',
+                   function($compile,    $animate,   $templateRequest) {
+    var ACTIVE_CLASS = 'ng-active';
+    var INACTIVE_CLASS = 'ng-inactive';
 
-     return {
-       require: 'ngMessages',
-       restrict: 'AE',
-       controller: ['$element', '$scope', '$attrs', function($element, $scope, $attrs) {
-         var ctrl = this;
-         var latestKey = 0;
+    return {
+      restrict: 'AE',
+      controller: function() {
+        this.$renderNgMessageClasses = angular.noop;
 
-         var messages = this.messages = {};
-         var renderLater, cachedCollection;
+        var messages = [];
+        this.registerMessage = function(index, message) {
+          for (var i = 0; i < messages.length; i++) {
+            if (messages[i].type == message.type) {
+              if (index != i) {
+                var temp = messages[index];
+                messages[index] = messages[i];
+                if (index < messages.length) {
+                  messages[i] = temp;
+                } else {
+                  messages.splice(0, i); //remove the old one (and shift left)
+                }
+              }
+              return;
+            }
+          }
+          messages.splice(index, 0, message); //add the new one (and shift right)
+        };
 
-         this.render = function(collection) {
-           collection = collection || {};
+        this.renderMessages = function(values, multiple) {
+          values = values || {};
 
-           renderLater = false;
-           cachedCollection = collection;
+          var found;
+          angular.forEach(messages, function(message) {
+            if ((!found || multiple) && truthyVal(values[message.type])) {
+              message.attach();
+              found = true;
+            } else {
+              message.detach();
+            }
+          });
 
-           // this is true if the attribute is empty or if the attribute value is truthy
-           var multiple = isAttrTruthy($scope, $attrs.ngMessagesMultiple) ||
-                          isAttrTruthy($scope, $attrs.multiple);
+          this.renderElementClasses(found);
 
-           var unmatchedMessages = [];
-           var matchedKeys = {};
-           var messageItem = ctrl.head;
-           var messageFound = false;
-           var totalMessages = 0;
+          function truthyVal(value) {
+            return value !== null && value !== false && value;
+          }
+        };
+      },
+      require: 'ngMessages',
+      link: function($scope, element, $attrs, ctrl) {
+        ctrl.renderElementClasses = function(bool) {
+          bool ? $animate.setClass(element, ACTIVE_CLASS, INACTIVE_CLASS)
+               : $animate.setClass(element, INACTIVE_CLASS, ACTIVE_CLASS);
+        };
 
-           // we use != instead of !== to allow for both undefined and null values
-           while (messageItem != null) {
-             totalMessages++;
-             var messageCtrl = messageItem.message;
+        //JavaScript treats empty strings as false, but ng-message-multiple by itself is an empty string
+        var multiple = angular.isString($attrs.ngMessagesMultiple) ||
+                       angular.isString($attrs.multiple);
 
-             var messageUsed = false;
-             if (!messageFound) {
-               forEach(collection, function(value, key) {
-                 if (!messageUsed && truthy(value) && messageCtrl.test(key)) {
-                   // this is to prevent the same error name from showing up twice
-                   if (matchedKeys[key]) return;
-                   matchedKeys[key] = true;
+        var cachedValues, watchAttr = $attrs.ngMessages || $attrs['for']; //for is a reserved keyword
+        $scope.$watchCollection(watchAttr, function(values) {
+          cachedValues = values;
+          ctrl.renderMessages(values, multiple);
+        });
 
-                   messageUsed = true;
-                   messageCtrl.attach();
-                 }
-               });
-             }
+        var tpl = $attrs.ngMessagesInclude || $attrs.include;
+        if (tpl) {
+          $templateRequest(tpl)
+            .then(function processTemplate(html) {
+              var after, container = angular.element('<div/>').html(html);
+              angular.forEach(container.children(), function(elm) {
+               elm = angular.element(elm);
+               after ? after.after(elm)
+                     : element.prepend(elm); //start of the container
+               after = elm;
+               $compile(elm)($scope);
+              });
+              ctrl.renderMessages(cachedValues, multiple);
+            });
+        }
+      }
+    };
+  }])
 
-             if (messageUsed) {
-               // unless we want to display multiple messages then we should
-               // set a flag here to avoid displaying the next message in the list
-               messageFound = !multiple;
-             } else {
-               unmatchedMessages.push(messageCtrl);
-             }
-
-             messageItem = messageItem.next;
-           }
-
-           forEach(unmatchedMessages, function(messageCtrl) {
-             messageCtrl.detach();
-           });
-
-           unmatchedMessages.length !== totalMessages
-              ? $animate.setClass($element, ACTIVE_CLASS, INACTIVE_CLASS)
-              : $animate.setClass($element, INACTIVE_CLASS, ACTIVE_CLASS);
-         };
-
-         $scope.$watchCollection($attrs.ngMessages || $attrs['for'], ctrl.render);
-
-         this.reRender = function() {
-           if (!renderLater) {
-             renderLater = true;
-             $scope.$evalAsync(function() {
-               if (renderLater) {
-                 cachedCollection && ctrl.render(cachedCollection);
-               }
-             });
-           }
-         };
-
-         this.register = function(comment, messageCtrl) {
-           var nextKey = latestKey.toString();
-           messages[nextKey] = {
-             message: messageCtrl
-           };
-           insertMessageNode($element[0], comment, nextKey);
-           comment.$$ngMessageNode = nextKey;
-           latestKey++;
-
-           ctrl.reRender();
-         };
-
-         this.deregister = function(comment) {
-           var key = comment.$$ngMessageNode;
-           delete comment.$$ngMessageNode;
-           removeMessageNode($element[0], comment, key);
-           delete messages[key];
-           ctrl.reRender();
-         };
-
-         function findPreviousMessage(parent, comment) {
-           var prevNode = comment;
-           var parentLookup = [];
-           while (prevNode && prevNode !== parent) {
-             var prevKey = prevNode.$$ngMessageNode;
-             if (prevKey && prevKey.length) {
-               return messages[prevKey];
-             }
-
-             // dive deeper into the DOM and examine its children for any ngMessage
-             // comments that may be in an element that appears deeper in the list
-             if (prevNode.childNodes.length && parentLookup.indexOf(prevNode) == -1) {
-               parentLookup.push(prevNode);
-               prevNode = prevNode.childNodes[prevNode.childNodes.length - 1];
-             } else {
-               prevNode = prevNode.previousSibling || prevNode.parentNode;
-             }
-           }
-         }
-
-         function insertMessageNode(parent, comment, key) {
-           var messageNode = messages[key];
-           if (!ctrl.head) {
-             ctrl.head = messageNode;
-           } else {
-             var match = findPreviousMessage(parent, comment);
-             if (match) {
-               messageNode.next = match.next;
-               match.next = messageNode;
-             } else {
-               messageNode.next = ctrl.head;
-               ctrl.head = messageNode;
-             }
-           }
-         }
-
-         function removeMessageNode(parent, comment, key) {
-           var messageNode = messages[key];
-
-           var match = findPreviousMessage(parent, comment);
-           if (match) {
-             match.next = messageNode.next;
-           } else {
-             ctrl.head = messageNode.next;
-           }
-         }
-       }]
-     };
-
-     function isAttrTruthy(scope, attr) {
-      return (isString(attr) && attr.length === 0) || //empty attribute
-             truthy(scope.$eval(attr));
-     }
-
-     function truthy(val) {
-       return isString(val) ? val.length : !!val;
-     }
-   }])
-
-   /**
-    * @ngdoc directive
-    * @name ngMessagesInclude
-    * @restrict AE
-    * @scope
-    *
-    * @description
-    * `ngMessagesInclude` is a directive with the purpose to import existing ngMessage template
-    * code from a remote template and place the downloaded template code into the exact spot
-    * that the ngMessagesInclude directive is placed within the ngMessages container. This allows
-    * for a series of pre-defined messages to be reused and also allows for the developer to
-    * determine what messages are overridden due to the placement of the ngMessagesInclude directive.
-    *
-    * @usage
-    * ```html
-    * <!-- using attribute directives -->
-    * <ANY ng-messages="expression" role="alert">
-    *   <ANY ng-messages-include="remoteTplString">...</ANY>
-    * </ANY>
-    *
-    * <!-- or by using element directives -->
-    * <ng-messages for="expression" role="alert">
-    *   <ng-messages-include src="expressionValue1">...</ng-messages-include>
-    * </ng-messages>
-    * ```
-    *
-    * {@link module:ngMessages Click here} to learn more about `ngMessages` and `ngMessage`.
-    *
-    * @param {string} ngMessagesInclude|src a string value corresponding to the remote template.
-    */
-   .directive('ngMessagesInclude',
-     ['$templateRequest', '$document', '$compile', function($templateRequest, $document, $compile) {
-
-     return {
-       restrict: 'AE',
-       require: '^^ngMessages', // we only require this for validation sake
-       link: function($scope, element, attrs) {
-         var src = attrs.ngMessagesInclude || attrs.src;
-         $templateRequest(src).then(function(html) {
-           $compile(html)($scope, function(contents) {
-             element.after(contents);
-
-             // the anchor is placed for debugging purposes
-             var anchor = jqLite($document[0].createComment(' ngMessagesInclude: ' + src + ' '));
-             element.after(anchor);
-
-             // we don't want to pollute the DOM anymore by keeping an empty directive element
-             element.remove();
-           });
-         });
-       }
-     };
-   }])
 
    /**
     * @ngdoc directive
@@ -55596,126 +55380,65 @@ angular.module('ngMessages', [])
     * @usage
     * ```html
     * <!-- using attribute directives -->
-    * <ANY ng-messages="expression" role="alert">
-    *   <ANY ng-message="stringValue">...</ANY>
-    *   <ANY ng-message="stringValue1, stringValue2, ...">...</ANY>
-    * </ANY>
-    *
-    * <!-- or by using element directives -->
-    * <ng-messages for="expression" role="alert">
-    *   <ng-message when="stringValue">...</ng-message>
-    *   <ng-message when="stringValue1, stringValue2, ...">...</ng-message>
-    * </ng-messages>
-    * ```
-    *
-    * @param {expression} ngMessage|when a string value corresponding to the message key.
-    */
-  .directive('ngMessage', ngMessageDirectiveFactory('AE'))
-
-
-   /**
-    * @ngdoc directive
-    * @name ngMessageExp
-    * @restrict AE
-    * @scope
-    *
-    * @description
-    * `ngMessageExp` is a directive with the purpose to show and hide a particular message.
-    * For `ngMessageExp` to operate, a parent `ngMessages` directive on a parent DOM element
-    * must be situated since it determines which messages are visible based on the state
-    * of the provided key/value map that `ngMessages` listens on.
-    *
-    * @usage
-    * ```html
-    * <!-- using attribute directives -->
     * <ANY ng-messages="expression">
-    *   <ANY ng-message-exp="expressionValue">...</ANY>
+    *   <ANY ng-message="keyValue1">...</ANY>
+    *   <ANY ng-message="keyValue2">...</ANY>
+    *   <ANY ng-message="keyValue3">...</ANY>
     * </ANY>
     *
     * <!-- or by using element directives -->
     * <ng-messages for="expression">
-    *   <ng-message when-exp="expressionValue">...</ng-message>
+    *   <ng-message when="keyValue1">...</ng-message>
+    *   <ng-message when="keyValue2">...</ng-message>
+    *   <ng-message when="keyValue3">...</ng-message>
     * </ng-messages>
     * ```
     *
-    * {@link module:ngMessages Click here} to learn more about `ngMessages` and `ngMessage`.
-    *
-    * @param {expression} ngMessageExp|whenExp an expression value corresponding to the message key.
+    * @param {string} ngMessage a string value corresponding to the message key.
     */
-  .directive('ngMessageExp', ngMessageDirectiveFactory('A'));
-
-function ngMessageDirectiveFactory(restrict) {
-  return ['$animate', function($animate) {
+  .directive('ngMessage', ['$animate', function($animate) {
+    var COMMENT_NODE = 8;
     return {
-      restrict: 'AE',
+      require: '^ngMessages',
       transclude: 'element',
       terminal: true,
-      require: '^^ngMessages',
-      link: function(scope, element, attrs, ngMessagesCtrl, $transclude) {
-        var commentNode = element[0];
+      restrict: 'AE',
+      link: function($scope, $element, $attrs, ngMessages, $transclude) {
+        var index, element;
 
-        var records;
-        var staticExp = attrs.ngMessage || attrs.when;
-        var dynamicExp = attrs.ngMessageExp || attrs.whenExp;
-        var assignRecords = function(items) {
-          records = items
-              ? (isArray(items)
-                    ? items
-                    : items.split(/[\s,]+/))
-              : null;
-          ngMessagesCtrl.reRender();
-        };
-
-        if (dynamicExp) {
-          assignRecords(scope.$eval(dynamicExp));
-          scope.$watchCollection(dynamicExp, assignRecords);
-        } else {
-          assignRecords(staticExp);
+        var commentNode = $element[0];
+        var parentNode = commentNode.parentNode;
+        for (var i = 0, j = 0; i < parentNode.childNodes.length; i++) {
+          var node = parentNode.childNodes[i];
+          if (node.nodeType == COMMENT_NODE && node.nodeValue.indexOf('ngMessage') >= 0) {
+            if (node === commentNode) {
+              index = j;
+              break;
+            }
+            j++;
+          }
         }
 
-        var currentElement, messageCtrl;
-        ngMessagesCtrl.register(commentNode, messageCtrl = {
-          test: function(name) {
-            return contains(records, name);
-          },
+        ngMessages.registerMessage(index, {
+          type: $attrs.ngMessage || $attrs.when,
           attach: function() {
-            if (!currentElement) {
-              $transclude(scope, function(elm) {
-                $animate.enter(elm, null, element);
-                currentElement = elm;
-
-                // in the event that the parent element is destroyed
-                // by any other structural directive then it's time
-                // to deregister the message from the controller
-                currentElement.on('$destroy', function() {
-                  if (currentElement) {
-                    ngMessagesCtrl.deregister(commentNode);
-                    messageCtrl.detach();
-                  }
-                });
+            if (!element) {
+              $transclude($scope, function(clone) {
+                $animate.enter(clone, null, $element);
+                element = clone;
               });
             }
           },
-          detach: function() {
-            if (currentElement) {
-              var elm = currentElement;
-              currentElement = null;
-              $animate.leave(elm);
+          detach: function(now) {
+            if (element) {
+              $animate.leave(element);
+              element = null;
             }
           }
         });
       }
     };
-  }];
-
-  function contains(collection, key) {
-    if (collection) {
-      return isArray(collection)
-          ? collection.indexOf(key) >= 0
-          : collection.hasOwnProperty(key);
-    }
-  }
-}
+  }]);
 
 
 })(window, window.angular);
@@ -57078,459 +56801,452 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 ///#source 1 1 /Scripts/angular-local-storage.js
 /**
  * An Angular module that gives you access to the browsers local storage
- * @version v0.1.5 - 2014-11-04
+ * @version v0.2.2 - 2015-05-29
  * @link https://github.com/grevory/angular-local-storage
  * @author grevory <greg@gregpike.ca>
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
-(function ( window, angular, undefined ) {
-/*jshint globalstrict:true*/
-'use strict';
+(function (window, angular, undefined) {
+    /*jshint globalstrict:true*/
+    'use strict';
 
-var isDefined = angular.isDefined,
-  isUndefined = angular.isUndefined,
-  isNumber = angular.isNumber,
-  isObject = angular.isObject,
-  isArray = angular.isArray,
-  extend = angular.extend,
-  toJson = angular.toJson,
-  fromJson = angular.fromJson;
+    var isDefined = angular.isDefined,
+      isUndefined = angular.isUndefined,
+      isNumber = angular.isNumber,
+      isObject = angular.isObject,
+      isArray = angular.isArray,
+      extend = angular.extend,
+      toJson = angular.toJson;
+    var angularLocalStorage = angular.module('LocalStorageModule', []);
 
+    angularLocalStorage.provider('localStorageService', function () {
 
-// Test if string is only contains numbers
-// e.g '1' => true, "'1'" => true
-function isStringNumber(num) {
-  return  /^-?\d+\.?\d*$/.test(num.replace(/["']/g, ''));
-}
+        // You should set a prefix to avoid overwriting any local storage variables from the rest of your app
+        // e.g. localStorageServiceProvider.setPrefix('yourAppName');
+        // With provider you can use config as this:
+        // myApp.config(function (localStorageServiceProvider) {
+        //    localStorageServiceProvider.prefix = 'yourAppName';
+        // });
+        this.prefix = 'ls';
 
-var angularLocalStorage = angular.module('LocalStorageModule', []);
+        // You could change web storage type localstorage or sessionStorage
+        this.storageType = 'localStorage';
 
-angularLocalStorage.provider('localStorageService', function() {
+        // Cookie options (usually in case of fallback)
+        // expiry = Number of days before cookies expire // 0 = Does not expire
+        // path = The web path the cookie represents
+        this.cookie = {
+            expiry: 30,
+            path: '/'
+        };
 
-  // You should set a prefix to avoid overwriting any local storage variables from the rest of your app
-  // e.g. localStorageServiceProvider.setPrefix('youAppName');
-  // With provider you can use config as this:
-  // myApp.config(function (localStorageServiceProvider) {
-  //    localStorageServiceProvider.prefix = 'yourAppName';
-  // });
-  this.prefix = 'ls';
+        // Send signals for each of the following actions?
+        this.notify = {
+            setItem: true,
+            removeItem: false
+        };
 
-  // You could change web storage type localstorage or sessionStorage
-  this.storageType = 'localStorage';
+        // Setter for the prefix
+        this.setPrefix = function (prefix) {
+            this.prefix = prefix;
+            return this;
+        };
 
-  // Cookie options (usually in case of fallback)
-  // expiry = Number of days before cookies expire // 0 = Does not expire
-  // path = The web path the cookie represents
-  this.cookie = {
-    expiry: 30,
-    path: '/'
-  };
+        // Setter for the storageType
+        this.setStorageType = function (storageType) {
+            this.storageType = storageType;
+            return this;
+        };
 
-  // Send signals for each of the following actions?
-  this.notify = {
-    setItem: true,
-    removeItem: false
-  };
+        // Setter for cookie config
+        this.setStorageCookie = function (exp, path) {
+            this.cookie.expiry = exp;
+            this.cookie.path = path;
+            return this;
+        };
 
-  // Setter for the prefix
-  this.setPrefix = function(prefix) {
-    this.prefix = prefix;
-    return this;
-  };
+        // Setter for cookie domain
+        this.setStorageCookieDomain = function (domain) {
+            this.cookie.domain = domain;
+            return this;
+        };
 
-   // Setter for the storageType
-   this.setStorageType = function(storageType) {
-     this.storageType = storageType;
-     return this;
-   };
+        // Setter for notification config
+        // itemSet & itemRemove should be booleans
+        this.setNotify = function (itemSet, itemRemove) {
+            this.notify = {
+                setItem: itemSet,
+                removeItem: itemRemove
+            };
+            return this;
+        };
 
-  // Setter for cookie config
-  this.setStorageCookie = function(exp, path) {
-    this.cookie = {
-      expiry: exp,
-      path: path
-    };
-    return this;
-  };
+        this.$get = ['$rootScope', '$window', '$document', '$parse', function ($rootScope, $window, $document, $parse) {
+            var self = this;
+            var prefix = self.prefix;
+            var cookie = self.cookie;
+            var notify = self.notify;
+            var storageType = self.storageType;
+            var webStorage;
 
-  // Setter for cookie domain
-  this.setStorageCookieDomain = function(domain) {
-    this.cookie.domain = domain;
-    return this;
-  };
+            // When Angular's $document is not available
+            if (!$document) {
+                $document = document;
+            } else if ($document[0]) {
+                $document = $document[0];
+            }
 
-  // Setter for notification config
-  // itemSet & itemRemove should be booleans
-  this.setNotify = function(itemSet, itemRemove) {
-    this.notify = {
-      setItem: itemSet,
-      removeItem: itemRemove
-    };
-    return this;
-  };
+            // If there is a prefix set in the config lets use that with an appended period for readability
+            if (prefix.substr(-1) !== '.') {
+                prefix = !!prefix ? prefix + '.' : '';
+            }
+            var deriveQualifiedKey = function (key) {
+                return prefix + key;
+            };
+            // Checks the browser to see if local storage is supported
+            var browserSupportsLocalStorage = (function () {
+                try {
+                    var supported = (storageType in $window && $window[storageType] !== null);
 
-  this.$get = ['$rootScope', '$window', '$document', '$parse', function($rootScope, $window, $document, $parse) {
-    var self = this;
-    var prefix = self.prefix;
-    var cookie = self.cookie;
-    var notify = self.notify;
-    var storageType = self.storageType;
-    var webStorage;
+                    // When Safari (OS X or iOS) is in private browsing mode, it appears as though localStorage
+                    // is available, but trying to call .setItem throws an exception.
+                    //
+                    // "QUOTA_EXCEEDED_ERR: DOM Exception 22: An attempt was made to add something to storage
+                    // that exceeded the quota."
+                    var key = deriveQualifiedKey('__' + Math.round(Math.random() * 1e7));
+                    if (supported) {
+                        webStorage = $window[storageType];
+                        webStorage.setItem(key, '');
+                        webStorage.removeItem(key);
+                    }
 
-    // When Angular's $document is not available
-    if (!$document) {
-      $document = document;
-    } else if ($document[0]) {
-      $document = $document[0];
-    }
+                    return supported;
+                } catch (e) {
+                    storageType = 'cookie';
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                    return false;
+                }
+            }());
 
-    // If there is a prefix set in the config lets use that with an appended period for readability
-    if (prefix.substr(-1) !== '.') {
-      prefix = !!prefix ? prefix + '.' : '';
-    }
-    var deriveQualifiedKey = function(key) {
-      return prefix + key;
-    };
-    // Checks the browser to see if local storage is supported
-    var browserSupportsLocalStorage = (function () {
-      try {
-        var supported = (storageType in $window && $window[storageType] !== null);
+            // Directly adds a value to local storage
+            // If local storage is not available in the browser use cookies
+            // Example use: localStorageService.add('library','angular');
+            var addToLocalStorage = function (key, value) {
+                // Let's convert undefined values to null to get the value consistent
+                if (isUndefined(value)) {
+                    value = null;
+                } else {
+                    value = toJson(value);
+                }
 
-        // When Safari (OS X or iOS) is in private browsing mode, it appears as though localStorage
-        // is available, but trying to call .setItem throws an exception.
-        //
-        // "QUOTA_EXCEEDED_ERR: DOM Exception 22: An attempt was made to add something to storage
-        // that exceeded the quota."
-        var key = deriveQualifiedKey('__' + Math.round(Math.random() * 1e7));
-        if (supported) {
-          webStorage = $window[storageType];
-          webStorage.setItem(key, '');
-          webStorage.removeItem(key);
-        }
+                // If this browser does not support local storage use cookies
+                if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
+                    if (!browserSupportsLocalStorage) {
+                        $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
+                    }
 
-        return supported;
-      } catch (e) {
-        storageType = 'cookie';
-        $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
-        return false;
-      }
-    }());
+                    if (notify.setItem) {
+                        $rootScope.$broadcast('LocalStorageModule.notification.setitem', { key: key, newvalue: value, storageType: 'cookie' });
+                    }
+                    return addToCookies(key, value);
+                }
 
+                try {
+                    if (webStorage) { webStorage.setItem(deriveQualifiedKey(key), value) };
+                    if (notify.setItem) {
+                        $rootScope.$broadcast('LocalStorageModule.notification.setitem', { key: key, newvalue: value, storageType: self.storageType });
+                    }
+                } catch (e) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                    return addToCookies(key, value);
+                }
+                return true;
+            };
 
+            // Directly get a value from local storage
+            // Example use: localStorageService.get('library'); // returns 'angular'
+            var getFromLocalStorage = function (key) {
 
-    // Directly adds a value to local storage
-    // If local storage is not available in the browser use cookies
-    // Example use: localStorageService.add('library','angular');
-    var addToLocalStorage = function (key, value) {
-      // Let's convert undefined values to null to get the value consistent
-      if (isUndefined(value)) {
-        value = null;
-      } else if (isObject(value) || isArray(value) || isNumber(+value || value)) {
-        value = toJson(value);
-      }
+                if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
+                    if (!browserSupportsLocalStorage) {
+                        $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
+                    }
 
-      // If this browser does not support local storage use cookies
-      if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
-        if (!browserSupportsLocalStorage) {
-            $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
-        }
+                    return getFromCookies(key);
+                }
 
-        if (notify.setItem) {
-          $rootScope.$broadcast('LocalStorageModule.notification.setitem', {key: key, newvalue: value, storageType: 'cookie'});
-        }
-        return addToCookies(key, value);
-      }
+                var item = webStorage ? webStorage.getItem(deriveQualifiedKey(key)) : null;
+                // angular.toJson will convert null to 'null', so a proper conversion is needed
+                // FIXME not a perfect solution, since a valid 'null' string can't be stored
+                if (!item || item === 'null') {
+                    return null;
+                }
 
-      try {
-        if (isObject(value) || isArray(value)) {
-          value = toJson(value);
-        }
-        if (webStorage) {webStorage.setItem(deriveQualifiedKey(key), value)};
-        if (notify.setItem) {
-          $rootScope.$broadcast('LocalStorageModule.notification.setitem', {key: key, newvalue: value, storageType: self.storageType});
-        }
-      } catch (e) {
-        $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
-        return addToCookies(key, value);
-      }
-      return true;
-    };
+                try {
+                    return JSON.parse(item);
+                } catch (e) {
+                    return item;
+                }
+            };
 
-    // Directly get a value from local storage
-    // Example use: localStorageService.get('library'); // returns 'angular'
-    var getFromLocalStorage = function (key) {
+            // Remove an item from local storage
+            // Example use: localStorageService.remove('library'); // removes the key/value pair of library='angular'
+            var removeFromLocalStorage = function () {
+                var i, key;
+                for (i = 0; i < arguments.length; i++) {
+                    key = arguments[i];
+                    if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
+                        if (!browserSupportsLocalStorage) {
+                            $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
+                        }
 
-      if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
-        if (!browserSupportsLocalStorage) {
-          $rootScope.$broadcast('LocalStorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
-        }
+                        if (notify.removeItem) {
+                            $rootScope.$broadcast('LocalStorageModule.notification.removeitem', { key: key, storageType: 'cookie' });
+                        }
+                        removeFromCookies(key);
+                    }
+                    else {
+                        try {
+                            webStorage.removeItem(deriveQualifiedKey(key));
+                            if (notify.removeItem) {
+                                $rootScope.$broadcast('LocalStorageModule.notification.removeitem', {
+                                    key: key,
+                                    storageType: self.storageType
+                                });
+                            }
+                        } catch (e) {
+                            $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                            removeFromCookies(key);
+                        }
+                    }
+                }
+            };
 
-        return getFromCookies(key);
-      }
+            // Return array of keys for local storage
+            // Example use: var keys = localStorageService.keys()
+            var getKeysForLocalStorage = function () {
 
-      var item = webStorage ? webStorage.getItem(deriveQualifiedKey(key)) : null;
-      // angular.toJson will convert null to 'null', so a proper conversion is needed
-      // FIXME not a perfect solution, since a valid 'null' string can't be stored
-      if (!item || item === 'null') {
-        return null;
-      }
+                if (!browserSupportsLocalStorage) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
+                    return false;
+                }
 
-      if (item.charAt(0) === "{" || item.charAt(0) === "[" || isStringNumber(item)) {
-        return fromJson(item);
-      }
+                var prefixLength = prefix.length;
+                var keys = [];
+                for (var key in webStorage) {
+                    // Only return keys that are for this app
+                    if (key.substr(0, prefixLength) === prefix) {
+                        try {
+                            keys.push(key.substr(prefixLength));
+                        } catch (e) {
+                            $rootScope.$broadcast('LocalStorageModule.notification.error', e.Description);
+                            return [];
+                        }
+                    }
+                }
+                return keys;
+            };
 
-      return item;
-    };
+            // Remove all data for this app from local storage
+            // Also optionally takes a regular expression string and removes the matching key-value pairs
+            // Example use: localStorageService.clearAll();
+            // Should be used mostly for development purposes
+            var clearAllFromLocalStorage = function (regularExpression) {
 
-    // Remove an item from local storage
-    // Example use: localStorageService.remove('library'); // removes the key/value pair of library='angular'
-    var removeFromLocalStorage = function (key) {
-      if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
-        if (!browserSupportsLocalStorage) {
-          $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
-        }
+                // Setting both regular expressions independently
+                // Empty strings result in catchall RegExp
+                var prefixRegex = !!prefix ? new RegExp('^' + prefix) : new RegExp();
+                var testRegex = !!regularExpression ? new RegExp(regularExpression) : new RegExp();
 
-        if (notify.removeItem) {
-          $rootScope.$broadcast('LocalStorageModule.notification.removeitem', {key: key, storageType: 'cookie'});
-        }
-        return removeFromCookies(key);
-      }
+                if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
+                    if (!browserSupportsLocalStorage) {
+                        $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
+                    }
+                    return clearAllFromCookies();
+                }
 
-      try {
-        webStorage.removeItem(deriveQualifiedKey(key));
-        if (notify.removeItem) {
-          $rootScope.$broadcast('LocalStorageModule.notification.removeitem', {key: key, storageType: self.storageType});
-        }
-      } catch (e) {
-        $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
-        return removeFromCookies(key);
-      }
-      return true;
-    };
+                var prefixLength = prefix.length;
 
-    // Return array of keys for local storage
-    // Example use: var keys = localStorageService.keys()
-    var getKeysForLocalStorage = function () {
+                for (var key in webStorage) {
+                    // Only remove items that are for this app and match the regular expression
+                    if (prefixRegex.test(key) && testRegex.test(key.substr(prefixLength))) {
+                        try {
+                            removeFromLocalStorage(key.substr(prefixLength));
+                        } catch (e) {
+                            $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                            return clearAllFromCookies();
+                        }
+                    }
+                }
+                return true;
+            };
 
-      if (!browserSupportsLocalStorage) {
-        $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
-        return false;
-      }
+            // Checks the browser to see if cookies are supported
+            var browserSupportsCookies = (function () {
+                try {
+                    return $window.navigator.cookieEnabled ||
+                      ("cookie" in $document && ($document.cookie.length > 0 ||
+                      ($document.cookie = "test").indexOf.call($document.cookie, "test") > -1));
+                } catch (e) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                    return false;
+                }
+            }());
 
-      var prefixLength = prefix.length;
-      var keys = [];
-      for (var key in webStorage) {
-        // Only return keys that are for this app
-        if (key.substr(0,prefixLength) === prefix) {
-          try {
-            keys.push(key.substr(prefixLength));
-          } catch (e) {
-            $rootScope.$broadcast('LocalStorageModule.notification.error', e.Description);
-            return [];
-          }
-        }
-      }
-      return keys;
-    };
+            // Directly adds a value to cookies
+            // Typically used as a fallback is local storage is not available in the browser
+            // Example use: localStorageService.cookie.add('library','angular');
+            var addToCookies = function (key, value, daysToExpiry) {
 
-    // Remove all data for this app from local storage
-    // Also optionally takes a regular expression string and removes the matching key-value pairs
-    // Example use: localStorageService.clearAll();
-    // Should be used mostly for development purposes
-    var clearAllFromLocalStorage = function (regularExpression) {
+                if (isUndefined(value)) {
+                    return false;
+                } else if (isArray(value) || isObject(value)) {
+                    value = toJson(value);
+                }
 
-      regularExpression = regularExpression || "";
-      //accounting for the '.' in the prefix when creating a regex
-      var tempPrefix = prefix.slice(0, -1);
-      var testRegex = new RegExp(tempPrefix + '.' + regularExpression);
+                if (!browserSupportsCookies) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
+                    return false;
+                }
 
-      if (!browserSupportsLocalStorage || self.storageType === 'cookie') {
-        if (!browserSupportsLocalStorage) {
-          $rootScope.$broadcast('LocalStorageModule.notification.warning', 'LOCAL_STORAGE_NOT_SUPPORTED');
-        }
+                try {
+                    var expiry = '',
+                        expiryDate = new Date(),
+                        cookieDomain = '';
 
-        return clearAllFromCookies();
-      }
+                    if (value === null) {
+                        // Mark that the cookie has expired one day ago
+                        expiryDate.setTime(expiryDate.getTime() + (-1 * 24 * 60 * 60 * 1000));
+                        expiry = "; expires=" + expiryDate.toGMTString();
+                        value = '';
+                    } else if (isNumber(daysToExpiry) && daysToExpiry !== 0) {
+                        expiryDate.setTime(expiryDate.getTime() + (daysToExpiry * 24 * 60 * 60 * 1000));
+                        expiry = "; expires=" + expiryDate.toGMTString();
+                    } else if (cookie.expiry !== 0) {
+                        expiryDate.setTime(expiryDate.getTime() + (cookie.expiry * 24 * 60 * 60 * 1000));
+                        expiry = "; expires=" + expiryDate.toGMTString();
+                    }
+                    if (!!key) {
+                        var cookiePath = "; path=" + cookie.path;
+                        if (cookie.domain) {
+                            cookieDomain = "; domain=" + cookie.domain;
+                        }
+                        $document.cookie = deriveQualifiedKey(key) + "=" + encodeURIComponent(value) + expiry + cookiePath + cookieDomain;
+                    }
+                } catch (e) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
+                    return false;
+                }
+                return true;
+            };
 
-      var prefixLength = prefix.length;
+            // Directly get a value from a cookie
+            // Example use: localStorageService.cookie.get('library'); // returns 'angular'
+            var getFromCookies = function (key) {
+                if (!browserSupportsCookies) {
+                    $rootScope.$broadcast('LocalStorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
+                    return false;
+                }
 
-      for (var key in webStorage) {
-        // Only remove items that are for this app and match the regular expression
-        if (testRegex.test(key)) {
-          try {
-            removeFromLocalStorage(key.substr(prefixLength));
-          } catch (e) {
-            $rootScope.$broadcast('LocalStorageModule.notification.error',e.message);
-            return clearAllFromCookies();
-          }
-        }
-      }
-      return true;
-    };
+                var cookies = $document.cookie && $document.cookie.split(';') || [];
+                for (var i = 0; i < cookies.length; i++) {
+                    var thisCookie = cookies[i];
+                    while (thisCookie.charAt(0) === ' ') {
+                        thisCookie = thisCookie.substring(1, thisCookie.length);
+                    }
+                    if (thisCookie.indexOf(deriveQualifiedKey(key) + '=') === 0) {
+                        var storedValues = decodeURIComponent(thisCookie.substring(prefix.length + key.length + 1, thisCookie.length))
+                        try {
+                            return JSON.parse(storedValues);
+                        } catch (e) {
+                            return storedValues
+                        }
+                    }
+                }
+                return null;
+            };
 
-    // Checks the browser to see if cookies are supported
-    var browserSupportsCookies = (function() {
-      try {
-        return $window.navigator.cookieEnabled ||
-          ("cookie" in $document && ($document.cookie.length > 0 ||
-          ($document.cookie = "test").indexOf.call($document.cookie, "test") > -1));
-      } catch (e) {
-          $rootScope.$broadcast('LocalStorageModule.notification.error', e.message);
-          return false;
-      }
-    }());
+            var removeFromCookies = function (key) {
+                addToCookies(key, null);
+            };
 
-    // Directly adds a value to cookies
-    // Typically used as a fallback is local storage is not available in the browser
-    // Example use: localStorageService.cookie.add('library','angular');
-    var addToCookies = function (key, value) {
+            var clearAllFromCookies = function () {
+                var thisCookie = null, thisKey = null;
+                var prefixLength = prefix.length;
+                var cookies = $document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    thisCookie = cookies[i];
 
-      if (isUndefined(value)) {
-        return false;
-      } else if(isArray(value) || isObject(value)) {
-        value = toJson(value);
-      }
+                    while (thisCookie.charAt(0) === ' ') {
+                        thisCookie = thisCookie.substring(1, thisCookie.length);
+                    }
 
-      if (!browserSupportsCookies) {
-        $rootScope.$broadcast('LocalStorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
-        return false;
-      }
+                    var key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
+                    removeFromCookies(key);
+                }
+            };
 
-      try {
-        var expiry = '',
-            expiryDate = new Date(),
-            cookieDomain = '';
+            var getStorageType = function () {
+                return storageType;
+            };
 
-        if (value === null) {
-          // Mark that the cookie has expired one day ago
-          expiryDate.setTime(expiryDate.getTime() + (-1 * 24 * 60 * 60 * 1000));
-          expiry = "; expires=" + expiryDate.toGMTString();
-          value = '';
-        } else if (cookie.expiry !== 0) {
-          expiryDate.setTime(expiryDate.getTime() + (cookie.expiry * 24 * 60 * 60 * 1000));
-          expiry = "; expires=" + expiryDate.toGMTString();
-        }
-        if (!!key) {
-          var cookiePath = "; path=" + cookie.path;
-          if(cookie.domain){
-            cookieDomain = "; domain=" + cookie.domain;
-          }
-          $document.cookie = deriveQualifiedKey(key) + "=" + encodeURIComponent(value) + expiry + cookiePath + cookieDomain;
-        }
-      } catch (e) {
-        $rootScope.$broadcast('LocalStorageModule.notification.error',e.message);
-        return false;
-      }
-      return true;
-    };
+            // Add a listener on scope variable to save its changes to local storage
+            // Return a function which when called cancels binding
+            var bindToScope = function (scope, key, def, lsKey) {
+                lsKey = lsKey || key;
+                var value = getFromLocalStorage(lsKey);
 
-    // Directly get a value from a cookie
-    // Example use: localStorageService.cookie.get('library'); // returns 'angular'
-    var getFromCookies = function (key) {
-      if (!browserSupportsCookies) {
-        $rootScope.$broadcast('LocalStorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
-        return false;
-      }
+                if (value === null && isDefined(def)) {
+                    value = def;
+                } else if (isObject(value) && isObject(def)) {
+                    value = extend(def, value);
+                }
 
-      var cookies = $document.cookie && $document.cookie.split(';') || [];
-      for(var i=0; i < cookies.length; i++) {
-        var thisCookie = cookies[i];
-        while (thisCookie.charAt(0) === ' ') {
-          thisCookie = thisCookie.substring(1,thisCookie.length);
-        }
-        if (thisCookie.indexOf(deriveQualifiedKey(key) + '=') === 0) {
-          var storedValues = decodeURIComponent(thisCookie.substring(prefix.length + key.length + 1, thisCookie.length))
-          try{
-            var obj = JSON.parse(storedValues);
-            return fromJson(obj)
-          }catch(e){
-            return storedValues
-          }
-        }
-      }
-      return null;
-    };
+                $parse(key).assign(scope, value);
 
-    var removeFromCookies = function (key) {
-      addToCookies(key,null);
-    };
+                return scope.$watch(key, function (newVal) {
+                    addToLocalStorage(lsKey, newVal);
+                }, isObject(scope[key]));
+            };
 
-    var clearAllFromCookies = function () {
-      var thisCookie = null, thisKey = null;
-      var prefixLength = prefix.length;
-      var cookies = $document.cookie.split(';');
-      for(var i = 0; i < cookies.length; i++) {
-        thisCookie = cookies[i];
+            // Return localStorageService.length
+            // ignore keys that not owned
+            var lengthOfLocalStorage = function () {
+                var count = 0;
+                var storage = $window[storageType];
+                for (var i = 0; i < storage.length; i++) {
+                    if (storage.key(i).indexOf(prefix) === 0) {
+                        count++;
+                    }
+                }
+                return count;
+            };
 
-        while (thisCookie.charAt(0) === ' ') {
-          thisCookie = thisCookie.substring(1, thisCookie.length);
-        }
+            return {
+                isSupported: browserSupportsLocalStorage,
+                getStorageType: getStorageType,
+                set: addToLocalStorage,
+                add: addToLocalStorage, //DEPRECATED
+                get: getFromLocalStorage,
+                keys: getKeysForLocalStorage,
+                remove: removeFromLocalStorage,
+                clearAll: clearAllFromLocalStorage,
+                bind: bindToScope,
+                deriveKey: deriveQualifiedKey,
+                length: lengthOfLocalStorage,
+                cookie: {
+                    isSupported: browserSupportsCookies,
+                    set: addToCookies,
+                    add: addToCookies, //DEPRECATED
+                    get: getFromCookies,
+                    remove: removeFromCookies,
+                    clearAll: clearAllFromCookies
+                }
+            };
+        }];
+    });
+})(window, window.angular);
 
-        var key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
-        removeFromCookies(key);
-      }
-    };
-
-    var getStorageType = function() {
-      return storageType;
-    };
-
-    // Add a listener on scope variable to save its changes to local storage
-    // Return a function which when called cancels binding
-    var bindToScope = function(scope, key, def, lsKey) {
-      lsKey = lsKey || key;
-      var value = getFromLocalStorage(lsKey);
-
-      if (value === null && isDefined(def)) {
-        value = def;
-      } else if (isObject(value) && isObject(def)) {
-        value = extend(def, value);
-      }
-
-      $parse(key).assign(scope, value);
-
-      return scope.$watch(key, function(newVal) {
-        addToLocalStorage(lsKey, newVal);
-      }, isObject(scope[key]));
-    };
-
-    // Return localStorageService.length
-    // ignore keys that not owned
-    var lengthOfLocalStorage = function() {
-      var count = 0;
-      var storage = $window[storageType];
-      for(var i = 0; i < storage.length; i++) {
-        if(storage.key(i).indexOf(prefix) === 0 ) {
-          count++;
-        }
-      }
-      return count;
-    };
-
-    return {
-      isSupported: browserSupportsLocalStorage,
-      getStorageType: getStorageType,
-      set: addToLocalStorage,
-      add: addToLocalStorage, //DEPRECATED
-      get: getFromLocalStorage,
-      keys: getKeysForLocalStorage,
-      remove: removeFromLocalStorage,
-      clearAll: clearAllFromLocalStorage,
-      bind: bindToScope,
-      deriveKey: deriveQualifiedKey,
-      length: lengthOfLocalStorage,
-      cookie: {
-        isSupported: browserSupportsCookies,
-        set: addToCookies,
-        add: addToCookies, //DEPRECATED
-        get: getFromCookies,
-        remove: removeFromCookies,
-        clearAll: clearAllFromCookies
-      }
-    };
-  }];
-});
-})( window, window.angular );
 ///#source 1 1 /Scripts/angular-ui/ui-utils.js
 /**
  * angular-ui-utils - Swiss-Army-Knife of AngularJS tools (with no external dependencies!)

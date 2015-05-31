@@ -18,6 +18,7 @@
     <file>/app/shared/auth.service.js</file>
     <file>/app/shared/common.directive.js</file>
     <file>/app/shared/authInterceptor.service.js</file>
+    <file>/app/shared/errorInterceptor.service.js</file>
     <!-- shared -->
     <file>/app/shared/header/header.service.js</file>
     <file>/app/shared/header/header.controller.js</file>
@@ -43,7 +44,7 @@
     <!-- association -->
     <file>/app/common/association/association.service.js</file>
     <file>/app/common/association/association.controller.js</file>
-    
+
     <!-- partyrole -->
     <file>/app/common/partyRole/partyRole.service.js</file>
     <file>/app/common/partyRole/partyRole.controller.js</file>

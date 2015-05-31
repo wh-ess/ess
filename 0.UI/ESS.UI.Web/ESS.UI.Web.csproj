@@ -158,6 +158,7 @@
     <Content Include="app\foundation\moduleConifg\formView.html" />
     <Content Include="app\foundation\moduleConifg\listView.html" />
     <Content Include="app\foundation\moduleConifg\tableView.html" />
+    <Content Include="app\shared\errorInterceptor.service.js" />
     <Content Include="app\shared\authInterceptor.service.js" />
     <Content Include="app\shared\auth.service.js" />
     <Content Include="app\foundation\accessControl\role.controller.js" />
@@ -211,6 +212,7 @@
     <Content Include="Scripts\angular-material.min.js" />
     <Content Include="Scripts\angular-message-format.js" />
     <Content Include="Scripts\angular-messages.js" />
+    <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
@@ -241,12 +243,12 @@
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="index.appcache" />
-    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\angular-messages.min.js.map" />
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
-    <None Include="Scripts\jquery-2.1.3-vsdoc.js" />
-    <Content Include="Scripts\jquery-2.1.3.js" />
-    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -275,7 +277,7 @@
     <Content Include="Scripts\restangular.min.js.map">
       <DependentUpon>restangular.min.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery-2.1.3.min.map" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

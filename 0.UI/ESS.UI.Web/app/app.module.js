@@ -35,25 +35,10 @@ angular.module("EssApp", [
     };
 
 }]).config(["$httpProvider", function ($httpProvider) {
-    $httpProvider.interceptors.push(["$q", function ($q) {
-        return {
-            responseError: function (rejection) {
-                if (rejection.status == 500) {
-                    alert(rejection.data.ExceptionMessage);
-                } else if (rejection.status == 401) {
-                    //其它地方会跳转
-                } else {
-                    alert("Error!");
-                }
-                return $q.reject(rejection);
-            },
-            response: function (response) {
-                return response;
-            }
-
-        };
-    }]);
+   
     $httpProvider.interceptors.push("authInterceptorService");
+    $httpProvider.interceptors.push("errorInterceptorService");
+
 }]).config(["RestangularProvider", function (RestangularProvider) {
     RestangularProvider.setBaseUrl("/api");
     // add a response intereceptor
