@@ -240,6 +240,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="index.appcache" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
