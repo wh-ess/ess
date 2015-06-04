@@ -59,6 +59,11 @@
     <Folder Include="Basic\EventHandlers\" />
     <Folder Include="Basic\Events\" />
     <Folder Include="Basic\ReadModels\" />
+    <Folder Include="Pop\Commands\" />
+    <Folder Include="Pop\Domain\" />
+    <Folder Include="Pop\EventHandlers\" />
+    <Folder Include="Pop\Events\" />
+    <Folder Include="Pop\ReadModels\" />
     <Folder Include="Queue\Commands\" />
     <Folder Include="Queue\Domain\" />
     <Folder Include="Queue\EventHandlers\" />
