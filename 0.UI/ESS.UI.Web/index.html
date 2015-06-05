@@ -44,8 +44,7 @@
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body id="ng-app" ng-app="EssApp" layout="row">
-
-    <md-sidenav class=" md-sidenav-left md-whiteframe-z2"
+    <md-sidenav class=" md-sidenav-left md-whiteframe-z2" ng-show="isAuth"
                 md-component-id="left"
                 md-is-locked-open="$mdMedia('gt-sm')">
 
@@ -65,7 +64,7 @@
     <!-- BEGIN CONTAINER -->
 
     <div layout="column" tabindex="-1" role="main" flex>
-        <md-toolbar class="md-whiteframe-glow-z2">
+        <md-toolbar class="md-whiteframe-glow-z2" ng-show="isAuth">
 
             <div class="md-toolbar-tools" tabindex="-1" ng-click="toggleSidenav('left')">
                 <md-button class="md-icon-button" hide-gt-sm aria-label="Toggle Menu">

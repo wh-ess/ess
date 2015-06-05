@@ -1,7 +1,13 @@
 ﻿<form class="form" role="form">
-    <h2 class="heading">Login</h2>
-    <input type="text" class="form-control" placeholder="Username" data-ng-model="loginData.userName" required autofocus>
-    <input type="password" class="form-control" placeholder="Password" data-ng-model="loginData.password" required>
-    <button class="btn btn-lg btn-info btn-block" type="submit" data-ng-click="login()">Login</button>
+    <h2 >Login</h2>
+    <md-input-container>
+        <label>userName</label>
+        <input type="text" data-ng-model="loginData.userName" required autofocus>
+    </md-input-container>
+    <md-input-container>
+        <label>password</label>
+        <input type="password" data-ng-model="loginData.password" required>
+    </md-input-container>
+    <md-button class="md-primary md-raised" type="submit" data-ng-click="login()">Login</md-button>
 
 </form>

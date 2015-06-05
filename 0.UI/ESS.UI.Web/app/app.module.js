@@ -12,9 +12,16 @@ angular.module("EssApp", [
     "ui.utils",
     "ui.tree",
     "LocalStorageModule"
-]).run(["$rootScope", "$mdSidenav", "DDL", function ($rootScope, $mdSidenav, DDL) {
+]).run(["$rootScope", "$mdSidenav", "DDL", "authService", function ($rootScope, $mdSidenav, DDL, authService) {
     $rootScope.pageTitle = "Index";
     $rootScope.pageSubTitle = "";
+
+    $rootScope.auth = authService;
+    $rootScope.auth.fillAuthData();
+    $rootScope.$watch("auth.authentication.isAuth", function (newVal) {
+        $rootScope.isAuth = newVal;
+        
+    });
 
     $rootScope.changeTitle = function (title, subTitle) {
         $rootScope.pageTitle = title;
@@ -35,7 +42,7 @@ angular.module("EssApp", [
     };
 
 }]).config(["$httpProvider", function ($httpProvider) {
-   
+
     $httpProvider.interceptors.push("authInterceptorService");
     $httpProvider.interceptors.push("errorInterceptorService");
 
