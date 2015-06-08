@@ -38,4 +38,8 @@ namespace ESS.Api.Common
     public class PartyRoleMainController : ApiController
     {
     }
+
+    public class SvgController : ApiController
+    {
+    }
 }

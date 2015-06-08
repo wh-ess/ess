@@ -10,7 +10,6 @@ angular.module("EssApp", [
     "ngMessages",
     "ngSanitize",
     "ui.utils",
-    "ui.tree",
     "LocalStorageModule"
 ]).run(["$rootScope", "$mdSidenav", "DDL", "authService", function ($rootScope, $mdSidenav, DDL, authService) {
     $rootScope.pageTitle = "Index";

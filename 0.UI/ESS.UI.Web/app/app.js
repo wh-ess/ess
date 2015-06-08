@@ -11,7 +11,6 @@ angular.module("EssApp", [
     "ngMessages",
     "ngSanitize",
     "ui.utils",
-    "ui.tree",
     "LocalStorageModule"
 ]).run(["$rootScope", "$mdSidenav", "DDL", "authService", function ($rootScope, $mdSidenav, DDL, authService) {
     $rootScope.pageTitle = "Index";
@@ -98,6 +97,9 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
             .when("/help", { templateUrl: "/app/shared/help/help.html" })
 
             //common
+            //svg
+            .when("/svg/svgEditor", { templateUrl: "/app/common/svg/svgEditor.html", controller: "SvgEditorController" })
+
             //category
             .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
             .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
@@ -1657,6 +1659,19 @@ angular.module('EssApp').controller('loginController', ['$scope', '$location', '
     };
 
 }]);
+///#source 1 1 /app/common/svg/svgEditor.controller.js
+"use strict";
+
+angular.module("EssApp").controller("SvgEditorController", [
+    "$scope",
+function ($scope) {
+    var canvas = SVG("canvas");
+    var canvasBackground = canvas.nested();
+    var canvasContent = canvas.nested();
+    canvasContent.rect(200, 100).draggy();
+    canvasContent.rect(200, 100).fill('#f03').draggy();
+}
+]);
 ///#source 1 1 /app/common/category/category.service.js
 "use strict";
 angular.module("EssApp").factory("CategoryTypeScheme", [

@@ -10,19 +10,21 @@
 </settings>
 <!--The order of the <file> elements determines the order of the files in the bundle.-->
 <files>
-	<file>/Scripts/jquery-2.1.4.js</file>
-  <file>/Scripts/angular.js</file>
-	<file>/Scripts/angular-animate.js</file>
-	<file>/Scripts/angular-aria.js</file>
-	<file>/Scripts/angular-material.js</file>
-  <file>/Scripts/angular-messages.js</file>
-  <file>/Scripts/angular-resource.js</file>
-	<file>/Scripts/angular-sanitize.js</file>
-	<file>/Scripts/angular-local-storage.js</file>
-  <file>/Scripts/angular-ui/ui-utils.js</file>
-	<file>/Scripts/angular-route.js</file>
-  <!-- for restangular-->
-	<file>/Scripts/underscore.js</file>
-  
+	<file>/Scripts/svg/svg.js</file>
+	<file>/Scripts/svg/svg.math.js</file>
+	<file>/Scripts/svg/svg.parser.js</file>
+	<file>/Scripts/svg/svg.path.js</file>
+	<file>/Scripts/svg/svg.draggy.js</file>
+	<file>/Scripts/svg/svg.connectable.js</file>
+	<file>/Scripts/svg/svg.absorb.js</file>
+	<file>/Scripts/svg/svg.draw.js</file>
+	<file>/Scripts/svg/svg.easing.js</file>
+	<file>/Scripts/svg/svg.export.js</file>
+	<file>/Scripts/svg/svg.filter.js</file>
+	<file>/Scripts/svg/svg.import.js</file>
+	<file>/Scripts/svg/svg.select.js</file>
+	<file>/Scripts/svg/svg.resize.js</file>
+	<file>/Scripts/svg/svg.shapes.js</file>
+	<file>/Scripts/svg/svg.topath.js</file>
 </files>
 </bundle>

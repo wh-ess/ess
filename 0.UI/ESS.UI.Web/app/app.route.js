@@ -32,6 +32,9 @@ angular.module("EssApp").run(['$rootScope','$route', '$routeParams', '$location'
             .when("/help", { templateUrl: "/app/shared/help/help.html" })
 
             //common
+            //svg
+            .when("/svg/svgEditor", { templateUrl: "/app/common/svg/svgEditor.html", controller: "SvgEditorController" })
+
             //category
             .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
             .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })

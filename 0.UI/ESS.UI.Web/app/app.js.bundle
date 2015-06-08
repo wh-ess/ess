@@ -38,6 +38,10 @@
     <!-- common -->
 
     <!-- category -->
+    <!--<file>/app/common/svg/svgEditor.service.js</file>-->
+    <file>/app/common/svg/svgEditor.controller.js</file>
+    
+    <!-- category -->
     <file>/app/common/category/category.service.js</file>
     <file>/app/common/category/category.controller.js</file>
 
