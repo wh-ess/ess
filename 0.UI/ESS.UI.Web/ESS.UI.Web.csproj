@@ -438,19 +438,15 @@
     <Content Include="Scripts\method-draw\lib\jgraduate\images\rangearrows2.gif" />
     <Content Include="Scripts\method-draw\lib\jgraduate\jpicker.min.js" />
     <Content Include="Scripts\method-draw\lib\jgraduate\jquery.jgraduate.js" />
-    <Content Include="Scripts\method-draw\lib\jgraduate\jquery.jgraduate.min.js" />
     <Content Include="Scripts\method-draw\lib\jquery-draginput.js" />
     <Content Include="Scripts\method-draw\lib\jquery-ui\jquery-ui-1.8.17.custom.min.js" />
     <Content Include="Scripts\method-draw\lib\jquery-ui\jquery-ui-1.8.custom.min.js" />
     <Content Include="Scripts\method-draw\lib\jquerybbq\jquery.bbq.js" />
-    <Content Include="Scripts\method-draw\lib\jquerybbq\jquery.bbq.min.js" />
     <Content Include="Scripts\method-draw\lib\js-hotkeys\jquery.hotkeys.min.js" />
     <Content Include="Scripts\method-draw\lib\mousewheel.js" />
     <Content Include="Scripts\method-draw\lib\requestanimationframe.js" />
     <Content Include="Scripts\method-draw\lib\taphold.js" />
     <Content Include="Scripts\method-draw\lib\touch.js" />
-    <Content Include="Scripts\method-draw\method-draw.compiled.css" />
-    <Content Include="Scripts\method-draw\method-draw.compiled.js" />
     <Content Include="Scripts\method-draw\src\browser.js" />
     <Content Include="Scripts\method-draw\src\dialog.js" />
     <Content Include="Scripts\method-draw\src\dragupload.js" />
@@ -466,8 +462,6 @@
     <Content Include="Scripts\method-draw\src\svgtransformlist.js" />
     <Content Include="Scripts\method-draw\src\svgutils.js" />
     <Content Include="Scripts\method-draw\src\units.js" />
-    <Content Include="Scripts\method-draw\svgedit.compiled.css" />
-    <Content Include="Scripts\method-draw\svgedit.compiled.js" />
     <Content Include="Scripts\method-draw\temp.css" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
@@ -558,9 +552,6 @@
     <Content Include="Scripts\method-draw\lib\jgraduate\README" />
     <Content Include="Scripts\method-draw\lib\js-hotkeys\README.md" />
     <Content Include="Scripts\method-draw\method-draw.manifest" />
-    <Content Include="Scripts\method-draw\lib\jquerybbq\jquery.bbq.min.js.map">
-      <DependentUpon>jquery.bbq.min.js</DependentUpon>
-    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
