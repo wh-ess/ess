@@ -171,12 +171,6 @@
     <Content Include="app\shared\header\mainMenu.html" />
     <Content Include="app\shared\help\help.html" />
     <Content Include="app\shared\common.directive.js" />
-    <Content Include="app\svg.js">
-      <DependentUpon>svg.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="app\svg.min.js">
-      <DependentUpon>svg.js</DependentUpon>
-    </Content>
     <Content Include="Content\angular-material\angular-material.css" />
     <Content Include="Content\angular-material\angular-material.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -270,12 +264,6 @@
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\d3\LICENSE" />
-    <Content Include="app\svg.js.bundle">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="app\svg.min.js.map">
-      <DependentUpon>svg.min.js</DependentUpon>
-    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -693,23 +681,6 @@
       <DependentUpon>style.css</DependentUpon>
     </Content>
     <Content Include="index.html" />
-    <Content Include="Scripts\svg\svg.absorb.js" />
-    <Content Include="Scripts\svg\svg.connectable.js" />
-    <Content Include="Scripts\svg\svg.draggable.js" />
-    <Content Include="Scripts\svg\svg.draggy.js" />
-    <Content Include="Scripts\svg\svg.draw.js" />
-    <Content Include="Scripts\svg\svg.easing.js" />
-    <Content Include="Scripts\svg\svg.export.js" />
-    <Content Include="Scripts\svg\svg.filter.js" />
-    <Content Include="Scripts\svg\svg.import.js" />
-    <Content Include="Scripts\svg\svg.js" />
-    <Content Include="Scripts\svg\svg.math.js" />
-    <Content Include="Scripts\svg\svg.parser.js" />
-    <Content Include="Scripts\svg\svg.path.js" />
-    <Content Include="Scripts\svg\svg.resize.js" />
-    <Content Include="Scripts\svg\svg.select.js" />
-    <Content Include="Scripts\svg\svg.shapes.js" />
-    <Content Include="Scripts\svg\svg.topath.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Web.config" />
   </ItemGroup>
