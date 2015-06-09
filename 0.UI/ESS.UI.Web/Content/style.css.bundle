@@ -12,10 +12,11 @@
   </settings>
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
-	  <file>/Content/angular-material/angular-material.css</file>
-	  <file>/Content/css/font-awesome.css</file>
+    <file>/Content/bootstrap.css</file>
+    <file>/Content/angular-material/angular-material.css</file>
+    <file>/Content/css/font-awesome.css</file>
     <file>/Content/simple-line-icons.css</file>
-	  <file>/Content/treeGrid.css</file>
-	<file>/Content/custome.css</file>
+    <file>/Content/treeGrid.css</file>
+    <file>/Content/custome.css</file>
   </files>
 </bundle>

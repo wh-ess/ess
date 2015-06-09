@@ -12,6 +12,7 @@
 <files>
 	<file>/Scripts/jquery-2.1.4.js</file>
   <file>/Scripts/angular.js</file>
+	<file>/Scripts/angular-ui/ui-bootstrap-tpls.min.js</file>
 	<file>/Scripts/angular-animate.js</file>
 	<file>/Scripts/angular-aria.js</file>
 	<file>/Scripts/angular-material.js</file>
