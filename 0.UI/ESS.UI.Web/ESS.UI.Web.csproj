@@ -284,7 +284,6 @@
     <Content Include="Scripts\method-draw\css\font-files\test_ff.svg" />
     <Content Include="Scripts\method-draw\css\font-files\test_ffsvg.svg" />
     <Content Include="Scripts\method-draw\css\fonts.css" />
-    <Content Include="Scripts\method-draw\css\method-draw.compiled.css" />
     <Content Include="Scripts\method-draw\css\method-draw.css" />
     <Content Include="Scripts\method-draw\embedapi.html" />
     <Content Include="Scripts\method-draw\extensions\closepath_icons.svg" />
