@@ -1,12 +1,12 @@
 ﻿
-<md-content>
-    <md-tabs md-dynamic-height>
-        <md-tab ng-repeat="scheme in categoryTypeSchemes" label="{{scheme.Name}}">
-            <md-content class="md-padding">
-
-                <ul>
-                    <li ng-repeat="t in categoryTypes | filter:scheme.Id">{{t.Name}}<md-button ng-click="delCategoryType(t)" aria-label="delete"><i class="fa fa-close"></i></md-button></li>
-                </ul>
+<md-content layout="column">
+    <accordion close-others="true">
+        <accordion-group ng-repeat="scheme in categoryTypeSchemes" heading="{{scheme.Name}}">
+            <ul>
+                <li ng-repeat="t in categoryTypes | filter:scheme.Id">
+                    {{t.Name}}
+                    <md-button ng-click="delCategoryType(t)" aria-label="delete"><i class="fa fa-close"></i></md-button>
+                </li>
 
                 <form ng-submit="editCategoryType(currentType,scheme)" layout="column" class="md-padding" name="form">
                     <div layout="row" layout-sm="column">
@@ -17,12 +17,9 @@
                         <md-button class="md-primary md-raised" ng-disabled="form.$invalid" type="submit">Add Type</md-button>
                     </div>
                 </form>
-
-                <md-button class="md-primary md-raised" ng-click="delCategoryTypeScheme( scheme )">Remove {{scheme.Name}}</md-button>
-
-            </md-content>
-        </md-tab>
-    </md-tabs>
+            </ul>
+        </accordion-group>
+    </accordion>
 
     <form ng-submit="editCategoryTypeScheme(currentScheme)" layout="column" class="md-padding" name="form">
         <div layout="row" layout-sm="column">

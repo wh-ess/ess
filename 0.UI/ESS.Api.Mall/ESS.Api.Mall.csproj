@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="InitData.cs" />
     <Compile Include="MallController.cs" />
+    <Compile Include="Pop\PopTemplateController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

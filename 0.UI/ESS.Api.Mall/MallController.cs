@@ -21,4 +21,8 @@ namespace ESS.Api.Mall
     {
     }
 
+    public class PopController : ApiController
+    {
+    }
+
 }

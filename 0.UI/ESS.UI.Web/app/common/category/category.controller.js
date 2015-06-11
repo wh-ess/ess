@@ -2,7 +2,8 @@
 
 angular.module("EssApp").controller("CategoryController", [
     "$scope", "CategoryTypeScheme", "CategoryType", "Category","$routeParams", "$timeout",
-function ($scope, CategoryTypeScheme, CategoryType,Category, $routeParams, $timeout) {
+function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $timeout) {
+    $scope.cur = { type: {} };
     //#region CategoryTypeScheme
     var fetchCategoryTypeSchemes = function () {
         $timeout(function () {

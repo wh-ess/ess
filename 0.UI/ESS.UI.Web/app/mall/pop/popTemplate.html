@@ -1,0 +1,25 @@
+﻿<md-content>
+    <md-card ng-repeat="pt in popTemplates|filter:q">
+        <md-card-content>
+            <div class="md-list-item-text">
+                <h4>{{pt.Name}}</h4>
+                <small>{{pt.No}}</small>
+                <p>{{pt.IsEnable?'Enabled':'Disabled'}}</p>
+            </div>
+        </md-card-content>
+        <div class="md-actions" layout="row" layout-align="end center">
+            <md-button href="#/popTemplate/edit/{{pt.Id}}" aria-label="edit">
+                <i class="fa fa-pencil"></i>
+            </md-button>
+            <md-button ng-click="enable(pt)" aria-label="lock" ng-if="!pt.IsEnable">
+                <i class="fa fa-lock"></i>
+            </md-button>
+            <md-button ng-click="disable(pt)" aria-label="unlock" ng-if="pt.IsEnable">
+                <i class="fa fa-unlock"></i>
+            </md-button>
+        </div>
+    </md-card>
+</md-content>
+<md-button class="md-fab md-fab-bottom-right" aria-label="Add PopTemplate" href="#/popTemplate/add">
+    <i class="fa fa-2x fa-plus"></i>
+</md-button>

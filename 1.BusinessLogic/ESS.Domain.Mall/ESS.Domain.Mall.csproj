@@ -51,6 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pop\Commands\PopTemplateCommands.cs" />
+    <Compile Include="Pop\Domain\PopTemplate.cs" />
+    <Compile Include="Pop\Events\PopTemplateEvents.cs" />
+    <Compile Include="Pop\ReadModels\PopTemplateView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +63,7 @@
     <Folder Include="Basic\EventHandlers\" />
     <Folder Include="Basic\Events\" />
     <Folder Include="Basic\ReadModels\" />
-    <Folder Include="Pop\Commands\" />
-    <Folder Include="Pop\Domain\" />
     <Folder Include="Pop\EventHandlers\" />
-    <Folder Include="Pop\Events\" />
-    <Folder Include="Pop\ReadModels\" />
     <Folder Include="Queue\Commands\" />
     <Folder Include="Queue\Domain\" />
     <Folder Include="Queue\EventHandlers\" />
