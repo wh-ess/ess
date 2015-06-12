@@ -4,7 +4,7 @@
 // Declare app level module which depends on filters, and services
 angular.module("EssApp").run([
     '$rootScope', '$route', '$routeParams', '$location',
-    function($rootScope, $route, $routeParams, $location) {
+    function ($rootScope, $route, $routeParams, $location) {
         $rootScope.$route = $route;
         $rootScope.$location = $location;
         $rootScope.$routeParams = $routeParams;
@@ -24,6 +24,9 @@ angular.module("EssApp").run([
                 .when("/module", { templateUrl: "/app/foundation/moduleConifg/moduleTable.html", controller: "ModuleController" })
                 .when("/module/:moduleNo/actions", { templateUrl: "/app/foundation/moduleConifg/actionTable.html", controller: "ActionController" })
                 .when("/module/:moduleNo/actions/:actionName/fields", { templateUrl: "/app/foundation/moduleConifg/fieldTable.html", controller: "FieldController" })
+
+                //readModels
+                .when("/readModels", { templateUrl: "/app/foundation/moduleConifg/readModels.html", controller: "ReadModelController" })
 
                 //user
                 .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
@@ -66,8 +69,8 @@ angular.module("EssApp").run([
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
 
-            //#endregion
-            ;
+        //#endregion
+        ;
     }
 ]);
 

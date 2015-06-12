@@ -24,7 +24,9 @@ namespace ESS.Framework.CQRS
     {
         private readonly Dictionary<Type, Action<object>> _commandHandlers = new Dictionary<Type, Action<object>>();
         private readonly IEventStore _eventStore;
-        private readonly Dictionary<Type, List<Action<object>>> _eventSubscribers = new Dictionary<Type, List<Action<object>>>();
+
+        private readonly Dictionary<Type, Dictionary<string, Action<object>>> _eventSubscribers =
+            new Dictionary<Type, Dictionary<string, Action<object>>>();
 
         /// <summary>
         ///     Initializes a message dispatcher, which will use the specified event store
@@ -58,13 +60,27 @@ namespace ESS.Framework.CQRS
         ///     Publishes the specified event to all of its subscribers.
         /// </summary>
         /// <param name="e"></param>
-        private void PublishEvent(object e)
+        /// <param name="acceptType">接收的类型,用于重建</param>
+        private void PublishEvent(object e, string acceptType = null)
         {
             var eventType = e.GetType();
             if (_eventSubscribers.ContainsKey(eventType))
             {
                 foreach (var sub in _eventSubscribers[eventType])
-                    sub(e);
+                {
+                    //只重建acceptType类型
+                    if (acceptType != null && sub.Key == acceptType)
+                    {
+                        if (sub.Key == acceptType)
+                        {
+                            sub.Value(e);
+                        }
+                    }
+                    else
+                    {
+                        sub.Value(e);
+                    }
+                }
             }
         }
 
@@ -122,9 +138,10 @@ namespace ESS.Framework.CQRS
         {
             if (!_eventSubscribers.ContainsKey(typeof(TEvent)))
             {
-                _eventSubscribers.Add(typeof(TEvent), new List<Action<object>>());
+                _eventSubscribers.Add(typeof(TEvent), new Dictionary<string, Action<object>>());
             }
-            _eventSubscribers[typeof(TEvent)].Add(e => subscriber.Handle((TEvent)e));
+            _eventSubscribers[typeof(TEvent)].Add(subscriber.GetType()
+                .FullName, e => subscriber.Handle((TEvent)e));
         }
 
         /// <summary>
@@ -216,11 +233,15 @@ namespace ESS.Framework.CQRS
             return ObjectContainer.Resolve(t);
         }
 
-        public void Repaly()
+        /// <summary>
+        ///     对readmodel进行重建
+        /// </summary>
+        /// <param name="t">readmodel类型</param>
+        public void Repaly(Type t)
         {
             var events = _eventStore.LoadEventsAll();
             foreach (var e in events)
-                PublishEvent(e);
+                PublishEvent(e, t.FullName);
         }
     }
 }

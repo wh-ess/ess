@@ -9,7 +9,7 @@ using ESS.Framework.Common.Configurations;
 namespace ESS.Framework.Common.Autofac
 {
     /// <summary>
-    ///     ENode configuration class Autofac extensions.
+    ///     configuration class Autofac extensions.
     /// </summary>
     public static class ConfigurationExtensions
     {

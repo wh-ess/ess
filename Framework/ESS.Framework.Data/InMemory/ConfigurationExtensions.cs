@@ -3,7 +3,7 @@ using ESS.Framework.Common.Configurations;
 
 namespace ESS.Framework.Data.InMemory
 {
-    /// <summary>ENode configuration class Redis extensions.
+    /// <summary>configuration class Redis extensions.
     /// </summary>
     public static class ConfigurationExtensions
     {

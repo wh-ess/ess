@@ -15,23 +15,33 @@ namespace ESS.Framework.Data.InMemory
     {
         private ConcurrentDictionary<TKey, TEntity> _store = new ConcurrentDictionary<TKey, TEntity>();
 
-        public void Add(TKey id, TEntity entity)
+        public bool Add(TKey id, TEntity entity)
         {
             _store.AddOrUpdate(id, entity, (k, v) => entity);
+            return true;
         }
 
-        public void Update(TKey id, TEntity entity)
+        public bool Update(TKey id, TEntity entity)
         {
             _store.AddOrUpdate(id, entity, (k, v) => entity);
+            return true;
         }
 
-        public void Delete(TKey id)
+        public bool Delete(TKey id)
         {
             _store.Remove(id);
+            return true;
         }
 
-        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        public bool Delete(Expression<Func<TEntity, bool>> predicate)
         {
+            return false;
+        }
+
+        public bool DeleteAll()
+        {
+            _store.Clear();
+            return true;
         }
 
         public TEntity Get(TKey id)

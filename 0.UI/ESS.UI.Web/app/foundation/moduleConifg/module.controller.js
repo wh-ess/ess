@@ -73,4 +73,20 @@ angular.module("EssApp").controller("ModuleController", [
             $scope.actions.post();
         };
     }
+]).controller("ReadModelController", [
+    "$scope", "ReadModel",
+    function ($scope, ReadModel) {
+        ReadModel.getList().then(function (items) {
+            $scope.readModels = items;
+        });
+        $scope.replay = function (id) {
+            ReadModel.one(id).post();
+        };
+
+        $scope.getData=function(id) {
+            ReadModel.one(id).getList().then(function (items) {
+                $scope.items = items;
+            });
+        }
+    }
 ]);

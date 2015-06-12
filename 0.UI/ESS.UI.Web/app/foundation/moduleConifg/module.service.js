@@ -19,6 +19,11 @@ angular.module('EssApp').factory('Module', ['Restangular',
         var DDL = Restangular.service("Ddl");
         return DDL;
     }
+]).factory('ReadModel', ['Restangular',
+    function (Restangular) {
+        var DDL = Restangular.service("ReadModel");
+        return DDL;
+    }
 ]);
 
 var Enums = {};

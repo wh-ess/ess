@@ -10,7 +10,7 @@ using ESS.Framework.CQRS.Event;
 namespace ESS.Framework.CQRS.Configurations
 {
     /// <summary>
-    ///     Configuration class for enode framework.
+    ///     Configuration class for framework.
     /// </summary>
     public static class ConfigurationExtensions
     {

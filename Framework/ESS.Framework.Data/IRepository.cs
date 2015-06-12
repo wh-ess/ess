@@ -10,11 +10,12 @@ namespace ESS.Framework.Data
 {
     public interface IRepository<TEntity, in TKey> : IDisposable where TEntity : class
     {
-        void Add(TKey id, TEntity entity);
-        void Update(TKey id, TEntity entity);
+        bool Add(TKey id, TEntity entity);
+        bool Update(TKey id, TEntity entity);
 
-        void Delete(TKey id);
-        void Delete(Expression<Func<TEntity, bool>> predicate);
+        bool Delete(TKey id);
+        bool Delete(Expression<Func<TEntity, bool>> predicate);
+        bool DeleteAll();
 
         TEntity Get(TKey id);
         IEnumerable<TEntity> GetAll();

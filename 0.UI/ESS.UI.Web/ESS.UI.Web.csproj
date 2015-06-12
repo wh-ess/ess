@@ -125,6 +125,7 @@
     <Content Include="app\foundation\accessControl\role.html" />
     <Content Include="app\foundation\accessControl\userEdit.html" />
     <Content Include="app\foundation\accessControl\user.html" />
+    <Content Include="app\foundation\moduleConifg\readModels.html" />
     <Content Include="app\foundation\moduleConifg\fieldSelect.html" />
     <Content Include="app\foundation\moduleConifg\formList.html" />
     <Content Include="app\foundation\moduleConifg\module.directive.js" />

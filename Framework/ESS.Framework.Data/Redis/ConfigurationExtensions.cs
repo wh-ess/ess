@@ -8,7 +8,7 @@ using StackExchange.Redis;
 
 namespace ESS.Framework.Data.Redis
 {
-    /// <summary>ENode configuration class Redis extensions.
+    /// <summary>configuration class Redis extensions.
     /// </summary>
     public static class ConfigurationExtensions
     {

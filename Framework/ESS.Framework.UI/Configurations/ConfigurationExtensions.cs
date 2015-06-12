@@ -22,7 +22,7 @@ using Owin;
 namespace ESS.Framework.UI.Configurations
 {
     /// <summary>
-    ///     Configuration class for enode framework.
+    ///     Configuration class for framework.
     /// </summary>
     public static class ConfigurationExtensions
     {

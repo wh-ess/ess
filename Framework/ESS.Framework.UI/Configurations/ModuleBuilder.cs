@@ -16,11 +16,13 @@ namespace ESS.Framework.UI.Configurations
     {
         public static List<ModuleAttribute> Modules = new List<ModuleAttribute>();
         public static List<Type> Enums = new List<Type>();
+        public static Dictionary<string,Type> ReadModels = new Dictionary<string, Type>();  
 
         public static void Build(Assembly[] assemblies)
         {
             BuildModules(assemblies);
             BuildEnum(assemblies);
+            BuildReadModels(assemblies);
         }
 
         private static void BuildModules(IEnumerable<Assembly> assemblies)
@@ -84,6 +86,19 @@ namespace ESS.Framework.UI.Configurations
             foreach (var t in types)
             {
                Enums.Add(t);
+            }
+        }
+        
+        private static void BuildReadModels(Assembly[] assemblies)
+        {
+            ReadModels.Clear();
+            var types = from a in assemblies
+                from t in a.GetTypes()
+                        where t.FullName.Contains("Domain") && t.FullName.Contains("ReadModels") && t.FullName.Contains("View") && !t.FullName.Contains("DisplayClass")
+                select t;
+            foreach (var t in types)
+            {
+                ReadModels.Add(t.FullName.Replace('.','_'),t);
             }
         }
 }

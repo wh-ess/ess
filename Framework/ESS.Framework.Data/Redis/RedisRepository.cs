@@ -22,24 +22,29 @@ namespace ESS.Framework.Data.Redis
         }
 
 
-        public void Add(TKey id, TEntity entity)
+        public bool Add(TKey id, TEntity entity)
         {
-            _redis.HashSetAsync(_key,id.ToString(), _jsonSerializer.Serialize(entity));
+            return _redis.HashSetAsync(_key,id.ToString(), _jsonSerializer.Serialize(entity)).Result;
         }
 
-        public void Update(TKey id, TEntity entity)
+        public bool Update(TKey id, TEntity entity)
         {
-            _redis.HashSetAsync(_key, id.ToString(), _jsonSerializer.Serialize(entity));
+            return _redis.HashSetAsync(_key, id.ToString(), _jsonSerializer.Serialize(entity)).Result;
         }
 
-        public void Delete(TKey id)
+        public bool Delete(TKey id)
         {
-            _redis.HashDeleteAsync(_key, id.ToString());
+            return _redis.HashDeleteAsync(_key, id.ToString()).Result;
         }
 
-        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        public bool Delete(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public bool DeleteAll()
+        {
+            return _redis.KeyDelete(_key);
         }
         
         public TEntity Get(TKey id)

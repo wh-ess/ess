@@ -17,26 +17,30 @@ namespace ESS.Framework.Data.Dapper
         {
             _conn  = new SqlConnection(connString);
         }
-        public void Add(TKey id, TEntity entity)
+        public bool Add(TKey id, TEntity entity)
         {
-            _conn.Insert(entity);
+            return _conn.Insert(entity)>0;
         }
 
-        public void Update(TKey id, TEntity entity)
+        public bool Update(TKey id, TEntity entity)
         {
-            _conn.Update(entity);
+            return _conn.Update(entity);
         }
 
-        public void Delete(TKey id)
+        public bool Delete(TKey id)
         {
-            
+            return false;
         }
 
-        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        public bool Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            
+            return false;
         }
 
+        public bool DeleteAll()
+        {
+            return _conn.DeleteAll<TEntity>();
+        }
         public TEntity Get(TKey id)
         {
             return _conn.Get<TEntity>(id);

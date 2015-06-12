@@ -69,6 +69,7 @@
     <Compile Include="AccessControl\RoleController.cs" />
     <Compile Include="EntityConfig\EntityController.cs" />
     <Compile Include="EntityConfig\DdlController.cs" />
+    <Compile Include="EntityConfig\ReadModelController.cs" />
     <Compile Include="EntityConfig\EnumController.cs" />
     <Compile Include="EntityConfig\ModuleController.cs" />
     <Compile Include="EntityConfig\FieldController.cs" />
@@ -98,6 +99,10 @@
     <ProjectReference Include="..\..\Framework\ESS.Framework.CQRS\ESS.Framework.CQRS.csproj">
       <Project>{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}</Project>
       <Name>ESS.Framework.CQRS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Data\ESS.Framework.Data.csproj">
+      <Project>{E7361ADE-FA40-4047-B618-B87C8F2B827C}</Project>
+      <Name>ESS.Framework.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\ESS.Framework.UI\ESS.Framework.UI.csproj">
       <Project>{775a877c-e2da-44ac-b61c-d4954738a71e}</Project>

@@ -70,7 +70,7 @@ angular.isUndefinedOrNull = function (val) {
 // Declare app level module which depends on filters, and services
 angular.module("EssApp").run([
     '$rootScope', '$route', '$routeParams', '$location',
-    function($rootScope, $route, $routeParams, $location) {
+    function ($rootScope, $route, $routeParams, $location) {
         $rootScope.$route = $route;
         $rootScope.$location = $location;
         $rootScope.$routeParams = $routeParams;
@@ -90,6 +90,9 @@ angular.module("EssApp").run([
                 .when("/module", { templateUrl: "/app/foundation/moduleConifg/moduleTable.html", controller: "ModuleController" })
                 .when("/module/:moduleNo/actions", { templateUrl: "/app/foundation/moduleConifg/actionTable.html", controller: "ActionController" })
                 .when("/module/:moduleNo/actions/:actionName/fields", { templateUrl: "/app/foundation/moduleConifg/fieldTable.html", controller: "FieldController" })
+
+                //readModels
+                .when("/readModels", { templateUrl: "/app/foundation/moduleConifg/readModels.html", controller: "ReadModelController" })
 
                 //user
                 .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
@@ -132,8 +135,8 @@ angular.module("EssApp").run([
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
 
-            //#endregion
-            ;
+        //#endregion
+        ;
     }
 ]);
 
@@ -1157,6 +1160,22 @@ angular.module("EssApp").controller("ModuleController", [
             $scope.actions.post();
         };
     }
+]).controller("ReadModelController", [
+    "$scope", "ReadModel",
+    function ($scope, ReadModel) {
+        ReadModel.getList().then(function (items) {
+            $scope.readModels = items;
+        });
+        $scope.replay = function (id) {
+            ReadModel.one(id).post();
+        };
+
+        $scope.getData=function(id) {
+            ReadModel.one(id).getList().then(function (items) {
+                $scope.items = items;
+            });
+        }
+    }
 ]);
 ///#source 1 1 /app/foundation/moduleConifg/module.service.js
 'use strict';
@@ -1178,6 +1197,11 @@ angular.module('EssApp').factory('Module', ['Restangular',
 ]).factory('DDL', ['Restangular',
     function (Restangular) {
         var DDL = Restangular.service("Ddl");
+        return DDL;
+    }
+]).factory('ReadModel', ['Restangular',
+    function (Restangular) {
+        var DDL = Restangular.service("ReadModel");
         return DDL;
     }
 ]);

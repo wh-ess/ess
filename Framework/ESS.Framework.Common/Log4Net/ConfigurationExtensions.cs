@@ -8,7 +8,7 @@ using ESS.Framework.Common.Logging;
 namespace ESS.Framework.Common.Log4Net
 {
     /// <summary>
-    ///     ENode configuration class Log4Net extensions.
+    ///     configuration class Log4Net extensions.
     /// </summary>
     public static class ConfigurationExtensions
     {
