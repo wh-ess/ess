@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using ESS.Framework.Common.Configurations;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -62,7 +63,18 @@ namespace ESS.Framework.CQRS.Event
 
         private static object DeserializeEvent(string typeName, string data)
         {
-            return JsonConvert.DeserializeObject(data, Type.GetType(typeName));
+            try
+            {
+                return JsonConvert.DeserializeObject(data, Type.GetType(typeName));
+            }
+            catch (Exception)
+            {
+                if (!Configuration.Instance.Setting.SkipEventDeserializeError)
+                {
+                    throw;
+                }
+            }
+            return null;
         }
 
         private static string SerializeEvent(object obj)

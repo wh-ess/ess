@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Attribute\ModuleAttribute.cs" />
     <Compile Include="Attribute\ValidateModelAttribute.cs" />
+    <Compile Include="Tracing\ExceptionLogger.cs" />
     <Compile Include="HttpModule\ClearHeaderModule.cs" />
     <Compile Include="Configurations\ConfigurationExtensions.cs" />
     <Compile Include="Configurations\ModuleBuilder.cs" />

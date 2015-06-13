@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 using Autofac;
 using Autofac.Integration.WebApi;
 using ESS.Framework.Common.Autofac;
@@ -12,6 +13,7 @@ using ESS.Framework.Common.Configurations;
 using ESS.Framework.UI.Attribute;
 using ESS.Framework.UI.Formatting.Jsonp;
 using ESS.Framework.UI.Formatting.Xlsx;
+using ESS.Framework.UI.Tracing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OfficeOpenXml.Style;
@@ -67,6 +69,9 @@ namespace ESS.Framework.UI.Configurations
 
             //Trace
             //config.Services.Replace(typeof(ITraceWriter), new Log4NetTraceWriter());
+
+            //ExceptionLogger
+            config.Services.Add(typeof(IExceptionLogger), new Log4NetExceptionLogger());
 
             config.MapHttpAttributeRoutes();
 

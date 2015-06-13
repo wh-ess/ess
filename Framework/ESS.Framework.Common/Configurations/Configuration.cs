@@ -18,19 +18,21 @@ namespace ESS.Framework.Common.Configurations
 {
     public class Configuration
     {
-        private Configuration()
+        public Setting Setting { get; private set; }
+        private Configuration(Setting setting)
         {
+            Setting = setting ?? new Setting();
         }
 
         public static Configuration Instance { get; private set; }
 
-        public static Configuration Create()
+        public static Configuration Create(Setting setting = null)
         {
             if (Instance != null)
             {
                 throw new Exception("Could not create configuration instance twice.");
             }
-            Instance = new Configuration();
+            Instance = new Configuration(setting);
             return Instance;
         }
 

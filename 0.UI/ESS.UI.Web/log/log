@@ -1,0 +1,99 @@
+2015-06-13 12:15:40,354 [18] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in POST for request http://localhost:7285/api/ReadModel/Common_Association__AssociationView: Newtonsoft.Json.JsonSerializationException: Error converting value {null} to type 'System.Guid'. Path 'From', line 1, position 12. ---> System.ArgumentException: Could not cast or convert from {null} to System.Guid.
+   在 Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   在 Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   在 Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   在 Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type)
+   在 ESS.Framework.CQRS.Event.RedisEventStore.DeserializeEvent(String typeName, String data) 位置 d:\Projects\ess\Framework\ESS.Framework.CQRS\Event\RedisEventStore.cs:行号 65
+   在 ESS.Framework.CQRS.Event.RedisEventStore.<LoadEventsAll>b__3(EventStream evt) 位置 d:\Projects\ess\Framework\ESS.Framework.CQRS\Event\RedisEventStore.cs:行号 43
+   在 System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   在 ESS.Framework.CQRS.ReadModel.ReadModel.Rebuild(IEnumerable events) 位置 d:\Projects\ess\Framework\ESS.Framework.CQRS\ReadModel\ReadModel.cs:行号 19
+   在 ESS.Framework.CQRS.MessageDispatcher.Repaly(IReadModel readModel) 位置 d:\Projects\ess\Framework\ESS.Framework.CQRS\MessageDispatcher.cs:行号 229
+   在 ESS.Api.Foundation.EntityConfig.ReadModelController.Replay(String id) 位置 d:\Projects\ess\0.UI\ESS.Api.Foundation\EntityConfig\ReadModelController.cs:行号 48
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClassc.<GetExecutor>b__6(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Filters.AuthorizationFilterAttribute.<ExecuteAuthorizationFilterAsyncCore>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 System.Web.Http.Dispatcher.HttpControllerDispatcher.<SendAsync>d__1.MoveNext()
+2015-06-13 12:16:22,577 [18] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/Association/CategoryType/Brand: System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 lambda_method(Closure , CategoryItem )
+   在 System.Linq.Enumerable.WhereEnumerableIterator`1.MoveNext()
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeList(JsonWriter writer, IEnumerable values, JsonArrayContract contract, JsonProperty member, JsonContainerContract collectionContract, JsonProperty containerProperty)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeValue(JsonWriter writer, Object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.Serialize(JsonWriter jsonWriter, Object value, Type objectType)
+   在 Newtonsoft.Json.JsonSerializer.SerializeInternal(JsonWriter jsonWriter, Object value, Type objectType)
+   在 Newtonsoft.Json.JsonSerializer.Serialize(JsonWriter jsonWriter, Object value)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, Encoding effectiveEncoding)
+   在 System.Net.Http.Formatting.JsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, Encoding effectiveEncoding)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, HttpContent content)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStreamAsync(Type type, Object value, Stream writeStream, HttpContent content, TransportContext transportContext, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   在 System.Web.Http.Owin.HttpMessageHandlerAdapter.<BufferResponseContentAsync>d__13.MoveNext()
+2015-06-13 12:16:30,120 [8] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/PartyRole/CategoryType/PartyRole: System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 lambda_method(Closure , CategoryItem )
+   在 System.Linq.Enumerable.WhereEnumerableIterator`1.MoveNext()
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeList(JsonWriter writer, IEnumerable values, JsonArrayContract contract, JsonProperty member, JsonContainerContract collectionContract, JsonProperty containerProperty)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeValue(JsonWriter writer, Object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.Serialize(JsonWriter jsonWriter, Object value, Type objectType)
+   在 Newtonsoft.Json.JsonSerializer.SerializeInternal(JsonWriter jsonWriter, Object value, Type objectType)
+   在 Newtonsoft.Json.JsonSerializer.Serialize(JsonWriter jsonWriter, Object value)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, Encoding effectiveEncoding)
+   在 System.Net.Http.Formatting.JsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, Encoding effectiveEncoding)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStream(Type type, Object value, Stream writeStream, HttpContent content)
+   在 System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStreamAsync(Type type, Object value, Stream writeStream, HttpContent content, TransportContext transportContext, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   在 System.Web.Http.Owin.HttpMessageHandlerAdapter.<BufferResponseContentAsync>d__13.MoveNext()
+2015-06-13 12:19:09,439 [18] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/Association/CategoryType/Brand: 未将对象引用设置到对象的实例。
+2015-06-13 12:19:42,534 [20] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/PartyRole/CategoryType/PartyRole: 未将对象引用设置到对象的实例。
+2015-06-13 12:19:44,938 [19] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/PartyRole/CategoryType/Party: 未将对象引用设置到对象的实例。
+2015-06-13 12:27:32,120 [15] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/Association/CategoryType/Brand: 未将对象引用设置到对象的实例。
+2015-06-13 12:27:41,318 [7] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in GET for request http://localhost:7285/api/CategoryTypeScheme/Association/CategoryType/Brand: 未将对象引用设置到对象的实例。
+2015-06-13 12:28:07,897 [8] ERROR ESS.Framework.UI.Tracing.Log4NetExceptionLogger [(null)] [ifca-zhangfei\z]  Unhandled exception thrown in POST for request http://localhost:7285/api/ReadModel/Common_Category__CategoryTypeView: 调用的目标发生了异常。
