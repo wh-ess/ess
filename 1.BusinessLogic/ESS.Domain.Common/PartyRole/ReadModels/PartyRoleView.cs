@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,13 +10,14 @@ using AutoMapper;
 using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Common.PartyRole.Events;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.Data;
 
 #endregion
 
 namespace ESS.Domain.Common.PartyRole.ReadModels
 {
-    public class PartyRoleView : ISubscribeTo<PartyRoleCreated>, ISubscribeTo<PartyRoleEdited>, ISubscribeTo<PartyRoleDeleted>
+    public class PartyRoleView :ReadModel, ISubscribeTo<PartyRoleCreated>, ISubscribeTo<PartyRoleEdited>, ISubscribeTo<PartyRoleDeleted>
     {
         private readonly IRepository<PartyRoleItem, Guid> _repository;
 
@@ -66,6 +68,15 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
             _repository.Update(item.Id, item);
         }
 
+        public override bool Clear()
+        {
+            return _repository.DeleteAll();
+        }
+
+        public override IEnumerable GetAll()
+        {
+            return PartyRoleList();
+        }
         #endregion
     }
 

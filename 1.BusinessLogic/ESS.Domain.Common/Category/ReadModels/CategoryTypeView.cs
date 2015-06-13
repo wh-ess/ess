@@ -1,11 +1,13 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Common.Category.Events;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.Data;
 
 #endregion
@@ -13,7 +15,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.Category.ReadModels
 {
     public class CategoryTypeView
-        : ISubscribeTo<CategoryTypeCreated>, ISubscribeTo<CategoryTypeNameChanged>, ISubscribeTo<CategoryTypeDeleted>,
+        : ReadModel,ISubscribeTo<CategoryTypeCreated>, ISubscribeTo<CategoryTypeNameChanged>, ISubscribeTo<CategoryTypeDeleted>,
             ISubscribeTo<CategoryTypeParentChanged>, ISubscribeTo<CategoryTypeSchemeChanged>,
             ISubscribeTo<CategoryTypeSchemeNameChanged>
     {
@@ -86,7 +88,18 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             Update(e.Id, c => c.Scheme.Name = e.Name);
         }
+
+        public override bool Clear()
+        {
+            return _repository.DeleteAll();
+        }
+
+        public override IEnumerable GetAll()
+        {
+            return CategoryTypeList();
+        }
         #endregion
+
     }
 
     [Serializable]

@@ -156,6 +156,10 @@
       <Project>{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}</Project>
       <Name>ESS.Framework.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESS.Framework.CQRS\ESS.Framework.CQRS.csproj">
+      <Project>{C2B89288-B9D3-40B7-97B2-1752AD56CE0E}</Project>
+      <Name>ESS.Framework.CQRS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESS.Framework.Licensing\ESS.Framework.Licensing.csproj">
       <Project>{3F32B306-3716-4BDE-BE6C-A6474737D455}</Project>
       <Name>ESS.Framework.Licensing</Name>

@@ -1,18 +1,20 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Mall.Pop.Events;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.Data;
 
 #endregion
 
 namespace ESS.Domain.Mall.Pop.ReadModels
 {
-    public class PopTemplateView : ISubscribeTo<PopTemplateCreated>, ISubscribeTo<PopTemplateDeleted>, ISubscribeTo<PopTemplateEdited>
+    public class PopTemplateView :ReadModel, ISubscribeTo<PopTemplateCreated>, ISubscribeTo<PopTemplateDeleted>, ISubscribeTo<PopTemplateEdited>
     {
         private readonly IRepository<PopTemplateItem, Guid> _repository;
 
@@ -65,8 +67,18 @@ namespace ESS.Domain.Mall.Pop.ReadModels
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
+        public override bool Clear()
+        {
+            return _repository.DeleteAll();
+        }
+
+        public override IEnumerable GetAll()
+        {
+            return PopTemplateList();
+        }
 
         #endregion
+
     }
 
     [Serializable]

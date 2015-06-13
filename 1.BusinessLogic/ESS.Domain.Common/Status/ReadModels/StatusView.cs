@@ -1,12 +1,14 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
 using ESS.Domain.Common.Status.Domain;
 using ESS.Domain.Common.Status.Events;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.Data;
 
 #endregion
@@ -14,7 +16,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.Status.ReadModels
 {
     public class StatusView
-        : ISubscribeTo<StatusCreated>,  ISubscribeTo<StatusDeleted>
+        :ReadModel, ISubscribeTo<StatusCreated>,  ISubscribeTo<StatusDeleted>
     {
         private readonly IRepository<StatusItem, Guid> _repository;
 
@@ -53,8 +55,6 @@ namespace ESS.Domain.Common.Status.ReadModels
         }
 
 
-
-
         private void Update(Guid id, Action<StatusItem> action)
         {
             var item = _repository.Single(c => c.Id == id);
@@ -64,6 +64,15 @@ namespace ESS.Domain.Common.Status.ReadModels
         }
 
 
+        public override bool Clear()
+        {
+            return _repository.DeleteAll();
+        }
+
+        public override IEnumerable GetAll()
+        {
+            return StatusList();
+        }
         #endregion
     }
 

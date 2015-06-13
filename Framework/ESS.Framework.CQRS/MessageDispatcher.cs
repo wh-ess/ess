@@ -9,6 +9,7 @@ using ESS.Framework.Common.Components;
 using ESS.Framework.CQRS.Command;
 using ESS.Framework.CQRS.Domain;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 
 #endregion
 
@@ -25,8 +26,8 @@ namespace ESS.Framework.CQRS
         private readonly Dictionary<Type, Action<object>> _commandHandlers = new Dictionary<Type, Action<object>>();
         private readonly IEventStore _eventStore;
 
-        private readonly Dictionary<Type, Dictionary<string, Action<object>>> _eventSubscribers =
-            new Dictionary<Type, Dictionary<string, Action<object>>>();
+        private readonly Dictionary<Type, List<Action<object>>> _eventSubscribers =
+            new Dictionary<Type, List<Action<object>>>();
 
         /// <summary>
         ///     Initializes a message dispatcher, which will use the specified event store
@@ -60,27 +61,13 @@ namespace ESS.Framework.CQRS
         ///     Publishes the specified event to all of its subscribers.
         /// </summary>
         /// <param name="e"></param>
-        /// <param name="acceptType">接收的类型,用于重建</param>
-        private void PublishEvent(object e, string acceptType = null)
+        private void PublishEvent(object e)
         {
             var eventType = e.GetType();
             if (_eventSubscribers.ContainsKey(eventType))
             {
                 foreach (var sub in _eventSubscribers[eventType])
-                {
-                    //只重建acceptType类型
-                    if (acceptType != null && sub.Key == acceptType)
-                    {
-                        if (sub.Key == acceptType)
-                        {
-                            sub.Value(e);
-                        }
-                    }
-                    else
-                    {
-                        sub.Value(e);
-                    }
-                }
+                    sub(e);
             }
         }
 
@@ -138,10 +125,9 @@ namespace ESS.Framework.CQRS
         {
             if (!_eventSubscribers.ContainsKey(typeof(TEvent)))
             {
-                _eventSubscribers.Add(typeof(TEvent), new Dictionary<string, Action<object>>());
+                _eventSubscribers.Add(typeof(TEvent), new List<Action<object>>());
             }
-            _eventSubscribers[typeof(TEvent)].Add(subscriber.GetType()
-                .FullName, e => subscriber.Handle((TEvent)e));
+            _eventSubscribers[typeof(TEvent)].Add(e => subscriber.Handle((TEvent)e));
         }
 
         /// <summary>
@@ -154,12 +140,12 @@ namespace ESS.Framework.CQRS
         {
             // Scan for and register handlers.
             var handlers = from a in ass
-                from t in a.GetTypes()
-                from i in t.GetInterfaces()
-                where i.IsGenericType
-                where i.GetGenericTypeDefinition() == typeof(IHandleCommand<>)
-                let args = i.GetGenericArguments()
-                select new { CommandType = args[0], AggregateType = t };
+                           from t in a.GetTypes()
+                           from i in t.GetInterfaces()
+                           where i.IsGenericType
+                           where i.GetGenericTypeDefinition() == typeof(IHandleCommand<>)
+                           let args = i.GetGenericArguments()
+                           select new { CommandType = args[0], AggregateType = t };
             foreach (var h in handlers)
             {
                 GetType()
@@ -170,11 +156,11 @@ namespace ESS.Framework.CQRS
 
             // Scan for and register subscribers.
             var subscriber = from a in ass
-                from t in a.GetTypes()
-                from i in t.GetInterfaces()
-                where i.IsGenericType
-                where i.GetGenericTypeDefinition() == typeof(ISubscribeTo<>)
-                select new { Type = t, EventType = i.GetGenericArguments()[0] };
+                             from t in a.GetTypes()
+                             from i in t.GetInterfaces()
+                             where i.IsGenericType
+                             where i.GetGenericTypeDefinition() == typeof(ISubscribeTo<>)
+                             select new { Type = t, EventType = i.GetGenericArguments()[0] };
             foreach (var s in subscriber)
             {
                 GetType()
@@ -194,10 +180,10 @@ namespace ESS.Framework.CQRS
             // Scan for and register handlers.
             var handlers = from i in instance.GetType()
                 .GetInterfaces()
-                where i.IsGenericType
-                where i.GetGenericTypeDefinition() == typeof(IHandleCommand<>)
-                let args = i.GetGenericArguments()
-                select new { CommandType = args[0], AggregateType = instance.GetType() };
+                           where i.IsGenericType
+                           where i.GetGenericTypeDefinition() == typeof(IHandleCommand<>)
+                           let args = i.GetGenericArguments()
+                           select new { CommandType = args[0], AggregateType = instance.GetType() };
             foreach (var h in handlers)
             {
                 GetType()
@@ -209,9 +195,9 @@ namespace ESS.Framework.CQRS
             // Scan for and register subscribers.
             var subscriber = from i in instance.GetType()
                 .GetInterfaces()
-                where i.IsGenericType
-                where i.GetGenericTypeDefinition() == typeof(ISubscribeTo<>)
-                select i.GetGenericArguments()[0];
+                             where i.IsGenericType
+                             where i.GetGenericTypeDefinition() == typeof(ISubscribeTo<>)
+                             select i.GetGenericArguments()[0];
             foreach (var s in subscriber)
             {
                 GetType()
@@ -236,12 +222,11 @@ namespace ESS.Framework.CQRS
         /// <summary>
         ///     对readmodel进行重建
         /// </summary>
-        /// <param name="t">readmodel类型</param>
-        public void Repaly(Type t)
+        /// <param name="readModel"></param>
+        public void Repaly(IReadModel readModel)
         {
             var events = _eventStore.LoadEventsAll();
-            foreach (var e in events)
-                PublishEvent(e, t.FullName);
+            readModel.Rebuild(events);
         }
     }
 }

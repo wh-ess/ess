@@ -1166,7 +1166,7 @@ angular.module("EssApp").controller("ModuleController", [
         ReadModel.getList().then(function (items) {
             $scope.readModels = items;
         });
-        $scope.replay = function (id) {
+        $scope.rebuild = function (id) {
             ReadModel.one(id).post();
         };
 

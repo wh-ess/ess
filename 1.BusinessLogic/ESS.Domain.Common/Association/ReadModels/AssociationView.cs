@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
@@ -9,6 +10,7 @@ using ESS.Domain.Common.Association.Events;
 using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Common.PartyRole.ReadModels;
 using ESS.Framework.CQRS.Event;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.Data;
 
 #endregion
@@ -16,7 +18,7 @@ using ESS.Framework.Data;
 namespace ESS.Domain.Common.Association.ReadModels
 {
     public class AssociationView
-        : ISubscribeTo<AssociationCreated>, ISubscribeTo<AssociationDeleted>, ISubscribeTo<AssociationEdited>
+        :ReadModel, ISubscribeTo<AssociationCreated>, ISubscribeTo<AssociationDeleted>, ISubscribeTo<AssociationEdited>
     {
         private readonly IRepository<AssociationItem, Guid> _repository;
 
@@ -60,9 +62,6 @@ namespace ESS.Domain.Common.Association.ReadModels
             _repository.Delete(e.Id);
         }
 
-
-
-
         private void Update(Guid id, Action<AssociationItem> action)
         {
             var item = _repository.Single(c => c.Id == id);
@@ -71,6 +70,15 @@ namespace ESS.Domain.Common.Association.ReadModels
             _repository.Update(item.Id, item);
         }
 
+        public override bool Clear()
+        {
+            return _repository.DeleteAll();
+        }
+
+        public override IEnumerable GetAll()
+        {
+            return AssociationList();
+        }
 
         #endregion
     }

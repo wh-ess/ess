@@ -77,6 +77,8 @@
     <Compile Include="MessageDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Event\SqlEventStore.cs" />
+    <Compile Include="ReadModel\IReadModel.cs" />
+    <Compile Include="ReadModel\ReadModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Event\sqlserver-es.sql" />

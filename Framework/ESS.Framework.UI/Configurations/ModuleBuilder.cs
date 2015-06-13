@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using ESS.Framework.Common.Components;
+using ESS.Framework.CQRS.ReadModel;
 using ESS.Framework.UI.Attribute;
 
 #endregion
@@ -16,7 +18,7 @@ namespace ESS.Framework.UI.Configurations
     {
         public static List<ModuleAttribute> Modules = new List<ModuleAttribute>();
         public static List<Type> Enums = new List<Type>();
-        public static Dictionary<string,Type> ReadModels = new Dictionary<string, Type>();  
+        public static Dictionary<string, IReadModel> ReadModels = new Dictionary<string, IReadModel>();  
 
         public static void Build(Assembly[] assemblies)
         {
@@ -94,11 +96,12 @@ namespace ESS.Framework.UI.Configurations
             ReadModels.Clear();
             var types = from a in assemblies
                 from t in a.GetTypes()
-                        where t.FullName.Contains("Domain") && t.FullName.Contains("ReadModels") && t.FullName.Contains("View") && !t.FullName.Contains("DisplayClass")
+                        where (typeof(IReadModel).IsAssignableFrom(t)) && t.FullName.Contains("Domain")
                 select t;
             foreach (var t in types)
             {
-                ReadModels.Add(t.FullName.Replace('.','_'),t);
+                IReadModel model = (IReadModel)ObjectContainer.Resolve(t);
+                ReadModels.Add(t.FullName.Replace('.', '_').Replace("ESS_Domain_","").Replace("ReadModels",""), model);
             }
         }
 }

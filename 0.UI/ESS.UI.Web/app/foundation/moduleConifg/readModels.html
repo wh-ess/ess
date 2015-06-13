@@ -4,10 +4,11 @@
         <ul>
             <li ng-repeat="rm in readModels" ng-click="getData(rm)">
                 {{rm}}
+                <md-button ng-click="rebuild(rm)">rebuild</md-button>
             </li>
         </ul>
     </md-content>
     <md-content>
-        {{data}}
+        {{items}}
     </md-content>
 </md-content>
