@@ -12,6 +12,11 @@ angular.module("EssApp").controller("PopTemplateController", [
                 });
             }, 100);
         };
+        if ($routeParams.id) {
+            PopTemplate.one($routeParams.id).get().then(function (data) {
+                $scope.current.item = data;
+            });
+        }
 
         fetchPopTemplates();
         $scope.addPopTemplate = function() {

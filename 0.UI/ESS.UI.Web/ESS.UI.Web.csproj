@@ -137,6 +137,7 @@
     <Content Include="app\foundation\moduleConifg\formView.html" />
     <Content Include="app\foundation\moduleConifg\listView.html" />
     <Content Include="app\foundation\moduleConifg\tableView.html" />
+    <Content Include="app\mall\pop\popTemplateEdit.html" />
     <Content Include="app\mall\pop\popTemplate.controller.js" />
     <Content Include="app\mall\pop\popTemplate.html" />
     <Content Include="app\mall\pop\popTemplate.service.js" />

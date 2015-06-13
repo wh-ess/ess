@@ -134,6 +134,7 @@ angular.module("EssApp").run([
                 //#region mall
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
+                .when("/popTemplate/edit/:id", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
 
         //#endregion
         ;
@@ -2269,6 +2270,11 @@ angular.module("EssApp").controller("PopTemplateController", [
                 });
             }, 100);
         };
+        if ($routeParams.id) {
+            PopTemplate.one($routeParams.id).get().then(function (data) {
+                $scope.current.item = data;
+            });
+        }
 
         fetchPopTemplates();
         $scope.addPopTemplate = function() {

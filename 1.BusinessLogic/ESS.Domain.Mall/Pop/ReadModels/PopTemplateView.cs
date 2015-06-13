@@ -3,7 +3,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using ESS.Domain.Mall.Pop.Events;
 using ESS.Framework.CQRS.Event;
@@ -84,12 +86,16 @@ namespace ESS.Domain.Mall.Pop.ReadModels
     [Serializable]
     public class PopTemplateItem
     {
-        public DateTime EndDate;
         public Guid Id;
+        [Required]
+        public string Name;
+        [Required]
+        public DateTime StartDate;
+        [Required]
+        public DateTime EndDate;
+        [Required]
         public string Image;
         public bool IsEnable;
-        public string Name;
         public int Seq;
-        public DateTime StartDate;
     }
 }

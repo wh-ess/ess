@@ -68,6 +68,7 @@ angular.module("EssApp").run([
                 //#region mall
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
+                .when("/popTemplate/edit/:id", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
 
         //#endregion
         ;
