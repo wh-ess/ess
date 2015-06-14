@@ -2,7 +2,7 @@
     <md-card ng-repeat="pt in popTemplates|filter:q">
         <md-card-content>
             <div class="md-list-item-text">
-                <img src="{{pt.Image}}"/>
+                <img ng-src="{{pt.Image}}"/>
                 <h4>{{pt.Name}}</h4>
                 <small>{{pt.No}}</small>
                 <p>{{pt.IsEnable?'Enabled':'Disabled'}}</p>
@@ -21,6 +21,6 @@
         </div>
     </md-card>
 </md-content>
-<md-button class="md-fab md-fab-bottom-right" aria-label="Add PopTemplate" href="#/popTemplate/add">
+<md-button class="md-fab md-fab-bottom-right" aria-label="Add PopTemplate" href="#/popTemplate/edit">
     <i class="fa fa-2x fa-plus"></i>
 </md-button>

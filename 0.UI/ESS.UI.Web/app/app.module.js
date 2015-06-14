@@ -11,8 +11,9 @@ angular.module("EssApp", [
     "ngSanitize",
     "ui.utils",
     "LocalStorageModule",
-    "ui.bootstrap"
-]).run(["$rootScope", "$mdSidenav", "DDL", "authService", function ($rootScope, $mdSidenav, DDL, authService) {
+    "ui.bootstrap",
+    "ngFileUpload"
+]).run(["$rootScope", "$mdSidenav", "DDL", "authService","Upload", function ($rootScope, $mdSidenav, DDL, authService,Upload) {
     $rootScope.pageTitle = "Index";
     $rootScope.pageSubTitle = "";
 
@@ -20,7 +21,7 @@ angular.module("EssApp", [
     $rootScope.auth.fillAuthData();
     $rootScope.$watch("auth.authentication.isAuth", function (newVal) {
         $rootScope.isAuth = newVal;
-        
+
     });
 
     $rootScope.changeTitle = function (title, subTitle) {
@@ -30,6 +31,24 @@ angular.module("EssApp", [
 
     $rootScope.toggleSidenav = function (menuId) {
         $mdSidenav(menuId).toggle();
+    };
+
+    $rootScope.upload = function (files) {
+        if (files && files.length) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                Upload.upload({
+                    url: 'upload/url',
+                    fields: { 'username': $scope.username },
+                    file: file
+                }).progress(function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+                }).success(function (data, status, headers, config) {
+                    console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+                });
+            }
+        }
     };
 
     $rootScope.ddl = {};

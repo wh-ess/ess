@@ -74,7 +74,7 @@ namespace ESS.Framework.CQRS.Event
                     throw;
                 }
             }
-            return null;
+            return "";
         }
 
         private static string SerializeEvent(object obj)
