@@ -2,12 +2,12 @@
 
 angular.module("EssApp").controller("PopTemplateController", [
     "$scope", "PopTemplate", "$routeParams", "$timeout",
-    function($scope, PopTemplate, $routeParams, $timeout) {
-
+    function ($scope, PopTemplate, $routeParams, $timeout) {
+        $scope.current = { item: {} };
         //#region PopTemplate
-        var fetchPopTemplates = function() {
-            $timeout(function() {
-                PopTemplate.getList().then(function(data) {
+        var fetchPopTemplates = function () {
+            $timeout(function () {
+                PopTemplate.getList().then(function (data) {
                     $scope.popTemplates = data;
                 });
             }, 100);
@@ -19,10 +19,10 @@ angular.module("EssApp").controller("PopTemplateController", [
         }
 
         fetchPopTemplates();
-        $scope.addPopTemplate = function() {
+        $scope.addPopTemplate = function () {
             $scope.popTemplates.push({});
         };
-        $scope.savePopTemplate = function(a, type) {
+        $scope.savePopTemplate = function (a, type) {
             if (a.Id) {
                 PopTemplate.one(a.Id).doPUT(a);
             } else {
@@ -32,7 +32,7 @@ angular.module("EssApp").controller("PopTemplateController", [
             }
             return true;
         };
-        $scope.delPopTemplate = function(a) {
+        $scope.delPopTemplate = function (a) {
             if (a.Id) {
                 a.remove({ Id: a.Id });
             }
@@ -40,5 +40,6 @@ angular.module("EssApp").controller("PopTemplateController", [
             $scope.popTemplates.splice(index, 1);
         };
         //#endregion
+
     }
 ]);

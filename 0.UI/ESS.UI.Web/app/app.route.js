@@ -30,11 +30,11 @@ angular.module("EssApp").run([
 
                 //user
                 .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
-                .when("/user/edit/:id", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController" })
+                .when("/user/edit/:id?", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController" })
 
                 //role
                 .when("/role", { templateUrl: "/app/foundation/AccessControl/role.html", controller: "RoleController" })
-                .when("/role/edit/:id", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController" })
+                .when("/role/edit/:id?", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController" })
 
                 //help
                 .when("/help", { templateUrl: "/app/shared/help/help.html" })
@@ -68,7 +68,7 @@ angular.module("EssApp").run([
                 //#region mall
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
-                .when("/popTemplate/edit/:id", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
+                .when("/popTemplate/edit/:id?", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
 
         //#endregion
         ;

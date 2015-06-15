@@ -127,6 +127,7 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
         Label,
         Password,
         Icon,
+        Image,
         Tree,
         SelectPage
     }

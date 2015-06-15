@@ -14,7 +14,7 @@ angular.module("EssApp", [
     "LocalStorageModule",
     "ui.bootstrap",
     "ngFileUpload"
-]).run(["$rootScope", "$mdSidenav", "DDL", "authService","Upload", function ($rootScope, $mdSidenav, DDL, authService,Upload) {
+]).run(["$rootScope", "$mdSidenav", "DDL", "authService", "Upload", function ($rootScope, $mdSidenav, DDL, authService, Upload) {
     $rootScope.pageTitle = "Index";
     $rootScope.pageSubTitle = "";
 
@@ -34,18 +34,18 @@ angular.module("EssApp", [
         $mdSidenav(menuId).toggle();
     };
 
-    $rootScope.upload = function (files) {
+    $rootScope.upload = function (files,model) {
         if (files && files.length) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 Upload.upload({
-                    url: 'upload/url',
-                    fields: { 'username': $scope.username },
+                    url: 'api/upload',
                     file: file
                 }).progress(function (evt) {
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                     console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
+                    model = data[0];
                     console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
                 });
             }
@@ -115,11 +115,11 @@ angular.module("EssApp").run([
 
                 //user
                 .when("/user", { templateUrl: "/app/foundation/AccessControl/user.html", controller: "UserController" })
-                .when("/user/edit/:id", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController" })
+                .when("/user/edit/:id?", { templateUrl: "/app/foundation/AccessControl/userEdit.html", controller: "UserController" })
 
                 //role
                 .when("/role", { templateUrl: "/app/foundation/AccessControl/role.html", controller: "RoleController" })
-                .when("/role/edit/:id", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController" })
+                .when("/role/edit/:id?", { templateUrl: "/app/foundation/AccessControl/roleEdit.html", controller: "RoleController" })
 
                 //help
                 .when("/help", { templateUrl: "/app/shared/help/help.html" })
@@ -153,7 +153,7 @@ angular.module("EssApp").run([
                 //#region mall
                 //pop
                 .when("/popTemplate", { templateUrl: "/app/mall/pop/popTemplate.html", controller: "PopTemplateController" })
-                .when("/popTemplate/edit/:id", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
+                .when("/popTemplate/edit/:id?", { templateUrl: "/app/mall/pop/popTemplateEdit.html", controller: "PopTemplateController" })
 
         //#endregion
         ;
@@ -2279,12 +2279,12 @@ angular.module("EssApp").factory("PopTemplate", [
 
 angular.module("EssApp").controller("PopTemplateController", [
     "$scope", "PopTemplate", "$routeParams", "$timeout",
-    function($scope, PopTemplate, $routeParams, $timeout) {
-
+    function ($scope, PopTemplate, $routeParams, $timeout) {
+        $scope.current = { item: {} };
         //#region PopTemplate
-        var fetchPopTemplates = function() {
-            $timeout(function() {
-                PopTemplate.getList().then(function(data) {
+        var fetchPopTemplates = function () {
+            $timeout(function () {
+                PopTemplate.getList().then(function (data) {
                     $scope.popTemplates = data;
                 });
             }, 100);
@@ -2296,10 +2296,10 @@ angular.module("EssApp").controller("PopTemplateController", [
         }
 
         fetchPopTemplates();
-        $scope.addPopTemplate = function() {
+        $scope.addPopTemplate = function () {
             $scope.popTemplates.push({});
         };
-        $scope.savePopTemplate = function(a, type) {
+        $scope.savePopTemplate = function (a, type) {
             if (a.Id) {
                 PopTemplate.one(a.Id).doPUT(a);
             } else {
@@ -2309,7 +2309,7 @@ angular.module("EssApp").controller("PopTemplateController", [
             }
             return true;
         };
-        $scope.delPopTemplate = function(a) {
+        $scope.delPopTemplate = function (a) {
             if (a.Id) {
                 a.remove({ Id: a.Id });
             }
@@ -2317,5 +2317,6 @@ angular.module("EssApp").controller("PopTemplateController", [
             $scope.popTemplates.splice(index, 1);
         };
         //#endregion
+
     }
 ]);

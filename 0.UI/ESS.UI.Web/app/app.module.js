@@ -13,7 +13,7 @@ angular.module("EssApp", [
     "LocalStorageModule",
     "ui.bootstrap",
     "ngFileUpload"
-]).run(["$rootScope", "$mdSidenav", "DDL", "authService","Upload", function ($rootScope, $mdSidenav, DDL, authService,Upload) {
+]).run(["$rootScope", "$mdSidenav", "DDL", "authService", "Upload", function ($rootScope, $mdSidenav, DDL, authService, Upload) {
     $rootScope.pageTitle = "Index";
     $rootScope.pageSubTitle = "";
 
@@ -33,18 +33,18 @@ angular.module("EssApp", [
         $mdSidenav(menuId).toggle();
     };
 
-    $rootScope.upload = function (files) {
+    $rootScope.upload = function (files,model) {
         if (files && files.length) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 Upload.upload({
-                    url: 'upload/url',
-                    fields: { 'username': $scope.username },
+                    url: 'api/upload',
                     file: file
                 }).progress(function (evt) {
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                     console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
+                    model = data[0];
                     console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
                 });
             }

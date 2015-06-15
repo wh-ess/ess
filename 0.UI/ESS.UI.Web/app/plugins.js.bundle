@@ -22,7 +22,7 @@
 	<file>/Scripts/angular-local-storage.js</file>
   <file>/Scripts/angular-ui/ui-utils.js</file>
 	<file>/Scripts/angular-route.js</file>
-	<file>/Scripts/ng-file-upload.js</file>
+	<file>/Scripts/ng-file-upload-all.js</file>
   <!-- for restangular-->
 	<file>/Scripts/underscore.js</file>
   

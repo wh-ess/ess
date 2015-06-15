@@ -17,6 +17,19 @@
             </label>
         </div>
 
+        <!-- image -->
+        <div ng-switch-when="image">
+            <label>{{f.Text}}</label>
+            <div ngf-select ngf-drop ng-model="files.item" ngf-change="upload($files)"
+                 class="drop-box" title="drop or click to upload"
+                 ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                 ngf-multiple="true" ngf-accept="'image/*'" accept="image/*" ngf-capture="camera">
+                <img ngf-src="files[0]" title="drop or click to upload" />
+            </div>
+            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+            <input type="hidden" ng-model="getModelParent(model,f.Name)[getModelLeaf(f.Name)]">
+        </div>
+
         <!-- selectMulti -->
         <div ng-switch-when="selectMulti">
             <label>{{f.Text}}</label>
@@ -37,6 +50,12 @@
                 </md-chip-template>
             </md-chips>
         </div>
+
+        <!-- date -->
+        <md-input-container ng-switch-when="date">
+            <label>{{f.Text}}</label>
+            <input type="text" datepicker-popup ng-model="getModelParent(model,f.Name)[ getModelLeaf(f.Name)]" ng-required="contains(f.Feature,'required')">
+        </md-input-container>
 
         <!-- label -->
         <md-input-container ng-switch-when="label">

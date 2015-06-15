@@ -544,6 +544,9 @@
       <DependentUpon>restangular.min.js</DependentUpon>
     </Content>
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Scripts\ng-file-upload-all.min.js.map">
+      <DependentUpon>ng-file-upload-all.min.js</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
