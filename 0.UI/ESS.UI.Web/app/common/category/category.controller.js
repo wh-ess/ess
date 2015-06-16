@@ -1,7 +1,7 @@
 ﻿"use strict";
 
 angular.module("EssApp").controller("CategoryController", [
-    "$scope", "CategoryTypeScheme", "CategoryType", "Category","$routeParams", "$timeout",
+    "$scope", "CategoryTypeScheme", "CategoryType", "Category", "$routeParams", "$timeout",
 function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $timeout) {
     $scope.cur = { type: {} };
     //#region CategoryTypeScheme
@@ -23,7 +23,7 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
         }
         return true;
     };
-    $scope.delCategoryTypeScheme = function(scheme) {
+    $scope.delCategoryTypeScheme = function (scheme) {
         if (scheme.Id) {
             scheme.remove({ Id: scheme.Id });
 
@@ -44,17 +44,30 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
 
     fetchCategoryTypes();
 
-    $scope.editCategoryType = function (type,scheme) {
+    $scope.editCategoryType = function (type, scheme) {
+        type.Scheme = scheme;
+
         if (type.Id) {
             CategoryType.one(type.Id).doPUT(type);
         } else {
-            type.Scheme = scheme;
             CategoryType.post(type);
             fetchCategoryTypes();
         }
         return true;
     };
-    $scope.delCategoryType = function(type) {
+    $scope.editCategoryTypeWithParent = function (type, parent, scheme) {
+        type.ParentId = parent.Id;
+        type.Scheme = scheme;
+
+        if (type.Id) {
+            CategoryType.one(type.Id).doPUT(type);
+        } else {
+            CategoryType.post(type);
+            fetchCategoryTypes();
+        }
+        return true;
+    };
+    $scope.delCategoryType = function (type) {
         if (type.Id) {
             type.remove({ Id: type.Id });
 
@@ -85,7 +98,7 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
         }
         return true;
     };
-    $scope.delCategory = function(cat) {
+    $scope.delCategory = function (cat) {
         if (cat.Id) {
             cat.remove({ Id: cat.Id });
         }
