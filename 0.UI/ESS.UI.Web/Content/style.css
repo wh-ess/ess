@@ -15851,3 +15851,8 @@ th{
 .drop-box.dragover-err {
 	border: 5px dashed red;
 }
+
+.img-view {
+    width: 200px;
+    height: 200px;
+}

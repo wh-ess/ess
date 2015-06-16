@@ -44,7 +44,7 @@ angular.module("EssApp", [
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                     console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
-                    model = data[0];
+                    model.Image = "upload/"+data[0];
                     console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
                 });
             }

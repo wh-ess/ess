@@ -1,11 +1,13 @@
 ﻿<md-content>
     <md-card ng-repeat="pt in popTemplates|filter:q">
         <md-card-content>
-            <div class="md-list-item-text">
-                <h4>{{pt.Name}}</h4>
-                <img ng-src="{{pt.Image}}"/>
-                <small>{{pt.StartDate}} - {{pt.EndDate}}</small>
-                <p>{{pt.IsEnable?'Enabled':'Disabled'}}</p>
+            <div class="md-list-item-text" layout="row">
+                <img ng-src="{{pt.Image}}" class="img-view" flex="50" />
+                <div flex>
+                    <h4>{{pt.Name}}</h4>
+                    <small>{{pt.StartDate| date:'yyyy-MM-dd'}} - {{pt.EndDate| date:'yyyy-MM-dd'}}</small>
+                    <p>{{pt.IsEnable?'Enabled':'Disabled'}}</p>
+                </div>
             </div>
         </md-card-content>
         <div class="md-actions" layout="row" layout-align="end center">

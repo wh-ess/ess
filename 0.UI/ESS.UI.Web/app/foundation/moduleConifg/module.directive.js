@@ -29,6 +29,8 @@ function formField(scope, Module, DDL, module, filterFilter) {
             return results;
         }
 
+        scope.files = { };
+
         scope.getModelParent = function (model, path) {
             var segs = path.split(".");
             var root = model;
@@ -135,7 +137,6 @@ angular.module("EssApp").directive("tableView", ["Module",
                 mode: "="
             },
             transclude: true,
-            replace: true,
             templateUrl: "/app/foundation/moduleConifg/formView.html",
             controller: ["$scope", "$element", "$attrs", "filterFilter",
                 function ($scope, $element, $attrs, filterFilter) {

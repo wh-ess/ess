@@ -1,15 +1,12 @@
-﻿<div form-view="PopTemplate.Get" model="current.item" save-click="savePopTemplate(current.item)" ok-button-text="Save PopTemplate"></div>
-<form name="formtest">
-    <!-- image -->
-    <div >
+﻿<div form-view="PopTemplate.Get" model="current.item" save-click="savePopTemplate(current.item)" ok-button-text="Save PopTemplate">
+    <div>
         <label>{{f.Text}}</label>
-        <div ngf-select ngf-drop ng-model="files" ngf-change="upload($files)"
+        <div ngf-select ngf-drop ng-model="files" ngf-change="upload($files,current.item)"
              class="drop-box" title="drop or click to upload"
              ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
              ngf-multiple="true" ngf-accept="'image/*'" accept="image/*" ngf-capture="camera">
-            <img ngf-src="files[0]" title="drop or click to upload" />
+            <img ng-src="{{current.item.Image}}" ngf-src="files[0]" title="drop or click to upload" />
         </div>
         <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-        <input type="hidden" ng-model="getModelParent(model,f.Name)[getModelLeaf(f.Name)]">
     </div>
-    </form>
+</div>
