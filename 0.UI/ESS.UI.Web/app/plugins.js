@@ -60986,11 +60986,11 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 /**!
  * AngularJS file upload/drop directive and service with progress and abort
  * @author  Danial  <danial.farid@gmail.com>
- * @version 5.0.5
+ * @version 5.0.6
  */
 var ngFileUpload = angular.module('ngFileUpload', []);
 
-ngFileUpload.version = '5.0.5';
+ngFileUpload.version = '5.0.6';
 ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
   function patchXHR(fnName, newFn) {
     window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
@@ -61016,8 +61016,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     config.method = config.method || 'POST';
     config.headers = config.headers || {};
 
-    var deferred =
-        $q.defer();
+    var deferred = $q.defer();
     var promise = deferred.promise;
 
     config.headers.__setXHR_ = function () {
@@ -61177,7 +61176,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
 
   this.http = function (config) {
     config.transformRequest = config.transformRequest || function (data) {
-        if (window.ArrayBuffer && data instanceof window.ArrayBuffer) {
+        if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof Blob) {
           return data;
         }
         return $http.defaults.transformRequest[0](arguments);
@@ -61186,8 +61185,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
   };
 }
 
-])
-;
+]);
 
 (function () {
     ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile',
@@ -61726,7 +61724,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
  * AngularJS file upload/drop directive and service with progress and abort
  * FileAPI Flash shim for old browsers not supporting FormData
  * @author  Danial  <danial.farid@gmail.com>
- * @version 5.0.5
+ * @version 5.0.6
  */
 
 (function () {
