@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ESS.Domain.Foundation.EntityConfig.Events;
 using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Event;
@@ -24,14 +25,14 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
             _moduleView = moduleView;
         }
 
-        public IEnumerable<EntityItem> GetEntity(string moduleNo)
+        public Task<IEnumerable<EntityItem>> GetEntity(string moduleNo)
         {
             return _repository.Find(c => c.ModuleNo.ToLower() == moduleNo.ToLower());
 
         }
 
 
-        public EntityItem GetEntity(string moduleNo, Guid id)
+        public Task<EntityItem> GetEntity(string moduleNo, Guid id)
         {
             return _repository.Single(c => c.ModuleNo.ToLower() == moduleNo.ToLower() && c.Id == id);
         }

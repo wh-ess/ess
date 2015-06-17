@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Contact.Events;
 using ESS.Framework.CQRS.Event;
@@ -22,17 +23,17 @@ namespace ESS.Domain.Common.Contact.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<PostalAddressPartItem> PostalAddressPartList(Expression<Func<PostalAddressPartItem, bool>> condition)
+        public Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList(Expression<Func<PostalAddressPartItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<PostalAddressPartItem> PostalAddressPartList()
+        public Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList()
         {
             return _repository.GetAll();
         }
 
-        public PostalAddressPartItem GetPostalAddressPart(Guid id)
+        public Task<PostalAddressPartItem> GetPostalAddressPart(Guid id)
         {
             return _repository.Get(id);
         }
@@ -60,7 +61,7 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<PostalAddressPartItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);

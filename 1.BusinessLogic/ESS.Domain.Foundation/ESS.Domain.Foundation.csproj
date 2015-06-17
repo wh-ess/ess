@@ -102,6 +102,10 @@
       <Project>{e7361ade-fa40-4047-b618-b87c8f2b827c}</Project>
       <Name>ESS.Framework.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Licensing\ESS.Framework.Licensing.csproj">
+      <Project>{3F32B306-3716-4BDE-BE6C-A6474737D455}</Project>
+      <Name>ESS.Framework.Licensing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EntityConfig\EventHandlers\" />

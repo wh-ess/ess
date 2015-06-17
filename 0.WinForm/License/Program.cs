@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using ESS.Framework.Licensing;
+using ESS.Framework.Licensing.License;
 
 namespace License
 {

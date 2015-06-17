@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -8,9 +9,9 @@ namespace ESS.Framework.CQRS.ReadModel
 {
     public interface IReadModel
     {
-        bool Clear();
+        Task<bool> Clear();
         void Rebuild(IEnumerable events);
 
-        IEnumerable GetAll();
+        Task<IEnumerable> GetAll();
     }
 }

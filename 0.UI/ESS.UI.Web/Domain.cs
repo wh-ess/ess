@@ -10,8 +10,8 @@ using ESS.Framework.CQRS.Configurations;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.Data.InMemory;
 using ESS.Framework.Data.Redis;
+using ESS.Framework.Licensing.OAuth;
 using ESS.Framework.UI.Configurations;
-using ESS.Framework.UI.OAuth;
 using Owin;
 
 #endregion

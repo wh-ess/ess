@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Framework.Common.Components;
 using ESS.Framework.CQRS;
@@ -31,7 +32,7 @@ namespace ESS.Api.Foundation.EntityConfig
         }
 
         [HttpGet]
-        public IEnumerable ReadModelData(string id)
+        public Task<IEnumerable> ReadModelData(string id)
         {
             if (ModuleBuilder.ReadModels.ContainsKey(id))
             {

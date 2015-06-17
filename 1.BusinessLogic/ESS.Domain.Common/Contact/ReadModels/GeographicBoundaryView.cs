@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Contact.Events;
 using ESS.Framework.CQRS.Event;
@@ -22,17 +23,17 @@ namespace ESS.Domain.Common.Contact.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<GeographicBoundaryItem> GeographicBoundaryList(Expression<Func<GeographicBoundaryItem, bool>> condition)
+        public Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList(Expression<Func<GeographicBoundaryItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<GeographicBoundaryItem> GeographicBoundaryList()
+        public Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList()
         {
             return _repository.GetAll();
         }
 
-        public GeographicBoundaryItem GetGeographicBoundary(Guid id)
+        public Task<GeographicBoundaryItem> GetGeographicBoundary(Guid id)
         {
             return _repository.Get(id);
         }
@@ -60,7 +61,7 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<GeographicBoundaryItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);

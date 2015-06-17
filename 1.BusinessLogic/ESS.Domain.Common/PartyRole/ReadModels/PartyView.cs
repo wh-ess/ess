@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Common.PartyRole.Events;
@@ -33,7 +34,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public IEnumerable<PartyItem> PartyList(Expression<Func<PartyItem, bool>> condition)
         {
-            var partys = _repository.Find(condition).ToList();
+            var partys = _repository.Find(condition).Result.ToList();
             foreach (var p in partys)
             {
                 AddRelation(p);
@@ -43,7 +44,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public IEnumerable<PartyItem> PartyList()
         {
-            var partys = _repository.GetAll().ToList();
+            var partys = _repository.GetAll().Result.ToList();
             foreach (var p in partys)
             {
                 AddRelation(p);
@@ -53,14 +54,14 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public PartyItem GetParty(Guid id)
         {
-            var p = _repository.Get(id);
+            var p = _repository.Get(id).Result;
             AddRelation(p);
             return p;
         }
 
         private void AddRelation(PartyItem p)
         {
-            var partyRoles = _partyRoleRepository.Find(c => c.Party.Id == p.Id);
+            var partyRoles = _partyRoleRepository.Find(c => c.Party.Id == p.Id).Result;
             foreach (var r in partyRoles)
             {
                 p.PartyRoles.Add(r.Type.Name);
@@ -89,18 +90,18 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         private void Update(Guid id, Action<PartyItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
 
-        public override bool Clear()
+        public override Task<bool> Clear()
         {
             return _repository.DeleteAll();
         }
 
-        public override IEnumerable GetAll()
+        public override Task<IEnumerable> GetAll()
         {
             return PartyList();
         }

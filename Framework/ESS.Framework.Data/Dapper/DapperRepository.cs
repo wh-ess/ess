@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -17,71 +18,71 @@ namespace ESS.Framework.Data.Dapper
         {
             _conn  = new SqlConnection(connString);
         }
-        public bool Add(TKey id, TEntity entity)
+        public async Task<bool> Add(TKey id, TEntity entity)
         {
-            return _conn.Insert(entity)>0;
+            return await _conn.InsertAsync(entity)>0;
         }
 
-        public bool Update(TKey id, TEntity entity)
+        public async Task<bool> Update(TKey id, TEntity entity)
         {
-            return _conn.Update(entity);
+            return await _conn.UpdateAsync(entity);
         }
 
-        public bool Delete(TKey id)
+        public async Task<bool> Delete(TKey id)
         {
             return false;
         }
 
-        public bool Delete(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> Delete(Expression<Func<TEntity, bool>> predicate)
         {
             return false;
         }
 
-        public bool DeleteAll()
+        public async Task<bool> DeleteAll()
         {
-            return _conn.DeleteAll<TEntity>();
+            return await _conn.DeleteAllAsync<TEntity>();
         }
-        public TEntity Get(TKey id)
+        public async Task<TEntity> Get(TKey id)
         {
-            return _conn.Get<TEntity>(id);
+            return await _conn.GetAsync<TEntity>(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TEntity> GetAllPaged(int page, int pageSize)
+        public async Task<IEnumerable<TEntity>> GetAllPaged(int page, int pageSize)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TEntity> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity Single(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity First(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> First(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public int Count()
+        public async Task<int> Count()
         {
             return 0;
         }
 
-        public int Count(Expression<Func<TEntity, bool>> criteria)
+        public async Task<int> Count(Expression<Func<TEntity, bool>> criteria)
         {
             throw new NotImplementedException();
         }

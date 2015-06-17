@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Category.Events;
 using ESS.Framework.CQRS.Event;
@@ -22,17 +23,17 @@ namespace ESS.Domain.Common.Category.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<CategoryClassificationItem> CategoryClassificationList(Expression<Func<CategoryClassificationItem, bool>> condition)
+        public Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList(Expression<Func<CategoryClassificationItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<CategoryClassificationItem> CategoryClassificationList()
+        public Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList()
         {
             return _repository.GetAll();
         }
 
-        public CategoryClassificationItem GetCategoryClassification(Guid id)
+        public Task<CategoryClassificationItem> GetCategoryClassification(Guid id)
         {
             return _repository.Get(id);
         }
@@ -56,7 +57,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryClassificationItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Mall.Pop.Events;
 using ESS.Framework.CQRS.Event;
@@ -25,17 +26,17 @@ namespace ESS.Domain.Mall.Pop.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<PopTemplateItem> PopTemplateList(Expression<Func<PopTemplateItem, bool>> condition)
+        public Task<IEnumerable<PopTemplateItem>> PopTemplateList(Expression<Func<PopTemplateItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<PopTemplateItem> PopTemplateList()
+        public Task<IEnumerable<PopTemplateItem>> PopTemplateList()
         {
             return _repository.GetAll();
         }
 
-        public PopTemplateItem GetPopTemplate(Guid id)
+        public Task<PopTemplateItem> GetPopTemplate(Guid id)
         {
             return _repository.Get(id);
         }
@@ -64,17 +65,17 @@ namespace ESS.Domain.Mall.Pop.ReadModels
 
         private void Update(Guid id, Action<PopTemplateItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
-        public override bool Clear()
+        public override Task<bool> Clear()
         {
             return _repository.DeleteAll();
         }
 
-        public override IEnumerable GetAll()
+        public override Task<IEnumerable> GetAll()
         {
             return PopTemplateList();
         }

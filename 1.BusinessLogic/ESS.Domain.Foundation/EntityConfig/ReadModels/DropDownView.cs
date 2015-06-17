@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ESS.Domain.Foundation.EntityConfig.Events;
 using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Event;
@@ -20,7 +21,7 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<DropDownItem> GetDropDown(string key)
+        public Task<IEnumerable<DropDownItem>> GetDropDown(string key)
         {
             return _repository.Find(c => c.Key.ToLower() == key.ToLower());
         }

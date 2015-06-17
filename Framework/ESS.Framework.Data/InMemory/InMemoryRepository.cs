@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using ESS.Framework.Common.Extensions;
 
 #endregion
@@ -15,86 +16,117 @@ namespace ESS.Framework.Data.InMemory
     {
         private ConcurrentDictionary<TKey, TEntity> _store = new ConcurrentDictionary<TKey, TEntity>();
 
-        public bool Add(TKey id, TEntity entity)
+        public async Task<bool> Add(TKey id, TEntity entity)
         {
-            _store.AddOrUpdate(id, entity, (k, v) => entity);
-            return true;
+            return await Task.Run(() =>
+            {
+                _store.AddOrUpdate(id, entity, (k, v) => entity);
+                return true;
+            });
         }
 
-        public bool Update(TKey id, TEntity entity)
+        public async Task<bool> Update(TKey id, TEntity entity)
         {
-            _store.AddOrUpdate(id, entity, (k, v) => entity);
-            return true;
+            return await Task.Run(() =>
+            {
+                _store.AddOrUpdate(id, entity, (k, v) => entity);
+                return true;
+            });
         }
 
-        public bool Delete(TKey id)
+        public async Task<bool> Delete(TKey id)
         {
-            _store.Remove(id);
-            return true;
+            return await Task.Run(() =>
+               {
+                   _store.Remove(id);
+                   return true;
+               });
         }
 
-        public bool Delete(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            return false;
+            return await Task.Run(() =>
+               {
+                   return false;
+               });
         }
 
-        public bool DeleteAll()
+        public async Task<bool> DeleteAll()
         {
-            _store.Clear();
-            return true;
+            return await Task.Run(() =>
+               {
+                   _store.Clear();
+                   return true;
+               });
         }
 
-        public TEntity Get(TKey id)
+        public async Task<TEntity> Get(TKey id)
         {
-            TEntity result = null;
-            _store.TryGetValue(id, out result);
-            return result;
+            return await Task.Run(() =>
+               {
+                   TEntity result = null;
+                   _store.TryGetValue(id, out result);
+                   return result;
+               });
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return _store.Values;
+            return await Task.Run(() =>
+               {
+                   return _store.Values;
+               });
         }
 
-        public IEnumerable<TEntity> GetAllPaged(int page, int pageSize)
+        public async Task<IEnumerable<TEntity>> GetAllPaged(int page, int pageSize)
         {
-            return _store.Values.Skip((page - 1) * pageSize)
-                .Take(pageSize);
+            return await Task.Run(() =>
+               {
+                   return _store.Values.Skip((page - 1) * pageSize)
+                       .Take(pageSize);
+               });
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return _store.Values.Where(predicate.Compile());
+            return await Task.Run(() =>
+               {
+                   return _store.Values.Where(predicate.Compile());
+               });
         }
 
-        public IEnumerable<TEntity> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            return Find(predicate)
+            return (await Find(predicate))
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
+
         }
 
-        public TEntity Single(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> predicate)
         {
-            return Find(predicate)
+            return (await Find(predicate))
                 .SingleOrDefault();
+
         }
 
-        public TEntity First(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> First(Expression<Func<TEntity, bool>> predicate)
         {
-            return Find(predicate)
+            return (await Find(predicate))
                 .FirstOrDefault();
+
         }
 
-        public int Count()
+        public async Task<int> Count()
         {
-            return _store.Count;
+            return await Task.Run(() => _store.Count);
         }
 
-        public int Count(Expression<Func<TEntity, bool>> criteria)
+        public async Task<int> Count(Expression<Func<TEntity, bool>> criteria)
         {
-            return Find(criteria)
+            return (await Find(criteria))
                 .Count();
+
         }
 
         #region IDisposable

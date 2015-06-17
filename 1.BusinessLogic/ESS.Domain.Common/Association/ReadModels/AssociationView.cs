@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Association.Domain;
 using ESS.Domain.Common.Association.Events;
@@ -27,17 +28,17 @@ namespace ESS.Domain.Common.Association.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<AssociationItem> AssociationList(Expression<Func<AssociationItem, bool>> condition)
+        public Task<IEnumerable<AssociationItem>> AssociationList(Expression<Func<AssociationItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<AssociationItem> AssociationList()
+        public Task<IEnumerable<AssociationItem>> AssociationList()
         {
             return _repository.GetAll();
         }
 
-        public AssociationItem GetAssociation(Guid id)
+        public Task<AssociationItem> GetAssociation(Guid id)
         {
             return _repository.Get(id);
         }
@@ -64,18 +65,18 @@ namespace ESS.Domain.Common.Association.ReadModels
 
         private void Update(Guid id, Action<AssociationItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
 
-        public override bool Clear()
+        public override Task<bool> Clear()
         {
             return _repository.DeleteAll();
         }
 
-        public override IEnumerable GetAll()
+        public override Task<IEnumerable> GetAll()
         {
             return AssociationList();
         }

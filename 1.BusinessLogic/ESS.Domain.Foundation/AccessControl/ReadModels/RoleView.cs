@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Foundation.AccessControl.Domain;
 using ESS.Domain.Foundation.AccessControl.Events;
@@ -27,16 +28,16 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<RoleItem> RoleList()
+        public Task<IEnumerable<RoleItem>> RoleList()
         {
             return _repository.GetAll();
         }
-        public RoleItem GetRole(Guid id)
+        public Task<RoleItem> GetRole(Guid id)
         {
             return _repository.Get(id);
         }
 
-        public IEnumerable<RoleItem> RoleList(Expression<Func<RoleItem, bool>> condition)
+        public Task<IEnumerable<RoleItem>> RoleList(Expression<Func<RoleItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
@@ -78,7 +79,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         }
         private void Update(Guid id, Action<RoleItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
@@ -107,7 +108,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         }
         public string UserNames
         {
-            get { return string.Join(",", Users.Select(c => c.Name)); }
+            get { return string.Join(",", Users.Select(c => c.UserName)); }
         }
     }
 

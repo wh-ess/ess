@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Category.Events;
 using ESS.Domain.Common.Contact.Events;
@@ -23,17 +24,17 @@ namespace ESS.Domain.Common.Contact.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<ContactItem> ContactList(Expression<Func<ContactItem, bool>> condition)
+        public Task<IEnumerable<ContactItem>> ContactList(Expression<Func<ContactItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<ContactItem> ContactList()
+        public Task<IEnumerable<ContactItem>> ContactList()
         {
             return _repository.GetAll();
         }
 
-        public ContactItem GetContact(Guid id)
+        public Task<ContactItem> GetContact(Guid id)
         {
             return _repository.Get(id);
         }
@@ -61,7 +62,7 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<ContactItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);

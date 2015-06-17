@@ -6,14 +6,14 @@ namespace ESS.Domain.Foundation.AccessControl.Events
     public class UserCreated : Event
     {
         public string No;
-        public string Name;
+        public string UserName;
         public string Password;
     }
 
     public class UserInfoChanged : Event
     {
         public string No;
-        public string Name;
+        public string UserName;
     }
 
     public class UserPasswordChanged : Event

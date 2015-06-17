@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Category.ReadModels;
 using ESS.Domain.Common.PartyRole.Events;
@@ -26,17 +27,17 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<PartyRoleItem> PartyRoleList(Expression<Func<PartyRoleItem, bool>> condition)
+        public Task<IEnumerable<PartyRoleItem>> PartyRoleList(Expression<Func<PartyRoleItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<PartyRoleItem> PartyRoleList()
+        public Task<IEnumerable<PartyRoleItem>> PartyRoleList()
         {
             return _repository.GetAll();
         }
 
-        public PartyRoleItem GetPartyRole(Guid id)
+        public Task<PartyRoleItem> GetPartyRole(Guid id)
         {
             return _repository.Get(id);
         }
@@ -62,18 +63,18 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         private void Update(Guid id, Action<PartyRoleItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
         }
 
-        public override bool Clear()
+        public override Task<bool> Clear()
         {
             return _repository.DeleteAll();
         }
 
-        public override IEnumerable GetAll()
+        public override Task<IEnumerable> GetAll()
         {
             return PartyRoleList();
         }

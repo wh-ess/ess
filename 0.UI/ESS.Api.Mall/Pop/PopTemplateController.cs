@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Mall.Pop.Commands;
 using ESS.Domain.Mall.Pop.ReadModels;
@@ -22,12 +23,12 @@ namespace ESS.Api.Mall.Pop
             _popTemplateView = popTemplateView;
         }
 
-        public IEnumerable<PopTemplateItem> Get()
+        public Task<IEnumerable<PopTemplateItem>> Get()
         {
             return _popTemplateView.PopTemplateList();
         }
 
-        public PopTemplateItem Get(Guid id)
+        public Task<PopTemplateItem> Get(Guid id)
         {
             return _popTemplateView.GetPopTemplate(id);
         }

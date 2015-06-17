@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using ESS.Domain.Common.Category.Events;
 using ESS.Framework.CQRS.Event;
@@ -26,22 +27,22 @@ namespace ESS.Domain.Common.Category.ReadModels
             _repository = repository;
         }
 
-        public IEnumerable<CategoryTypeItem> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
+        public Task<IEnumerable<CategoryTypeItem>> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
         {
             return _repository.Find(condition);
         }
 
-        public IEnumerable<CategoryTypeItem> CategoryTypeList()
+        public Task<IEnumerable<CategoryTypeItem>> CategoryTypeList()
         {
             return _repository.GetAll();
         }
 
-        public CategoryTypeItem GetCategoryType(Guid id)
+        public Task<CategoryTypeItem> GetCategoryType(Guid id)
         {
             return _repository.Get(id);
         }
 
-        public IEnumerable<CategoryTypeItem> GetCategoryTypeByScheme(string name)
+        public Task<IEnumerable<CategoryTypeItem>> GetCategoryTypeByScheme(string name)
         {
             return _repository.Find(c => c.Scheme.Name == name);
         }
@@ -69,7 +70,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryTypeItem> action)
         {
-            var item = _repository.Single(c => c.Id == id);
+            var item = _repository.Single(c => c.Id == id).Result;
 
             action.Invoke(item);
             _repository.Update(item.Id, item);
@@ -89,12 +90,12 @@ namespace ESS.Domain.Common.Category.ReadModels
             Update(e.Id, c => c.Scheme.Name = e.Name);
         }
 
-        public override bool Clear()
+        public override Task<bool> Clear()
         {
             return _repository.DeleteAll();
         }
 
-        public override IEnumerable GetAll()
+        public override Task<IEnumerable> GetAll()
         {
             return CategoryTypeList();
         }
