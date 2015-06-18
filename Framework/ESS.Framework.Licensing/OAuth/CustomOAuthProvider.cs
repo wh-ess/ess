@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ESS.Framework.Common.Components;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 
@@ -44,8 +45,11 @@ namespace ESS.Framework.Licensing.OAuth
             {
                 context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
             }
-            
+
             //Dummy check here, you need to do your DB checks against memebrship system http://bit.ly/SPAAuthCode
+            var authService = ObjectContainer.Resolve<IAuthService>();
+            var user = authService.FindUser(context.UserName, context.Password).Result;
+            //if (user == null)
             if (context.UserName != context.Password)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect");

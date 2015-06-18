@@ -66,6 +66,7 @@ namespace ESS.Framework.Common.Configurations
             var container = (ObjectContainer.Current as AutofacObjectContainer).Container;
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assemblies);
+            builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
             builder.Update(container);
 
             return this;

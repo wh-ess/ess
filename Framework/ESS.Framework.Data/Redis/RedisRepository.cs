@@ -25,7 +25,7 @@ namespace ESS.Framework.Data.Redis
 
         public async Task<bool> Add(TKey id, TEntity entity)
         {
-            return await _redis.HashSetAsync(_key,id.ToString(), _jsonSerializer.Serialize(entity));
+            return await _redis.HashSetAsync(_key, id.ToString(), _jsonSerializer.Serialize(entity));
         }
 
         public async Task<bool> Update(TKey id, TEntity entity)
@@ -47,15 +47,19 @@ namespace ESS.Framework.Data.Redis
         {
             return await _redis.KeyDeleteAsync(_key);
         }
-        
+
         public async Task<TEntity> Get(TKey id)
         {
             return _jsonSerializer.Deserialize<TEntity>(await _redis.HashGetAsync(_key, id.ToString()));
         }
-        
+
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            RedisValue[] result = await _redis.HashValuesAsync(_key);
+            RedisValue[] result = { };
+            if (_redis.KeyExists(_key))
+            {
+                result = await _redis.HashValuesAsync(_key);
+            }
             return result.Select(r => _jsonSerializer.Deserialize<TEntity>(r));
         }
 
@@ -89,10 +93,10 @@ namespace ESS.Framework.Data.Redis
             return (await Find(predicate))
                 .FirstOrDefault();
         }
-        
+
         public async Task<int> Count()
         {
-            return (int) await _redis.HashLengthAsync(_key);
+            return (int)await _redis.HashLengthAsync(_key);
         }
 
         public async Task<int> Count(Expression<Func<TEntity, bool>> criteria)
