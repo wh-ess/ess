@@ -65,9 +65,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Basic\BrandTest.cs" />
-    <Compile Include="Basic\BrandTypeTest.cs" />
-    <Compile Include="Basic\FloorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +83,9 @@
       <Project>{743d850b-33a1-487c-9a48-1b51a4c6f546}</Project>
       <Name>ESS.Domain.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Basic\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

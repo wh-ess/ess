@@ -75,9 +75,9 @@ namespace ESS.Domain.Mall.Pop.ReadModels
             return _repository.DeleteAll();
         }
 
-        public override Task<IEnumerable> GetAll()
+        public override async Task<IEnumerable> GetAll()
         {
-            return PopTemplateList();
+            return await PopTemplateList();
         }
 
         #endregion

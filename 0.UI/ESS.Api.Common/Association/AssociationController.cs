@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Common.Association.Commands;
 using ESS.Domain.Common.Association.ReadModels;
@@ -22,12 +23,12 @@ namespace ESS.Api.Common.Association
             _associationView = associationView;
         }
 
-        public IEnumerable<AssociationItem> Get()
+        public Task<IEnumerable<AssociationItem>> Get()
         {
             return _associationView.AssociationList();
         }
 
-        public AssociationItem Get(Guid id)
+        public Task<AssociationItem> Get(Guid id)
         {
             return _associationView.GetAssociation(id);
         }

@@ -26,7 +26,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 When(new CreateUser()
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 
@@ -34,7 +34,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Then(new UserCreated
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 
@@ -48,7 +48,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 
@@ -56,14 +56,14 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 When(new ChangeUserInfo()
                 {
                     Id = id,
-                    Name = "zff",
+                    UserName = "zff",
                     No = "zf",
 
                 }),
                 Then(new UserInfoChanged
                 {
                     Id = id,
-                    Name = "zff",
+                    UserName = "zff",
                     No = "zf"
 
                 }));
@@ -76,7 +76,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 
@@ -104,7 +104,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 
@@ -126,7 +126,7 @@ namespace ESS.Domain.Foundation.Test.AccessControl
                 Given(new UserCreated
                 {
                     Id = id,
-                    Name = "zf",
+                    UserName = "zf",
                     No = "z",
                     Password = "1"
 

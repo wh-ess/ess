@@ -101,9 +101,9 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
             return _repository.DeleteAll();
         }
 
-        public override Task<IEnumerable> GetAll()
+        public override async Task<IEnumerable> GetAll()
         {
-            return PartyList();
+            return await Task.FromResult(PartyList());
         }
         #endregion
     }

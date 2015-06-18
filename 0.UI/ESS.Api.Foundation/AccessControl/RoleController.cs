@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Foundation.AccessControl.Commands;
 using ESS.Domain.Foundation.AccessControl.ReadModels;
@@ -20,12 +21,12 @@ namespace ESS.Api.Foundation.AccessControl
             _roleView = roleView;
         }
 
-        public IEnumerable<RoleItem> Get()
+        public Task<IEnumerable<RoleItem>> Get()
         {
             return _roleView.RoleList();
         }
 
-        public RoleItem Get(Guid id)
+        public Task<RoleItem> Get(Guid id)
         {
             return _roleView.GetRole(id);
         }

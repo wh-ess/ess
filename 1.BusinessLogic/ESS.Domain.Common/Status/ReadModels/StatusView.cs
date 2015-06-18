@@ -70,9 +70,9 @@ namespace ESS.Domain.Common.Status.ReadModels
             return _repository.DeleteAll();
         }
 
-        public override Task<IEnumerable> GetAll()
+        public override async Task<IEnumerable> GetAll()
         {
-            return StatusList();
+            return await StatusList();
         }
         #endregion
     }

@@ -95,9 +95,9 @@ namespace ESS.Domain.Common.Category.ReadModels
             return _repository.DeleteAll();
         }
 
-        public override Task<IEnumerable> GetAll()
+        public override async Task<IEnumerable> GetAll()
         {
-            return CategoryTypeList();
+            return await CategoryTypeList();
         }
         #endregion
 

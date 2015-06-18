@@ -6,7 +6,7 @@ namespace ESS.Domain.Foundation.AccessControl.Commands
     public class CreateUser : Command
     {
         public string No;
-        public string Name;
+        public string UserName;
         public string Password;
 
     }
@@ -14,7 +14,7 @@ namespace ESS.Domain.Foundation.AccessControl.Commands
     public class ChangeUserInfo : Command
     {
         public string No;
-        public string Name;
+        public string UserName;
     }
 
     public class ChangePassword : Command

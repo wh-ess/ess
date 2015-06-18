@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Foundation.EntityConfig.Commands;
 using ESS.Domain.Foundation.EntityConfig.ReadModels;
@@ -24,13 +25,13 @@ namespace ESS.Api.Foundation.EntityConfig
         }
 
         [Route("{moduleNo}")]
-        public IEnumerable<EntityItem> GetEntity(string moduleNo)
+        public Task<IEnumerable<EntityItem>> GetEntity(string moduleNo)
         {
             return _entityView.GetEntity(moduleNo);
         }
 
         [Route("{moduleNo}/{id}")]
-        public EntityItem GetEntity(string moduleNo, Guid id)
+        public Task<EntityItem> GetEntity(string moduleNo, Guid id)
         {
             return _entityView.GetEntity(moduleNo, id);
         }

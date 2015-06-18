@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Common.Category.Commands;
 using ESS.Domain.Common.Category.ReadModels;
@@ -22,12 +23,12 @@ namespace ESS.Api.Common.Category
             _categoryTypeSchemeView = categoryTypeSchemeView;
         }
 
-        public IEnumerable<CategoryTypeSchemeItem> Get()
+        public Task<IEnumerable<CategoryTypeSchemeItem>> Get()
         {
             return _categoryTypeSchemeView.CategoryTypeSchemeList();
         }
 
-        public CategoryTypeSchemeItem Get(Guid id)
+        public Task<CategoryTypeSchemeItem> Get(Guid id)
         {
             return _categoryTypeSchemeView.GetCategoryTypeScheme(id);
         }

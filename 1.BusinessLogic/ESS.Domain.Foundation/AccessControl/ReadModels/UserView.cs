@@ -101,9 +101,9 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
         #endregion
 
-        public Task<IUser> FindUser(string userName, string password)
+        public async Task<IUser> FindUser(string userName, string password)
         {
-            return _repository.First(c => c.UserName == userName && c.Password == password);
+            return await _repository.First(c => c.UserName == userName && c.Password == password);
         }
     }
 

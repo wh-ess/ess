@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Common.PartyRole.Commands;
 using ESS.Domain.Common.PartyRole.ReadModels;
@@ -22,12 +23,12 @@ namespace ESS.Api.Common.PartyRole
             _partyRoleView = partyRoleView;
         }
 
-        public IEnumerable<PartyRoleItem> Get()
+        public Task<IEnumerable<PartyRoleItem>> Get()
         {
             return _partyRoleView.PartyRoleList();
         }
 
-        public PartyRoleItem Get(Guid id)
+        public Task<PartyRoleItem> Get(Guid id)
         {
             return _partyRoleView.GetPartyRole(id);
         }

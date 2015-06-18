@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Foundation.AccessControl.ReadModels;
 using ESS.Domain.Foundation.EntityConfig.Commands;
@@ -27,20 +28,20 @@ namespace ESS.Api.Foundation.EntityConfig
             _dropDownView = dropDownView;
             _userView = userView;
         }
-        public IEnumerable Get(string id)
+        public async Task<IEnumerable> Get(string id)
         {
             if (ModuleBuilder.Enums.Any(c => c.Name == id))
             {
-                return EnumExtensions.ToEnumClass(ModuleBuilder.Enums.First(c => c.Name == id));
+                return await Task.FromResult(EnumExtensions.ToEnumClass(ModuleBuilder.Enums.First(c => c.Name == id)));
             }
 
             switch (id)
             {
                 case "Users":
-                    return _userView.UserList();
+                    return await Task.FromResult(_userView.UserList());
                         
             }
-            return _dropDownView.GetDropDown(id);
+            return await _dropDownView.GetDropDown(id);
         }
 
         [HttpPost]

@@ -76,9 +76,9 @@ namespace ESS.Domain.Common.Association.ReadModels
             return _repository.DeleteAll();
         }
 
-        public override Task<IEnumerable> GetAll()
+        public override async Task<IEnumerable> GetAll()
         {
-            return AssociationList();
+            return await AssociationList();
         }
 
         #endregion
