@@ -9212,7 +9212,7 @@ return jQuery;
 
 ///#source 1 1 /Scripts/angular.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -9270,7 +9270,7 @@ function minErr(module, ErrorConstructor) {
       return match;
     });
 
-    message += '\nhttp://errors.angularjs.org/1.4.0/' +
+    message += '\nhttp://errors.angularjs.org/1.4.1/' +
       (module ? module + '/' : '') + code;
 
     for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
@@ -10077,9 +10077,18 @@ function copy(source, destination, stackSource, stackDest) {
 
   if (!destination) {
     destination = source;
-    if (source) {
+    if (isObject(source)) {
+      var index;
+      if (stackSource && (index = stackSource.indexOf(source)) !== -1) {
+        return stackDest[index];
+      }
+
+      // TypedArray, Date and RegExp have specific copy functionality and must be
+      // pushed onto the stack before returning.
+      // Array and other objects create the base object and recurse to copy child
+      // objects. The array/object will be pushed onto the stack when recursed.
       if (isArray(source)) {
-        destination = copy(source, [], stackSource, stackDest);
+        return copy(source, [], stackSource, stackDest);
       } else if (isTypedArray(source)) {
         destination = new source.constructor(source);
       } else if (isDate(source)) {
@@ -10087,9 +10096,14 @@ function copy(source, destination, stackSource, stackDest) {
       } else if (isRegExp(source)) {
         destination = new RegExp(source.source, source.toString().match(/[^\/]*$/)[0]);
         destination.lastIndex = source.lastIndex;
-      } else if (isObject(source)) {
+      } else {
         var emptyObject = Object.create(getPrototypeOf(source));
-        destination = copy(source, emptyObject, stackSource, stackDest);
+        return copy(source, emptyObject, stackSource, stackDest);
+      }
+
+      if (stackDest) {
+        stackSource.push(source);
+        stackDest.push(destination);
       }
     }
   } else {
@@ -10100,9 +10114,6 @@ function copy(source, destination, stackSource, stackDest) {
     stackDest = stackDest || [];
 
     if (isObject(source)) {
-      var index = stackSource.indexOf(source);
-      if (index !== -1) return stackDest[index];
-
       stackSource.push(source);
       stackDest.push(destination);
     }
@@ -10111,12 +10122,7 @@ function copy(source, destination, stackSource, stackDest) {
     if (isArray(source)) {
       destination.length = 0;
       for (var i = 0; i < source.length; i++) {
-        result = copy(source[i], null, stackSource, stackDest);
-        if (isObject(source[i])) {
-          stackSource.push(source[i]);
-          stackDest.push(result);
-        }
-        destination.push(result);
+        destination.push(copy(source[i], null, stackSource, stackDest));
       }
     } else {
       var h = destination.$$hashKey;
@@ -10130,20 +10136,20 @@ function copy(source, destination, stackSource, stackDest) {
       if (isBlankObject(source)) {
         // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
         for (key in source) {
-          putValue(key, source[key], destination, stackSource, stackDest);
+          destination[key] = copy(source[key], null, stackSource, stackDest);
         }
       } else if (source && typeof source.hasOwnProperty === 'function') {
         // Slow path, which must rely on hasOwnProperty
         for (key in source) {
           if (source.hasOwnProperty(key)) {
-            putValue(key, source[key], destination, stackSource, stackDest);
+            destination[key] = copy(source[key], null, stackSource, stackDest);
           }
         }
       } else {
         // Slowest path --- hasOwnProperty can't be called as a method
         for (key in source) {
           if (hasOwnProperty.call(source, key)) {
-            putValue(key, source[key], destination, stackSource, stackDest);
+            destination[key] = copy(source[key], null, stackSource, stackDest);
           }
         }
       }
@@ -10151,16 +10157,6 @@ function copy(source, destination, stackSource, stackDest) {
     }
   }
   return destination;
-
-  function putValue(key, val, destination, stackSource, stackDest) {
-    // No context allocation, trivial outer scope, easily inlined
-    var result = copy(val, null, stackSource, stackDest);
-    if (isObject(val)) {
-      stackSource.push(val);
-      stackDest.push(result);
-    }
-    destination[key] = result;
-  }
 }
 
 /**
@@ -11218,7 +11214,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#provider $provide.provider()}.
            */
-          provider: invokeLater('$provide', 'provider'),
+          provider: invokeLaterAndSetModuleName('$provide', 'provider'),
 
           /**
            * @ngdoc method
@@ -11229,7 +11225,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#factory $provide.factory()}.
            */
-          factory: invokeLater('$provide', 'factory'),
+          factory: invokeLaterAndSetModuleName('$provide', 'factory'),
 
           /**
            * @ngdoc method
@@ -11240,7 +11236,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#service $provide.service()}.
            */
-          service: invokeLater('$provide', 'service'),
+          service: invokeLaterAndSetModuleName('$provide', 'service'),
 
           /**
            * @ngdoc method
@@ -11275,7 +11271,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#decorator $provide.decorator()}.
            */
-          decorator: invokeLater('$provide', 'decorator'),
+          decorator: invokeLaterAndSetModuleName('$provide', 'decorator'),
 
           /**
            * @ngdoc method
@@ -11309,7 +11305,7 @@ function setupModuleLoader(window) {
            * See {@link ng.$animateProvider#register $animateProvider.register()} and
            * {@link ngAnimate ngAnimate module} for more information.
            */
-          animation: invokeLater('$animateProvider', 'register'),
+          animation: invokeLaterAndSetModuleName('$animateProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -11327,7 +11323,7 @@ function setupModuleLoader(window) {
            * (`myapp_subsection_filterx`).
            * </div>
            */
-          filter: invokeLater('$filterProvider', 'register'),
+          filter: invokeLaterAndSetModuleName('$filterProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -11339,7 +11335,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link ng.$controllerProvider#register $controllerProvider.register()}.
            */
-          controller: invokeLater('$controllerProvider', 'register'),
+          controller: invokeLaterAndSetModuleName('$controllerProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -11352,7 +11348,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link ng.$compileProvider#directive $compileProvider.directive()}.
            */
-          directive: invokeLater('$compileProvider', 'directive'),
+          directive: invokeLaterAndSetModuleName('$compileProvider', 'directive'),
 
           /**
            * @ngdoc method
@@ -11399,6 +11395,19 @@ function setupModuleLoader(window) {
           if (!queue) queue = invokeQueue;
           return function() {
             queue[insertMethod || 'push']([provider, method, arguments]);
+            return moduleInstance;
+          };
+        }
+
+        /**
+         * @param {string} provider
+         * @param {string} method
+         * @returns {angular.Module}
+         */
+        function invokeLaterAndSetModuleName(provider, method) {
+          return function(recipeName, factoryFunction) {
+            if (factoryFunction && isFunction(factoryFunction)) factoryFunction.$$moduleName = name;
+            invokeQueue.push([provider, method, arguments]);
             return moduleInstance;
           };
         }
@@ -11545,11 +11554,11 @@ function toDebugString(obj) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.4.0',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.4.1',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 4,
-  dot: 0,
-  codeName: 'jaracimrman-existence'
+  dot: 1,
+  codeName: 'hyperionic-illumination'
 };
 
 
@@ -11873,6 +11882,13 @@ function jqLiteAcceptsData(node) {
   // Otherwise we are only interested in elements (1) and documents (9)
   var nodeType = node.nodeType;
   return nodeType === NODE_TYPE_ELEMENT || !nodeType || nodeType === NODE_TYPE_DOCUMENT;
+}
+
+function jqLiteHasData(node) {
+  for (var key in jqCache[node.ng339]) {
+    return true;
+  }
+  return false;
 }
 
 function jqLiteBuildFragment(html, context) {
@@ -12249,7 +12265,8 @@ function getAliasedAttrName(element, name) {
 
 forEach({
   data: jqLiteData,
-  removeData: jqLiteRemoveData
+  removeData: jqLiteRemoveData,
+  hasData: jqLiteHasData
 }, function(fn, name) {
   JQLite[name] = fn;
 });
@@ -13458,7 +13475,7 @@ function createInjector(modulesToLoad, strictDi) {
           }));
 
 
-  forEach(loadModules(modulesToLoad), function(fn) { instanceInjector.invoke(fn || noop); });
+  forEach(loadModules(modulesToLoad), function(fn) { if (fn) instanceInjector.invoke(fn); });
 
   return instanceInjector;
 
@@ -14681,7 +14698,7 @@ function Browser(window, document, $log, $sniffer) {
         // Do the assignment again so that those two variables are referentially identical.
         lastHistoryState = cachedState;
       } else {
-        if (!sameBase) {
+        if (!sameBase || reloadLocation) {
           reloadLocation = url;
         }
         if (replace) {
@@ -15687,12 +15704,15 @@ function $TemplateCacheProvider() {
  *   * `controller` - the directive's required controller instance(s) - Instances are shared
  *     among all directives, which allows the directives to use the controllers as a communication
  *     channel. The exact value depends on the directive's `require` property:
+ *       * no controller(s) required: the directive's own controller, or `undefined` if it doesn't have one
  *       * `string`: the controller instance
  *       * `array`: array of controller instances
- *       * no controller(s) required: `undefined`
  *
  *     If a required controller cannot be found, and it is optional, the instance is `null`,
  *     otherwise the {@link error:$compile:ctreq Missing Required Controller} error is thrown.
+ *
+ *     Note that you can also require the directive's own controller - it will be made available like
+ *     like any other controller.
  *
  *   * `transcludeFn` - A transclude linking function pre-bound to the correct transclusion scope.
  *     This is the same as the `$transclude`
@@ -16140,6 +16160,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
                 if (isObject(bindings.isolateScope)) {
                   directive.$$isolateBindings = bindings.isolateScope;
                 }
+                directive.$$moduleName = directiveFactory.$$moduleName;
                 directives.push(directive);
               } catch (e) {
                 $exceptionHandler(e);
@@ -16711,8 +16732,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
             if (nodeLinkFn.transcludeOnThisElement) {
               childBoundTranscludeFn = createBoundTranscludeFn(
-                  scope, nodeLinkFn.transclude, parentBoundTranscludeFn,
-                  nodeLinkFn.elementTranscludeOnThisElement);
+                  scope, nodeLinkFn.transclude, parentBoundTranscludeFn);
 
             } else if (!nodeLinkFn.templateOnThisElement && parentBoundTranscludeFn) {
               childBoundTranscludeFn = parentBoundTranscludeFn;
@@ -16734,7 +16754,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       }
     }
 
-    function createBoundTranscludeFn(scope, transcludeFn, previousBoundTranscludeFn, elementTransclusion) {
+    function createBoundTranscludeFn(scope, transcludeFn, previousBoundTranscludeFn) {
 
       var boundTranscludeFn = function(transcludedScope, cloneFn, controllers, futureParentElement, containingScope) {
 
@@ -16833,6 +16853,13 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           }
           break;
         case NODE_TYPE_TEXT: /* Text Node */
+          if (msie === 11) {
+            // Workaround for #11781
+            while (node.parentNode && node.nextSibling && node.nextSibling.nodeType === NODE_TYPE_TEXT) {
+              node.nodeValue = node.nodeValue + node.nextSibling.nodeValue;
+              node.parentNode.removeChild(node.nextSibling);
+            }
+          }
           addTextInterpolateDirective(directives, node.nodeValue);
           break;
         case NODE_TYPE_COMMENT: /* Comment */
@@ -17125,7 +17152,6 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
       nodeLinkFn.scope = newScopeDirective && newScopeDirective.scope === true;
       nodeLinkFn.transcludeOnThisElement = hasTranscludeDirective;
-      nodeLinkFn.elementTranscludeOnThisElement = hasElementTranscludeDirective;
       nodeLinkFn.templateOnThisElement = hasTemplate;
       nodeLinkFn.transclude = childTranscludeFn;
 
@@ -17286,9 +17312,12 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           for (i in elementControllers) {
             controller = elementControllers[i];
             var controllerResult = controller();
+
             if (controllerResult !== controller.instance) {
+              // If the controller constructor has a return value, overwrite the instance
+              // from setupControllers and update the element data
               controller.instance = controllerResult;
-              $element.data('$' + directive.name + 'Controller', controllerResult);
+              $element.data('$' + i + 'Controller', controllerResult);
               if (controller === controllerForBindings) {
                 // Remove and re-install bindToController bindings
                 thisLinkFn.$$destroyBindings();
@@ -17588,11 +17617,18 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       return a.index - b.index;
     }
 
-
     function assertNoDuplicate(what, previousDirective, directive, element) {
+
+      function wrapModuleNameIfDefined(moduleName) {
+        return moduleName ?
+          (' (module: ' + moduleName + ')') :
+          '';
+      }
+
       if (previousDirective) {
-        throw $compileMinErr('multidir', 'Multiple directives [{0}, {1}] asking for {2} on: {3}',
-            previousDirective.name, directive.name, what, startingTag(element));
+        throw $compileMinErr('multidir', 'Multiple directives [{0}{1}, {2}{3}] asking for {4} on: {5}',
+            previousDirective.name, wrapModuleNameIfDefined(previousDirective.$$moduleName),
+            directive.name, wrapModuleNameIfDefined(directive.$$moduleName), what, startingTag(element));
       }
     }
 
@@ -17773,26 +17809,28 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       var fragment = document.createDocumentFragment();
       fragment.appendChild(firstElementToRemove);
 
-      // Copy over user data (that includes Angular's $scope etc.). Don't copy private
-      // data here because there's no public interface in jQuery to do that and copying over
-      // event listeners (which is the main use of private data) wouldn't work anyway.
-      jqLite(newNode).data(jqLite(firstElementToRemove).data());
+      if (jqLite.hasData(firstElementToRemove)) {
+        // Copy over user data (that includes Angular's $scope etc.). Don't copy private
+        // data here because there's no public interface in jQuery to do that and copying over
+        // event listeners (which is the main use of private data) wouldn't work anyway.
+        jqLite(newNode).data(jqLite(firstElementToRemove).data());
 
-      // Remove data of the replaced element. We cannot just call .remove()
-      // on the element it since that would deallocate scope that is needed
-      // for the new node. Instead, remove the data "manually".
-      if (!jQuery) {
-        delete jqLite.cache[firstElementToRemove[jqLite.expando]];
-      } else {
-        // jQuery 2.x doesn't expose the data storage. Use jQuery.cleanData to clean up after
-        // the replaced element. The cleanData version monkey-patched by Angular would cause
-        // the scope to be trashed and we do need the very same scope to work with the new
-        // element. However, we cannot just cache the non-patched version and use it here as
-        // that would break if another library patches the method after Angular does (one
-        // example is jQuery UI). Instead, set a flag indicating scope destroying should be
-        // skipped this one time.
-        skipDestroyOnNextJQueryCleanData = true;
-        jQuery.cleanData([firstElementToRemove]);
+        // Remove data of the replaced element. We cannot just call .remove()
+        // on the element it since that would deallocate scope that is needed
+        // for the new node. Instead, remove the data "manually".
+        if (!jQuery) {
+          delete jqLite.cache[firstElementToRemove[jqLite.expando]];
+        } else {
+          // jQuery 2.x doesn't expose the data storage. Use jQuery.cleanData to clean up after
+          // the replaced element. The cleanData version monkey-patched by Angular would cause
+          // the scope to be trashed and we do need the very same scope to work with the new
+          // element. However, we cannot just cache the non-patched version and use it here as
+          // that would break if another library patches the method after Angular does (one
+          // example is jQuery UI). Instead, set a flag indicating scope destroying should be
+          // skipped this one time.
+          skipDestroyOnNextJQueryCleanData = true;
+          jQuery.cleanData([firstElementToRemove]);
+        }
       }
 
       for (var k = 1, kk = elementsToRemove.length; k < kk; k++) {
@@ -17833,9 +17871,19 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
         lastValue,
         parentGet, parentSet, compare;
 
+        if (!hasOwnProperty.call(attrs, attrName)) {
+          // In the case of user defined a binding with the same name as a method in Object.prototype but didn't set
+          // the corresponding attribute. We need to make sure subsequent code won't access to the prototype function
+          attrs[attrName] = undefined;
+        }
+
         switch (mode) {
 
           case '@':
+            if (!attrs[attrName] && !optional) {
+              destination[scopeName] = undefined;
+            }
+
             attrs.$observe(attrName, function(value) {
               destination[scopeName] = value;
             });
@@ -17852,6 +17900,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               return;
             }
             parentGet = $parse(attrs[attrName]);
+
             if (parentGet.literal) {
               compare = equals;
             } else {
@@ -17890,9 +17939,6 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
             break;
 
           case '&':
-            // Don't assign Object.prototype method to scope
-            if (!attrs.hasOwnProperty(attrName) && optional) break;
-
             parentGet = $parse(attrs[attrName]);
 
             // Don't assign noop to destination if expression is not valid
@@ -18293,13 +18339,17 @@ function $HttpParamSerializerProvider() {
    * @name $httpParamSerializer
    * @description
    *
-   * Default $http params serializer that converts objects to a part of a request URL
+   * Default {@link $http `$http`} params serializer that converts objects to strings
    * according to the following rules:
+   *
    * * `{'foo': 'bar'}` results in `foo=bar`
    * * `{'foo': Date.now()}` results in `foo=2015-04-01T09%3A50%3A49.262Z` (`toISOString()` and encoded representation of a Date object)
    * * `{'foo': ['bar', 'baz']}` results in `foo=bar&foo=baz` (repeated key for each array element)
    * * `{'foo': {'bar':'baz'}}` results in `foo=%7B%22bar%22%3A%22baz%22%7D"` (stringified and encoded representation of an object)
+   *
+   * Note that serializer will sort the request parameters alphabetically.
    * */
+
   this.$get = function() {
     return function ngParamSerializer(params) {
       if (!params) return '';
@@ -18326,7 +18376,43 @@ function $HttpParamSerializerJQLikeProvider() {
    * @name $httpParamSerializerJQLike
    * @description
    *
-   * Alternative $http params serializer that follows jQuery's [`param()`](http://api.jquery.com/jquery.param/) method logic.
+   * Alternative {@link $http `$http`} params serializer that follows
+   * jQuery's [`param()`](http://api.jquery.com/jquery.param/) method logic.
+   * The serializer will also sort the params alphabetically.
+   *
+   * To use it for serializing `$http` request parameters, set it as the `paramSerializer` property:
+   *
+   * ```js
+   * $http({
+   *   url: myUrl,
+   *   method: 'GET',
+   *   params: myParams,
+   *   paramSerializer: '$httpParamSerializerJQLike'
+   * });
+   * ```
+   *
+   * It is also possible to set it as the default `paramSerializer` in the
+   * {@link $httpProvider#defaults `$httpProvider`}.
+   *
+   * Additionally, you can inject the serializer and use it explicitly, for example to serialize
+   * form data for submission:
+   *
+   * ```js
+   * .controller(function($http, $httpParamSerializerJQLike) {
+   *   //...
+   *
+   *   $http({
+   *     url: myUrl,
+   *     method: 'POST',
+   *     data: $httpParamSerializerJQLike(myData),
+   *     headers: {
+   *       'Content-Type': 'application/x-www-form-urlencoded'
+   *     }
+   *   });
+   *
+   * });
+   * ```
+   *
    * */
   this.$get = function() {
     return function jQueryLikeParamSerializer(params) {
@@ -18500,10 +18586,11 @@ function $HttpProvider() {
    *     - **`defaults.headers.put`**
    *     - **`defaults.headers.patch`**
    *
-   * - **`defaults.paramSerializer`** - {string|function(Object<string,string>):string} - A function used to prepare string representation
-   * of request parameters (specified as an object).
-   * If specified as string, it is interpreted as a function registered with the {@link auto.$injector $injector}.
-   * Defaults to {@link ng.$httpParamSerializer $httpParamSerializer}.
+   *
+   * - **`defaults.paramSerializer`** - `{string|function(Object<string,string>):string}` - A function
+   *  used to the prepare string representation of request parameters (specified as an object).
+   *  If specified as string, it is interpreted as a function registered with the {@link auto.$injector $injector}.
+   *  Defaults to {@link ng.$httpParamSerializer $httpParamSerializer}.
    *
    **/
   var defaults = this.defaults = {
@@ -18969,15 +19056,17 @@ function $HttpProvider() {
      * properties of either $httpProvider.defaults at config-time, $http.defaults at run-time,
      * or the per-request config object.
      *
+     * In order to prevent collisions in environments where multiple Angular apps share the
+     * same domain or subdomain, we recommend that each application uses unique cookie name.
+     *
      *
      * @param {object} config Object describing the request to be made and how it should be
      *    processed. The object has following properties:
      *
      *    - **method** – `{string}` – HTTP method (e.g. 'GET', 'POST', etc)
      *    - **url** – `{string}` – Absolute or relative URL of the resource that is being requested.
-     *    - **params** – `{Object.<string|Object>}` – Map of strings or objects which will be turned
-     *      to `?key1=value1&key2=value2` after the url. If the value is not a string, it will be
-     *      JSONified.
+     *    - **params** – `{Object.<string|Object>}` – Map of strings or objects which will be serialized
+     *      with the `paramSerializer` and appended as GET parameters.
      *    - **data** – `{string|Object}` – Data to be sent as the request message data.
      *    - **headers** – `{Object}` – Map of strings or functions which return strings representing
      *      HTTP headers to send to the server. If the return value of a function is null, the
@@ -18995,10 +19084,14 @@ function $HttpProvider() {
      *      transform function or an array of such functions. The transform function takes the http
      *      response body, headers and status and returns its transformed (typically deserialized) version.
      *      See {@link ng.$http#overriding-the-default-transformations-per-request
-     *      Overriding the Default Transformations}
-     *    - **paramSerializer** - {string|function(Object<string,string>):string} - A function used to prepare string representation
-     *      of request parameters (specified as an object).
-     *      Is specified as string, it is interpreted as function registered in with the {$injector}.
+     *      Overriding the Default TransformationjqLiks}
+     *    - **paramSerializer** - `{string|function(Object<string,string>):string}` - A function used to
+     *      prepare the string representation of request parameters (specified as an object).
+     *      If specified as string, it is interpreted as function registered with the
+     *      {@link $injector $injector}, which means you can create your own serializer
+     *      by registering it as a {@link auto.$provide#service service}.
+     *      The default serializer is the {@link $httpParamSerializer $httpParamSerializer};
+     *      alternatively, you can use the {@link $httpParamSerializerJQLike $httpParamSerializerJQLike}
      *    - **cache** – `{boolean|Cache}` – If true, a default $http cache will be used to cache the
      *      GET request, otherwise if a cache instance built with
      *      {@link ng.$cacheFactory $cacheFactory}, this cache will be used for
@@ -22426,8 +22519,10 @@ ASTCompiler.prototype = {
               nameId.name = ast.property.name;
             }
           }
-          recursionFn(intoId);
+        }, function() {
+          self.assign(intoId, 'undefined');
         });
+        recursionFn(intoId);
       }, !!create);
       break;
     case AST.CallExpression:
@@ -22465,8 +22560,10 @@ ASTCompiler.prototype = {
             }
             expression = self.ensureSafeObject(expression);
             self.assign(intoId, expression);
-            recursionFn(intoId);
+          }, function() {
+            self.assign(intoId, 'undefined');
           });
+          recursionFn(intoId);
         });
       }
       break;
@@ -23849,6 +23946,19 @@ function qFactory(nextTick, exceptionHandler) {
 
   /**
    * @ngdoc method
+   * @name $q#resolve
+   * @kind function
+   *
+   * @description
+   * Alias of {@link ng.$q#when when} to maintain naming consistency with ES6.
+   *
+   * @param {*} value Value or a promise
+   * @returns {Promise} Returns a promise of the passed value or promise
+   */
+  var resolve = when;
+
+  /**
+   * @ngdoc method
    * @name $q#all
    * @kind function
    *
@@ -23915,6 +24025,7 @@ function qFactory(nextTick, exceptionHandler) {
   $Q.defer = defer;
   $Q.reject = reject;
   $Q.when = when;
+  $Q.resolve = resolve;
   $Q.all = all;
 
   return $Q;
@@ -27224,9 +27335,11 @@ function $FilterProvider($provide) {
  *     `{name: {first: 'John', last: 'Doe'}}` will **not** be matched by `{name: 'John'}`, but
  *     **will** be matched by `{$: 'John'}`.
  *
- *   - `function(value, index)`: A predicate function can be used to write arbitrary filters. The
- *     function is called for each element of `array`. The final result is an array of those
- *     elements that the predicate returned true for.
+ *   - `function(value, index, array)`: A predicate function can be used to write arbitrary filters.
+ *     The function is called for each element of the array, with the element, its index, and
+ *     the entire array itself as arguments.
+ *
+ *     The final result is an array of those elements that the predicate returned true for.
  *
  * @param {function(actual, expected)|true|undefined} comparator Comparator which is used in
  *     determining if the expected value (from the filter expression) and actual value (from
@@ -27527,9 +27640,10 @@ function currencyFilter($locale) {
  * @description
  * Formats a number as text.
  *
+ * If the input is null or undefined, it will just be returned.
+ * If the input is infinite (Infinity/-Infinity) the Infinity symbol '∞' is returned.
  * If the input is not a number an empty string is returned.
  *
- * If the input is an infinite (Infinity/-Infinity) the Infinity symbol '∞' is returned.
  *
  * @param {number|string} number Number to format.
  * @param {(number|string)=} fractionSize Number of decimal places to round the number to.
@@ -28158,7 +28272,7 @@ function limitToFilter() {
  * @description
  * Orders a specified `array` by the `expression` predicate. It is ordered alphabetically
  * for strings and numerically for numbers. Note: if you notice numbers are not being sorted
- * correctly, make sure they are actually being saved as numbers and not strings.
+ * as expected, make sure they are actually being saved as numbers and not strings.
  *
  * @param {Array} array The array to sort.
  * @param {function(*)|string|Array.<(function(*)|string)>=} expression A predicate to be
@@ -28233,19 +28347,40 @@ function limitToFilter() {
                   {name:'Mike', phone:'555-4321', age:21},
                   {name:'Adam', phone:'555-5678', age:35},
                   {name:'Julie', phone:'555-8765', age:29}];
-             $scope.predicate = '-age';
+             $scope.predicate = 'age';
+             $scope.reverse = true;
+             $scope.order = function(predicate) {
+               $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+               $scope.predicate = predicate;
+             };
            }]);
        </script>
+       <style type="text/css">
+         .sortorder:after {
+           content: '\25b2';
+         }
+         .sortorder.reverse:after {
+           content: '\25bc';
+         }
+       </style>
        <div ng-controller="ExampleController">
          <pre>Sorting predicate = {{predicate}}; reverse = {{reverse}}</pre>
          <hr/>
          [ <a href="" ng-click="predicate=''">unsorted</a> ]
          <table class="friend">
            <tr>
-             <th><a href="" ng-click="predicate = 'name'; reverse=false">Name</a>
-                 (<a href="" ng-click="predicate = '-name'; reverse=false">^</a>)</th>
-             <th><a href="" ng-click="predicate = 'phone'; reverse=!reverse">Phone Number</a></th>
-             <th><a href="" ng-click="predicate = 'age'; reverse=!reverse">Age</a></th>
+             <th>
+               <a href="" ng-click="order('name')">Name</a>
+               <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+             </th>
+             <th>
+               <a href="" ng-click="order('phone')">Phone Number</a>
+               <span class="sortorder" ng-show="predicate === 'phone'" ng-class="{reverse:reverse}"></span>
+             </th>
+             <th>
+               <a href="" ng-click="order('age')">Age</a>
+               <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+             </th>
            </tr>
            <tr ng-repeat="friend in friends | orderBy:predicate:reverse">
              <td>{{friend.name}}</td>
@@ -29408,7 +29543,7 @@ var ngFormDirective = formDirectiveFactory(true);
 var ISO_DATE_REGEXP = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
 var URL_REGEXP = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
 var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))\s*$/;
+var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))([eE][+-]?\d+)?\s*$/;
 var DATE_REGEXP = /^(\d{4})-(\d{2})-(\d{2})$/;
 var DATETIMELOCAL_REGEXP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d)(\.\d{1,3})?)?$/;
 var WEEK_REGEXP = /^(\d{4})-W(\d\d)$/;
@@ -30006,6 +30141,16 @@ var inputType = {
    * Be aware that a string containing a number is not enough. See the {@link ngModel:numfmt}
    * error docs for more information and an example of how to convert your model if necessary.
    * </div>
+   *
+   * ## Issues with HTML5 constraint validation
+   *
+   * In browsers that follow the
+   * [HTML5 specification](https://html.spec.whatwg.org/multipage/forms.html#number-state-%28type=number%29),
+   * `input[number]` does not work as expected with {@link ngModelOptions `ngModelOptions.allowInvalid`}.
+   * If a non-number is entered in the input, the browser will report the value as an empty string,
+   * which means the view / model values in `ngModel` and subsequently the scope value
+   * will also be an empty string.
+   *
    *
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string=} name Property name of the form under which the control is published.
@@ -31543,7 +31688,7 @@ function classDirective(name, selector) {
  * @example Example that demonstrates basic bindings via ngClass directive.
    <example>
      <file name="index.html">
-       <p ng-class="{strike: deleted, bold: important, red: error}">Map Syntax Example</p>
+       <p ng-class="{strike: deleted, bold: important, 'has-error': error}">Map Syntax Example</p>
        <label>
           <input type="checkbox" ng-model="deleted">
           deleted (apply "strike" class)
@@ -31554,7 +31699,7 @@ function classDirective(name, selector) {
        </label><br>
        <label>
           <input type="checkbox" ng-model="error">
-          error (apply "red" class)
+          error (apply "has-error" class)
        </label>
        <hr>
        <p ng-class="style">Using String Syntax</p>
@@ -31583,6 +31728,10 @@ function classDirective(name, selector) {
        .red {
            color: red;
        }
+       .has-error {
+           color: red;
+           background-color: yellow;
+       }
        .orange {
            color: orange;
        }
@@ -31593,13 +31742,13 @@ function classDirective(name, selector) {
        it('should let you toggle the class', function() {
 
          expect(ps.first().getAttribute('class')).not.toMatch(/bold/);
-         expect(ps.first().getAttribute('class')).not.toMatch(/red/);
+         expect(ps.first().getAttribute('class')).not.toMatch(/has-error/);
 
          element(by.model('important')).click();
          expect(ps.first().getAttribute('class')).toMatch(/bold/);
 
          element(by.model('error')).click();
-         expect(ps.first().getAttribute('class')).toMatch(/red/);
+         expect(ps.first().getAttribute('class')).toMatch(/has-error/);
        });
 
        it('should let you toggle string example', function() {
@@ -34433,7 +34582,7 @@ var DEFAULT_REGEXP = /(\s+|^)default(\s+|$)/;
  *   - `debounce`: integer value which contains the debounce model update value in milliseconds. A
  *     value of 0 triggers an immediate update. If an object is supplied instead, you can specify a
  *     custom value for each event. For example:
- *     `ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"`
+ *     `ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"`
  *   - `allowInvalid`: boolean value which indicates that the model can be set with values that did
  *     not validate correctly instead of the default behavior of setting the model to undefined.
  *   - `getterSetter`: boolean value which determines whether or not to treat functions bound to
@@ -34683,7 +34832,9 @@ function addSetValidityMethod(context) {
 function isObjectEmpty(obj) {
   if (obj) {
     for (var prop in obj) {
-      return false;
+      if (obj.hasOwnProperty(prop)) {
+        return false;
+      }
     }
   }
   return true;
@@ -35026,6 +35177,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
         values = values || [];
 
         Object.keys(values).forEach(function getWatchable(key) {
+          if (key.charAt(0) === '$') return;
           var locals = getLocals(values[key], key);
           var selectValue = getTrackByValueFn(values[key], locals);
           watchedArray.push(selectValue);
@@ -35429,8 +35581,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
         // Check to see if the value has changed due to the update to the options
         if (!ngModelCtrl.$isEmpty(previousValue)) {
           var nextValue = selectCtrl.readValue();
-          if (ngOptions.trackBy && !equals(previousValue, nextValue) ||
-                previousValue !== nextValue) {
+          if (ngOptions.trackBy ? !equals(previousValue, nextValue) : previousValue !== nextValue) {
             ngModelCtrl.$setViewValue(nextValue);
             ngModelCtrl.$render();
           }
@@ -35778,6 +35929,15 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
  *    </div>
  * ```
  *
+ * <div class="alert alert-warning">
+ * **Note:** `track by` must always be the last expression:
+ * </div>
+ * ```
+ * <div ng-repeat="model in collection | orderBy: 'id' as filtered_result track by model.id">
+ *     {{model.name}}
+ * </div>
+ * ```
+ *
  * # Special repeat start and end points
  * To repeat a series of elements instead of just one parent element, ngRepeat (as well as other ng directives) supports extending
  * the range of the repeater by defining explicit start and end points by using **ng-repeat-start** and **ng-repeat-end** respectively.
@@ -35849,8 +36009,9 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
  *     which can be used to associate the objects in the collection with the DOM elements. If no tracking expression
  *     is specified, ng-repeat associates elements by identity. It is an error to have
  *     more than one tracking expression value resolve to the same key. (This would mean that two distinct objects are
- *     mapped to the same DOM element, which is not possible.)  If filters are used in the expression, they should be
- *     applied before the tracking expression.
+ *     mapped to the same DOM element, which is not possible.)
+ *
+ *     Note that the tracking expression must come last, after any filters, and the alias expression.
  *
  *     For example: `item in items` is equivalent to `item in items track by $id(item)`. This implies that the DOM elements
  *     will be associated by item identity in the array.
@@ -37357,7 +37518,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.collapse","ui.b
 }]),angular.module("template/modal/backdrop.html",[]).run(["$templateCache",function(a){a.put("template/modal/backdrop.html",'<div class="modal-backdrop"\n     modal-animation-class="fade"\n     ng-class="{in: animate}"\n     ng-style="{\'z-index\': 1040 + (index && 1 || 0) + index*10}"\n></div>\n')}]),angular.module("template/modal/window.html",[]).run(["$templateCache",function(a){a.put("template/modal/window.html",'<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal"\n    modal-animation-class="fade"\n	ng-class="{in: animate}" ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)">\n    <div class="modal-dialog" ng-class="size ? \'modal-\' + size : \'\'"><div class="modal-content" modal-transclude></div></div>\n</div>\n')}]),angular.module("template/pagination/pager.html",[]).run(["$templateCache",function(a){a.put("template/pagination/pager.html",'<ul class="pager">\n  <li ng-class="{disabled: noPrevious(), previous: align}"><a href ng-click="selectPage(page - 1, $event)">{{getText(\'previous\')}}</a></li>\n  <li ng-class="{disabled: noNext(), next: align}"><a href ng-click="selectPage(page + 1, $event)">{{getText(\'next\')}}</a></li>\n</ul>')}]),angular.module("template/pagination/pagination.html",[]).run(["$templateCache",function(a){a.put("template/pagination/pagination.html",'<ul class="pagination">\n  <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1, $event)">{{getText(\'first\')}}</a></li>\n  <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1, $event)">{{getText(\'previous\')}}</a></li>\n  <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number, $event)">{{page.text}}</a></li>\n  <li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1, $event)">{{getText(\'next\')}}</a></li>\n  <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages, $event)">{{getText(\'last\')}}</a></li>\n</ul>')}]),angular.module("template/tooltip/tooltip-html-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-html-popup.html",'<div class="tooltip"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner" ng-bind-html="contentExp()"></div>\n</div>\n')}]),angular.module("template/tooltip/tooltip-html-unsafe-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-html-unsafe-popup.html",'<div class="tooltip"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner" bind-html-unsafe="content"></div>\n</div>\n')}]),angular.module("template/tooltip/tooltip-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-popup.html",'<div class="tooltip"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner" ng-bind="content"></div>\n</div>\n')}]),angular.module("template/tooltip/tooltip-template-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-template-popup.html",'<div class="tooltip"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner"\n    tooltip-template-transclude="contentExp()"\n    tooltip-template-transclude-scope="originScope()"></div>\n</div>\n')}]),angular.module("template/popover/popover-template.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover-template.html",'<div class="popover"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n      <div class="popover-content"\n        tooltip-template-transclude="contentExp()"\n        tooltip-template-transclude-scope="originScope()"></div>\n  </div>\n</div>\n')}]),angular.module("template/popover/popover-window.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover-window.html",'<div class="popover {{placement}}" ng-class="{ in: isOpen, fade: animation }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-show="title"></h3>\n      <div class="popover-content" tooltip-template-transclude></div>\n  </div>\n</div>\n')}]),angular.module("template/popover/popover.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover.html",'<div class="popover"\n  tooltip-animation-class="fade"\n  tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n      <div class="popover-content" ng-bind="content"></div>\n  </div>\n</div>\n')}]),angular.module("template/progressbar/bar.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/bar.html",'<div class="progress-bar" ng-class="type && \'progress-bar-\' + type" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="{{max}}" ng-style="{width: (percent < 100 ? percent : 100) + \'%\'}" aria-valuetext="{{percent | number:0}}%" ng-transclude></div>\n')}]),angular.module("template/progressbar/progress.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/progress.html",'<div class="progress" ng-transclude></div>')}]),angular.module("template/progressbar/progressbar.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/progressbar.html",'<div class="progress">\n  <div class="progress-bar" ng-class="type && \'progress-bar-\' + type" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="{{max}}" ng-style="{width: (percent < 100 ? percent : 100) + \'%\'}" aria-valuetext="{{percent | number:0}}%" ng-transclude></div>\n</div>\n')}]),angular.module("template/rating/rating.html",[]).run(["$templateCache",function(a){a.put("template/rating/rating.html",'<span ng-mouseleave="reset()" ng-keydown="onKeydown($event)" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="{{range.length}}" aria-valuenow="{{value}}">\n    <i ng-repeat="r in range track by $index" ng-mouseenter="enter($index + 1)" ng-click="rate($index + 1)" class="glyphicon" ng-class="$index < value && (r.stateOn || \'glyphicon-star\') || (r.stateOff || \'glyphicon-star-empty\')">\n        <span class="sr-only">({{ $index < value ? \'*\' : \' \' }})</span>\n    </i>\n</span>')}]),angular.module("template/tabs/tab.html",[]).run(["$templateCache",function(a){a.put("template/tabs/tab.html",'<li ng-class="{active: active, disabled: disabled}">\n  <a href ng-click="select()" tab-heading-transclude>{{heading}}</a>\n</li>\n')}]),angular.module("template/tabs/tabset.html",[]).run(["$templateCache",function(a){a.put("template/tabs/tabset.html",'<div>\n  <ul class="nav nav-{{type || \'tabs\'}}" ng-class="{\'nav-stacked\': vertical, \'nav-justified\': justified}" ng-transclude></ul>\n  <div class="tab-content">\n    <div class="tab-pane" \n         ng-repeat="tab in tabs" \n         ng-class="{active: tab.active}"\n         tab-content-transclude="tab">\n    </div>\n  </div>\n</div>\n')}]),angular.module("template/timepicker/timepicker.html",[]).run(["$templateCache",function(a){a.put("template/timepicker/timepicker.html",'<table>\n	<tbody>\n		<tr class="text-center">\n			<td><a ng-click="incrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n			<td>&nbsp;</td>\n			<td><a ng-click="incrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n			<td ng-show="showMeridian"></td>\n		</tr>\n		<tr>\n			<td class="form-group" ng-class="{\'has-error\': invalidHours}">\n				<input style="width:50px;" type="text" ng-model="hours" ng-change="updateHours()" class="form-control text-center" ng-readonly="readonlyInput" maxlength="2">\n			</td>\n			<td>:</td>\n			<td class="form-group" ng-class="{\'has-error\': invalidMinutes}">\n				<input style="width:50px;" type="text" ng-model="minutes" ng-change="updateMinutes()" class="form-control text-center" ng-readonly="readonlyInput" maxlength="2">\n			</td>\n			<td ng-show="showMeridian"><button type="button" class="btn btn-default text-center" ng-click="toggleMeridian()">{{meridian}}</button></td>\n		</tr>\n		<tr class="text-center">\n			<td><a ng-click="decrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n			<td>&nbsp;</td>\n			<td><a ng-click="decrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n			<td ng-show="showMeridian"></td>\n		</tr>\n	</tbody>\n</table>\n')}]),angular.module("template/typeahead/typeahead-match.html",[]).run(["$templateCache",function(a){a.put("template/typeahead/typeahead-match.html",'<a tabindex="-1" bind-html-unsafe="match.label | typeaheadHighlight:query"></a>')}]),angular.module("template/typeahead/typeahead-popup.html",[]).run(["$templateCache",function(a){a.put("template/typeahead/typeahead-popup.html",'<ul class="dropdown-menu" ng-show="isOpen()" ng-style="{top: position.top+\'px\', left: position.left+\'px\'}" style="display: block;" role="listbox" aria-hidden="{{!isOpen()}}">\n    <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{match.id}}">\n        <div typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>\n    </li>\n</ul>\n')}]),!angular.$$csp()&&angular.element(document).find("head").prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');
 ///#source 1 1 /Scripts/angular-animate.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -37862,7 +38023,8 @@ var $$AnimateChildrenDirective = [function() {
  * unless you really need a digest to kick off afterwards.
  *
  * Keep in mind that, to make this easier, ngAnimate has tweaked the JS animations API to recognize when a runner instance is returned from $animateCss
- * (so there is no need to call `runner.done(doneFn)` inside of your JavaScript animation code). Check the [animation code above](#usage) to see how this works.
+ * (so there is no need to call `runner.done(doneFn)` inside of your JavaScript animation code).
+ * Check the {@link ngAnimate.$animateCss#usage animation code above} to see how this works.
  *
  * @param {DOMElement} element the element that will be animated
  * @param {object} options the animation-related options that will be applied during the animation
@@ -40378,7 +40540,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
  *   opacity:0;
  * }
  *
- * /&#42; The starting CSS styles for the enter animation &#42;/
+ * /&#42; The finishing CSS styles for the enter animation &#42;/
  * .fade.ng-enter.ng-enter-active {
  *   opacity:1;
  * }
@@ -41067,7 +41229,7 @@ angular.module('ngAnimate', [])
 
 ///#source 1 1 /Scripts/angular-aria.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -41087,8 +41249,8 @@ angular.module('ngAnimate', [])
  *
  * ## Usage
  *
- * For ngAria to do its magic, simply include the module as a dependency. The directives supported
- * by ngAria are:
+ * For ngAria to do its magic, simply include the module `ngAria` as a dependency. The following
+ * directives are supported:
  * `ngModel`, `ngDisabled`, `ngShow`, `ngHide`, `ngClick`, `ngDblClick`, and `ngMessages`.
  *
  * Below is a more detailed breakdown of the attributes handled by ngAria:
@@ -41188,9 +41350,8 @@ function $AriaProvider() {
       var ariaCamelName = attr.$normalize(ariaAttr);
       if (config[ariaCamelName] && !attr[ariaCamelName]) {
         scope.$watch(attr[attrName], function(boolVal) {
-          if (negate) {
-            boolVal = !boolVal;
-          }
+          // ensure boolean value
+          boolVal = negate ? !boolVal : !!boolVal;
           elem.attr(ariaAttr, boolVal);
         });
       }
@@ -41338,13 +41499,23 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
                 elem.attr('role', 'slider');
               }
               if ($aria.config('ariaValue')) {
-                if (attr.min && !elem.attr('aria-valuemin')) {
-                  elem.attr('aria-valuemin', attr.min);
+                var needsAriaValuemin = !elem.attr('aria-valuemin') &&
+                    (attr.hasOwnProperty('min') || attr.hasOwnProperty('ngMin'));
+                var needsAriaValuemax = !elem.attr('aria-valuemax') &&
+                    (attr.hasOwnProperty('max') || attr.hasOwnProperty('ngMax'));
+                var needsAriaValuenow = !elem.attr('aria-valuenow');
+
+                if (needsAriaValuemin) {
+                  attr.$observe('min', function ngAriaValueMinReaction(newVal) {
+                    elem.attr('aria-valuemin', newVal);
+                  });
                 }
-                if (attr.max && !elem.attr('aria-valuemax')) {
-                  elem.attr('aria-valuemax', attr.max);
+                if (needsAriaValuemax) {
+                  attr.$observe('max', function ngAriaValueMinReaction(newVal) {
+                    elem.attr('aria-valuemax', newVal);
+                  });
                 }
-                if (!elem.attr('aria-valuenow')) {
+                if (needsAriaValuenow) {
                   scope.$watch(ngAriaWatchModelValue, function ngAriaValueNowReaction(newVal) {
                     elem.attr('aria-valuenow', newVal);
                   });
@@ -41450,7 +41621,7 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.9.8-rc1-master-434a509
+ * v0.10.0-master-4a6cd56
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -41458,7 +41629,7 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
 (function(){
 "use strict";
 
-angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.theming.palette","material.core.theming","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.checkbox","material.components.chips","material.components.content","material.components.dialog","material.components.divider","material.components.gridList","material.components.icon","material.components.input","material.components.list","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.whiteframe"]);
+angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.theming.palette","material.core.theming","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.checkbox","material.components.chips","material.components.content","material.components.dialog","material.components.divider","material.components.fabActions","material.components.fabSpeedDial","material.components.fabToolbar","material.components.fabTrigger","material.components.gridList","material.components.icon","material.components.input","material.components.list","material.components.menu","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.virtualRepeat","material.components.whiteframe"]);
 })();
 (function(){
 "use strict";
@@ -41955,353 +42126,358 @@ mdMediaFactory.$inject = ["$mdConstant", "$rootScope", "$window"];
 var nextUniqueId = 0;
 
 angular.module('material.core')
-.factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", "$q", "$window", "$mdConstant", function($cacheFactory, $document, $timeout, $q, $window, $mdConstant) {
-  var Util;
+  .factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", "$q", "$window", "$mdConstant", function ($cacheFactory, $document, $timeout, $q, $window, $mdConstant) {
+    var Util;
 
-  function getNode(el) {
-    return el[0] || el;
-  }
+    function getNode(el) {
+      return el[0] || el;
+    }
 
-  return Util = {
-    now: window.performance ?
-      angular.bind(window.performance, window.performance.now) :
-      Date.now,
+    return Util = {
+      now: window.performance ?
+        angular.bind(window.performance, window.performance.now) :
+        Date.now,
 
-    clientRect: function(element, offsetParent, isOffsetRect) {
-      var node = getNode(element);
-      offsetParent = getNode(offsetParent || node.offsetParent || document.body);
-      var nodeRect = node.getBoundingClientRect();
+      clientRect: function (element, offsetParent, isOffsetRect) {
+        var node = getNode(element);
+        offsetParent = getNode(offsetParent || node.offsetParent || document.body);
+        var nodeRect = node.getBoundingClientRect();
 
-      // The user can ask for an offsetRect: a rect relative to the offsetParent,
-      // or a clientRect: a rect relative to the page
-      var offsetRect = isOffsetRect ?
-        offsetParent.getBoundingClientRect() :
-        { left: 0, top: 0, width: 0, height: 0 };
-      return {
-        left: nodeRect.left - offsetRect.left,
-        top: nodeRect.top - offsetRect.top,
-        width: nodeRect.width,
-        height: nodeRect.height
-      };
-    },
-    offsetRect: function(element, offsetParent) {
-      return Util.clientRect(element, offsetParent, true);
-    },
-    // Disables scroll around the passed element. Goes up the DOM to find a
-    // disableTarget (a md-content that is scrolling, or the body as a fallback)
-    // and uses CSS/JS to prevent it from scrolling
-    disableScrollAround: function(element) {
-      element = element instanceof angular.element ? element[0] : element;
-      var parentEl = element;
-      var disableTarget;
+        // The user can ask for an offsetRect: a rect relative to the offsetParent,
+        // or a clientRect: a rect relative to the page
+        var offsetRect = isOffsetRect ?
+          offsetParent.getBoundingClientRect() :
+        {left: 0, top: 0, width: 0, height: 0};
+        return {
+          left: nodeRect.left - offsetRect.left,
+          top: nodeRect.top - offsetRect.top,
+          width: nodeRect.width,
+          height: nodeRect.height
+        };
+      },
+      offsetRect: function (element, offsetParent) {
+        return Util.clientRect(element, offsetParent, true);
+      },
 
-      // Find the highest level scrolling md-content
-      while (parentEl = this.getClosest(parentEl, 'MD-CONTENT', true)) {
-        if (isScrolling(parentEl)) {
-          disableTarget = angular.element(parentEl)[0];
+      // Annoying method to copy nodes to an array, thanks to IE
+      nodesToArray: function (nodes) {
+        var results = [];
+        for (var i = 0; i < nodes.length; ++i) {
+          results.push(nodes.item(i));
         }
-      }
+        return results;
+      },
 
-      // Default to the body if no scrolling md-content
-      if (!disableTarget) {
-        disableTarget = $document[0].body;
-        if (!isScrolling(disableTarget)) return angular.noop;
-      }
+      // Disables scroll around the passed element.
+      disableScrollAround: function (element) {
+        if (Util.disableScrollAround._enableScrolling) return Util.disableScrollAround._enableScrolling;
+        element = angular.element(element);
+        var body = $document[0].body,
+          restoreBody = disableBodyScroll(),
+          restoreElement = disableElementScroll();
 
-      if (disableTarget.nodeName == 'BODY') {
-        return disableBodyScroll();
-      } else {
-        return disableElementScroll();
-      }
-
-      // Creates a virtual scrolling mask to absorb touchmove, keyboard, scrollbar clicking, and wheel events
-      function disableElementScroll() {
-        var scrollMask = angular.element('<div class="md-scroll-mask"><div class="md-scroll-mask-bar"></div></div>');
-        var computedStyle = $window.getComputedStyle(disableTarget);
-        var disableRect = disableTarget.getBoundingClientRect();
-        var scrollWidth = disableRect.width - disableTarget.clientWidth;
-        applyStyles(scrollMask[0], {
-          zIndex: computedStyle.zIndex == 'auto' ? 2 : computedStyle.zIndex + 1,
-          width: disableRect.width + 'px',
-          height: disableRect.height + 'px',
-          top: disableRect.top + 'px',
-          left: disableRect.left + 'px'
-        });
-        scrollMask[0].firstElementChild.style.width = scrollWidth + 'px';
-        $document[0].body.appendChild(scrollMask[0]);
-
-        scrollMask.on('wheel', preventDefault);
-        scrollMask.on('touchmove', preventDefault);
-        $document.on('keydown', disableKeyNav);
-
-        return function restoreScroll() {
-          scrollMask.off('wheel');
-          scrollMask.off('touchmove');
-          scrollMask[0].parentNode.removeChild(scrollMask[0]);
-          $document.off('keydown', disableKeyNav);
+        return Util.disableScrollAround._enableScrolling = function () {
+          restoreBody();
+          restoreElement();
+          delete Util.disableScrollAround._enableScrolling;
         };
 
-        // Prevent keypresses from elements inside the disableTarget
-        // used to stop the keypresses that could cause the page to scroll
-        // (arrow keys, spacebar, tab, etc).
-        function disableKeyNav(e) {
-          if (disableTarget.contains(e.target)) {
+        // Creates a virtual scrolling mask to absorb touchmove, keyboard, scrollbar clicking, and wheel events
+        function disableElementScroll() {
+          var zIndex = $window.getComputedStyle(element[0]).zIndex - 1;
+          if (isNaN(zIndex)) zIndex = 50;
+          var scrollMask = angular.element(
+            '<div class="md-scroll-mask" style="z-index: ' + zIndex + '">' +
+            '  <div class="md-scroll-mask-bar"></div>' +
+            '</div>');
+          body.appendChild(scrollMask[0]);
+
+          scrollMask.on('wheel', preventDefault);
+          scrollMask.on('touchmove', preventDefault);
+          $document.on('keydown', disableKeyNav);
+
+          return function restoreScroll() {
+            scrollMask.off('wheel');
+            scrollMask.off('touchmove');
+            scrollMask[0].parentNode.removeChild(scrollMask[0]);
+            $document.off('keydown', disableKeyNav);
+            delete Util.disableScrollAround._enableScrolling;
+          };
+
+          // Prevent keypresses from elements inside the body
+          // used to stop the keypresses that could cause the page to scroll
+          // (arrow keys, spacebar, tab, etc).
+          function disableKeyNav(e) {
+            //-- temporarily removed this logic, will possibly re-add at a later date
+            return;
+            if (!element[0].contains(e.target)) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          }
+
+          function preventDefault(e) {
             e.preventDefault();
-            e.stopImmediatePropagation();
           }
         }
 
-        function preventDefault(e) {
-          e.preventDefault();
+        // Converts the body to a position fixed block and translate it to the proper scroll
+        // position
+        function disableBodyScroll() {
+          var htmlNode = body.parentNode;
+          var restoreHtmlStyle = htmlNode.getAttribute('style') || '';
+          var restoreBodyStyle = body.getAttribute('style') || '';
+          var scrollOffset = body.scrollTop + body.parentElement.scrollTop;
+          var clientWidth = body.clientWidth;
+
+          applyStyles(body, {
+            position: 'fixed',
+            width: '100%',
+            overflowY: 'scroll',
+            top: -scrollOffset + 'px'
+          });
+
+          applyStyles(htmlNode, {
+            overflowY: 'hidden'
+          });
+
+          if (body.clientWidth < clientWidth) applyStyles(body, {overflow: 'hidden'});
+
+          return function restoreScroll() {
+            body.setAttribute('style', restoreBodyStyle);
+            htmlNode.setAttribute('style', restoreHtmlStyle);
+            body.scrollTop = scrollOffset;
+          };
         }
-      }
 
-      // Converts the disableTarget (body) to a position fixed block and translate it to the propper scroll position
-      function disableBodyScroll() {
-        var restoreStyle = disableTarget.getAttribute('style') || '';
-        var scrollOffset = disableTarget.scrollTop;
+        function applyStyles(el, styles) {
+          for (var key in styles) {
+            el.style[key] = styles[key];
+          }
+        }
+      },
+      enableScrolling: function () {
+        var method = this.disableScrollAround._enableScrolling;
+        method && method();
+      },
+      floatingScrollbars: function () {
+        if (this.floatingScrollbars.cached === undefined) {
+          var tempNode = angular.element('<div style="width: 100%; z-index: -1; position: absolute; height: 35px; overflow-y: scroll"><div style="height: 60;"></div></div>');
+          $document[0].body.appendChild(tempNode[0]);
+          this.floatingScrollbars.cached = (tempNode[0].offsetWidth == tempNode[0].childNodes[0].offsetWidth);
+          tempNode.remove();
+        }
+        return this.floatingScrollbars.cached;
+      },
 
-        applyStyles(disableTarget, {
-          position: 'fixed',
-          width: '100%',
-          overflowY: 'scroll',
-          top: -scrollOffset + 'px'
-        });
+      // Mobile safari only allows you to set focus in click event listeners...
+      forceFocus: function (element) {
+        var node = element[0] || element;
 
-        return function restoreScroll() {
-          disableTarget.setAttribute('style', restoreStyle);
-          disableTarget.scrollTop = scrollOffset;
+        document.addEventListener('click', function focusOnClick(ev) {
+          if (ev.target === node && ev.$focus) {
+            node.focus();
+            ev.stopImmediatePropagation();
+            ev.preventDefault();
+            node.removeEventListener('click', focusOnClick);
+          }
+        }, true);
+
+        var newEvent = document.createEvent('MouseEvents');
+        newEvent.initMouseEvent('click', false, true, window, {}, 0, 0, 0, 0,
+          false, false, false, false, 0, null);
+        newEvent.$material = true;
+        newEvent.$focus = true;
+        node.dispatchEvent(newEvent);
+      },
+
+      transitionEndPromise: function (element, opts) {
+        opts = opts || {};
+        var deferred = $q.defer();
+        element.on($mdConstant.CSS.TRANSITIONEND, finished);
+        function finished(ev) {
+          // Make sure this transitionend didn't bubble up from a child
+          if (!ev || ev.target === element[0]) {
+            element.off($mdConstant.CSS.TRANSITIONEND, finished);
+            deferred.resolve();
+          }
+        }
+
+        if (opts.timeout) $timeout(finished, opts.timeout);
+        return deferred.promise;
+      },
+
+      fakeNgModel: function () {
+        return {
+          $fake: true,
+          $setTouched: angular.noop,
+          $setViewValue: function (value) {
+            this.$viewValue = value;
+            this.$render(value);
+            this.$viewChangeListeners.forEach(function (cb) {
+              cb();
+            });
+          },
+          $isEmpty: function (value) {
+            return ('' + value).length === 0;
+          },
+          $parsers: [],
+          $formatters: [],
+          $viewChangeListeners: [],
+          $render: angular.noop
         };
-      }
+      },
 
-      function applyStyles (el, styles) {
-        for (var key in styles) {
-          el.style[key] = styles[key];
+      // Returns a function, that, as long as it continues to be invoked, will not
+      // be triggered. The function will be called after it stops being called for
+      // N milliseconds.
+      // @param wait Integer value of msecs to delay (since last debounce reset); default value 10 msecs
+      // @param invokeApply should the $timeout trigger $digest() dirty checking
+      debounce: function (func, wait, scope, invokeApply) {
+        var timer;
+
+        return function debounced() {
+          var context = scope,
+            args = Array.prototype.slice.call(arguments);
+
+          $timeout.cancel(timer);
+          timer = $timeout(function () {
+
+            timer = undefined;
+            func.apply(context, args);
+
+          }, wait || 10, invokeApply);
+        };
+      },
+
+      // Returns a function that can only be triggered every `delay` milliseconds.
+      // In other words, the function will not be called unless it has been more
+      // than `delay` milliseconds since the last call.
+      throttle: function throttle(func, delay) {
+        var recent;
+        return function throttled() {
+          var context = this;
+          var args = arguments;
+          var now = Util.now();
+
+          if (!recent || (now - recent > delay)) {
+            func.apply(context, args);
+            recent = now;
+          }
+        };
+      },
+
+      /**
+       * Measures the number of milliseconds taken to run the provided callback
+       * function. Uses a high-precision timer if available.
+       */
+      time: function time(cb) {
+        var start = Util.now();
+        cb();
+        return Util.now() - start;
+      },
+
+      /**
+       * Get a unique ID.
+       *
+       * @returns {string} an unique numeric string
+       */
+      nextUid: function () {
+        return '' + nextUniqueId++;
+      },
+
+      // Stop watchers and events from firing on a scope without destroying it,
+      // by disconnecting it from its parent and its siblings' linked lists.
+      disconnectScope: function disconnectScope(scope) {
+        if (!scope) return;
+
+        // we can't destroy the root scope or a scope that has been already destroyed
+        if (scope.$root === scope) return;
+        if (scope.$$destroyed) return;
+
+        var parent = scope.$parent;
+        scope.$$disconnected = true;
+
+        // See Scope.$destroy
+        if (parent.$$childHead === scope) parent.$$childHead = scope.$$nextSibling;
+        if (parent.$$childTail === scope) parent.$$childTail = scope.$$prevSibling;
+        if (scope.$$prevSibling) scope.$$prevSibling.$$nextSibling = scope.$$nextSibling;
+        if (scope.$$nextSibling) scope.$$nextSibling.$$prevSibling = scope.$$prevSibling;
+
+        scope.$$nextSibling = scope.$$prevSibling = null;
+
+      },
+
+      // Undo the effects of disconnectScope above.
+      reconnectScope: function reconnectScope(scope) {
+        if (!scope) return;
+
+        // we can't disconnect the root node or scope already disconnected
+        if (scope.$root === scope) return;
+        if (!scope.$$disconnected) return;
+
+        var child = scope;
+
+        var parent = child.$parent;
+        child.$$disconnected = false;
+        // See Scope.$new for this logic...
+        child.$$prevSibling = parent.$$childTail;
+        if (parent.$$childHead) {
+          parent.$$childTail.$$nextSibling = child;
+          parent.$$childTail = child;
+        } else {
+          parent.$$childHead = parent.$$childTail = child;
         }
-      }
+      },
 
-      function isScrolling(el) {
+      /*
+       * getClosest replicates jQuery.closest() to walk up the DOM tree until it finds a matching nodeName
+       *
+       * @param el Element to start walking the DOM from
+       * @param tagName Tag name to find closest to el, such as 'form'
+       */
+      getClosest: function getClosest(el, tagName, onlyParent) {
         if (el instanceof angular.element) el = el[0];
-        return el.scrollHeight > el.offsetHeight;
-      }
-    },
+        tagName = tagName.toUpperCase();
+        if (onlyParent) el = el.parentNode;
+        if (!el) return null;
+        do {
+          if (el.nodeName === tagName) {
+            return el;
+          }
+        } while (el = el.parentNode);
+        return null;
+      },
 
-    floatingScrollbars: function() {
-      if (this.floatingScrollbars.cached === undefined) {
-        var tempNode = angular.element('<div style="width: 100%; z-index: -1; position: absolute; height: 35px; overflow-y: scroll"><div style="height: 60;"></div></div>');
-        $document[0].body.appendChild(tempNode[0]);
-        this.floatingScrollbars.cached = (tempNode[0].offsetWidth == tempNode[0].childNodes[0].offsetWidth);
-        tempNode.remove();
-      }
-      return this.floatingScrollbars.cached;
-    },
-
-    // Mobile safari only allows you to set focus in click event listeners...
-    forceFocus: function(element) {
-      var node = element[0] || element;
-
-      document.addEventListener('click', function focusOnClick(ev) {
-        if (ev.target === node && ev.$focus) {
-          node.focus();
-          ev.stopImmediatePropagation();
-          ev.preventDefault();
-          node.removeEventListener('click', focusOnClick);
+      /**
+       * Functional equivalent for $element.filter(‘md-bottom-sheet’)
+       * useful with interimElements where the element and its container are important...
+       */
+      extractElementByName: function (element, nodeName) {
+        for (var i = 0, len = element.length; i < len; i++) {
+          if (element[i].nodeName.toLowerCase() === nodeName) {
+            return angular.element(element[i]);
+          }
         }
-      }, true);
+        return element;
+      },
 
-      var newEvent = document.createEvent('MouseEvents');
-      newEvent.initMouseEvent('click', false, true, window, {}, 0, 0, 0, 0,
-                       false, false, false, false, 0, null);
-      newEvent.$material = true;
-      newEvent.$focus = true;
-      node.dispatchEvent(newEvent);
-    },
-
-    transitionEndPromise: function(element, opts) {
-      opts = opts || {};
-      var deferred = $q.defer();
-      element.on($mdConstant.CSS.TRANSITIONEND, finished);
-      function finished(ev) {
-        // Make sure this transitionend didn't bubble up from a child
-        if (!ev || ev.target === element[0]) {
-          element.off($mdConstant.CSS.TRANSITIONEND, finished);
-          deferred.resolve();
-        }
+      /**
+       * Give optional properties with no value a boolean true if attr provided or false otherwise
+       */
+      initOptionalProperties: function (scope, attr, defaults) {
+        defaults = defaults || {};
+        angular.forEach(scope.$$isolateBindings, function (binding, key) {
+          if (binding.optional && angular.isUndefined(scope[key])) {
+            var attrIsDefined = angular.isDefined(attr[binding.attrName]);
+            scope[key] = angular.isDefined(defaults[key]) ? defaults[key] : attrIsDefined;
+          }
+        });
       }
-      if (opts.timeout) $timeout(finished, opts.timeout);
-      return deferred.promise;
-    },
 
-    fakeNgModel: function() {
-      return {
-        $fake: true,
-        $setTouched: angular.noop,
-        $setViewValue: function(value) {
-          this.$viewValue = value;
-          this.$render(value);
-          this.$viewChangeListeners.forEach(function(cb) { cb(); });
-        },
-        $isEmpty: function(value) {
-          return ('' + value).length === 0;
-        },
-        $parsers: [],
-        $formatters: [],
-        $viewChangeListeners: [],
-        $render: angular.noop
-      };
-    },
+    };
 
-    // Returns a function, that, as long as it continues to be invoked, will not
-    // be triggered. The function will be called after it stops being called for
-    // N milliseconds.
-    // @param wait Integer value of msecs to delay (since last debounce reset); default value 10 msecs
-    // @param invokeApply should the $timeout trigger $digest() dirty checking
-    debounce: function (func, wait, scope, invokeApply) {
-      var timer;
-
-      return function debounced() {
-        var context = scope,
-          args = Array.prototype.slice.call(arguments);
-
-        $timeout.cancel(timer);
-        timer = $timeout(function() {
-
-          timer = undefined;
-          func.apply(context, args);
-
-        }, wait || 10, invokeApply );
-      };
-    },
-
-    // Returns a function that can only be triggered every `delay` milliseconds.
-    // In other words, the function will not be called unless it has been more
-    // than `delay` milliseconds since the last call.
-    throttle: function throttle(func, delay) {
-      var recent;
-      return function throttled() {
-        var context = this;
-        var args = arguments;
-        var now = Util.now();
-
-        if (!recent || (now - recent > delay)) {
-          func.apply(context, args);
-          recent = now;
-        }
-      };
-    },
-
-    /**
-     * Measures the number of milliseconds taken to run the provided callback
-     * function. Uses a high-precision timer if available.
-     */
-    time: function time(cb) {
-      var start = Util.now();
-      cb();
-      return Util.now() - start;
-    },
-
-    /**
-     * Get a unique ID.
-     *
-     * @returns {string} an unique numeric string
-     */
-    nextUid: function() {
-      return '' + nextUniqueId++;
-    },
-
-    // Stop watchers and events from firing on a scope without destroying it,
-    // by disconnecting it from its parent and its siblings' linked lists.
-    disconnectScope: function disconnectScope(scope) {
-      if (!scope) return;
-
-      // we can't destroy the root scope or a scope that has been already destroyed
-      if (scope.$root === scope) return;
-      if (scope.$$destroyed ) return;
-
-      var parent = scope.$parent;
-      scope.$$disconnected = true;
-
-      // See Scope.$destroy
-      if (parent.$$childHead === scope) parent.$$childHead = scope.$$nextSibling;
-      if (parent.$$childTail === scope) parent.$$childTail = scope.$$prevSibling;
-      if (scope.$$prevSibling) scope.$$prevSibling.$$nextSibling = scope.$$nextSibling;
-      if (scope.$$nextSibling) scope.$$nextSibling.$$prevSibling = scope.$$prevSibling;
-
-      scope.$$nextSibling = scope.$$prevSibling = null;
-
-    },
-
-    // Undo the effects of disconnectScope above.
-    reconnectScope: function reconnectScope(scope) {
-      if (!scope) return;
-
-      // we can't disconnect the root node or scope already disconnected
-      if (scope.$root === scope) return;
-      if (!scope.$$disconnected) return;
-
-      var child = scope;
-
-      var parent = child.$parent;
-      child.$$disconnected = false;
-      // See Scope.$new for this logic...
-      child.$$prevSibling = parent.$$childTail;
-      if (parent.$$childHead) {
-        parent.$$childTail.$$nextSibling = child;
-        parent.$$childTail = child;
-      } else {
-        parent.$$childHead = parent.$$childTail = child;
-      }
-    },
-
-    /*
-     * getClosest replicates jQuery.closest() to walk up the DOM tree until it finds a matching nodeName
-     *
-     * @param el Element to start walking the DOM from
-     * @param tagName Tag name to find closest to el, such as 'form'
-     */
-    getClosest: function getClosest(el, tagName, onlyParent) {
-      if (el instanceof angular.element) el = el[0];
-      tagName = tagName.toUpperCase();
-      if (onlyParent) el = el.parentNode;
-      if (!el) return null;
-      do {
-        if (el.nodeName === tagName) {
-          return el;
-        }
-      } while (el = el.parentNode);
-      return null;
-    },
-
-    /**
-     * Functional equivalent for $element.filter(‘md-bottom-sheet’)
-     * useful with interimElements where the element and its container are important...
-     */
-    extractElementByName: function (element, nodeName) {
-      for (var i = 0, len = element.length; i < len; i++) {
-        if (element[i].nodeName.toLowerCase() === nodeName){
-          return angular.element(element[i]);
-        }
-      }
-      return element;
-    },
-
-    /**
-     * Give optional properties with no value a boolean true by default
-     */
-    initOptionalProperties: function (scope, attr, defaults ) {
-       defaults = defaults || { };
-       angular.forEach(scope.$$isolateBindings, function (binding, key) {
-         if (binding.optional && angular.isUndefined(scope[key])) {
-           var hasKey = attr.hasOwnProperty(attr.$normalize(binding.attrName));
-
-           scope[key] = angular.isDefined(defaults[key]) ? defaults[key] : hasKey;
-         }
-       });
-    }
-
-  };
-
-}]);
+  }]);
 
 /*
  * Since removing jQuery from the demos, some code that uses `element.focus()` is broken.
@@ -42311,18 +42487,18 @@ angular.module('material.core')
  * TODO(ajoslin): This should be added in a better place later.
  */
 
-angular.element.prototype.focus = angular.element.prototype.focus || function() {
-  if (this.length) {
-    this[0].focus();
-  }
-  return this;
-};
-angular.element.prototype.blur = angular.element.prototype.blur || function() {
-  if (this.length) {
-    this[0].blur();
-  }
-  return this;
-};
+angular.element.prototype.focus = angular.element.prototype.focus || function () {
+    if (this.length) {
+      this[0].focus();
+    }
+    return this;
+  };
+angular.element.prototype.blur = angular.element.prototype.blur || function () {
+    if (this.length) {
+      this[0].blur();
+    }
+    return this;
+  };
 
 })();
 (function(){
@@ -44993,6 +45169,9 @@ function ThemingProvider($mdColorPalette) {
         if (oldTheme) el.removeClass('md-' + oldTheme +'-theme');
         el.addClass('md-' + theme + '-theme');
         el.data('$mdThemeName', theme);
+        if (ctrl) {
+          el.data('$mdThemeController', ctrl);
+        }
       }
     };
 
@@ -46817,6 +46996,547 @@ MdDividerDirective.$inject = ["$mdTheming"];
 (function(){
 "use strict";
 
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabActions', ['material.core'])
+    .directive('mdFabActions', MdFabActionsDirective);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabActions
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-actions>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the actions and setup the
+   * proper event listeners.
+   *
+   * @usage
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
+   */
+  function MdFabActionsDirective() {
+    return {
+      restrict: 'E',
+
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar'],
+
+      link: function(scope, element, attributes, controllers) {
+        // Grab whichever parent controller is used
+        var controller = controllers[0] || controllers[1];
+
+        // Make the children open/close their parent directive
+        if (controller) {
+          angular.forEach(element.children(), function(child) {
+            angular.element(child).on('focus', controller.open);
+            angular.element(child).on('blur', controller.close);
+          });
+        }
+
+        // After setting up the listeners, wrap every child in a new div and add a class that we can
+        // scale/fling independently
+        element.children().wrap('<div class="md-fab-action-item">');
+      }
+    }
+  }
+
+})();
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabSpeedDial', [
+      'material.core',
+      'material.components.fabTrigger',
+      'material.components.fabActions'
+    ])
+    .directive('mdFabSpeedDial', MdFabSpeedDialDirective)
+    .animation('.md-fling', MdFabSpeedDialFlingAnimation)
+    .animation('.md-scale', MdFabSpeedDialScaleAnimation);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabSpeedDial
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-speed-dial>` directive is used to present a series of popup elements (usually
+   * `<md-button>`s) for quick access to common actions.
+   *
+   * There are currently two animations available by applying one of the following classes to
+   * the component:
+   *
+   *  - `md-fling` - The speed dial items appear from underneath the trigger and move into their
+   *    appropriate positions.
+   *  - `md-scale` - The speed dial items appear in their proper places by scaling from 0% to 100%.
+   *
+   * @usage
+   * <hljs lang="html">
+   * <md-fab-speed-dial direction="up" class="md-fling">
+   *   <md-fab-trigger>
+   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
+   *   </md-fab-trigger>
+   *
+   *   <md-fab-actions>
+   *     <md-button aria-label="Add User">
+   *       <md-icon icon="/img/icons/user.svg"></md-icon>
+   *     </md-button>
+   *
+   *     <md-button aria-label="Add Group">
+   *       <md-icon icon="/img/icons/group.svg"></md-icon>
+   *     </md-button>
+   *   </md-fab-actions>
+   * </md-fab-speed-dial>
+   * </hljs>
+   *
+   * @param {string=} md-direction From which direction you would like the speed dial to appear
+   * relative to the trigger element.
+   * @param {expression=} md-open Programmatically control whether or not the speed-dial is visible.
+   */
+  function MdFabSpeedDialDirective() {
+    FabSpeedDialController.$inject = ["$scope", "$element", "$animate"];
+    return {
+      restrict: 'E',
+
+      scope: {
+        direction: '@?mdDirection',
+        isOpen: '=?mdOpen'
+      },
+
+      bindToController: true,
+      controller: FabSpeedDialController,
+      controllerAs: 'vm',
+
+      link: FabSpeedDialLink
+    };
+
+    function FabSpeedDialLink(scope, element) {
+      // Prepend an element to hold our CSS variables so we can use them in the animations below
+      element.prepend('<div class="md-css-variables"></div>');
+    }
+
+    function FabSpeedDialController($scope, $element, $animate) {
+      var vm = this;
+
+      // Define our open/close functions
+      // Note: Used by fabTrigger and fabActions directives
+      vm.open = function() {
+        $scope.$apply('vm.isOpen = true');
+      };
+
+      vm.close = function() {
+        $scope.$apply('vm.isOpen = false');
+      };
+
+      setupDefaults();
+      setupListeners();
+      setupWatchers();
+
+      // Set our default variables
+      function setupDefaults() {
+        // Set the default direction to 'down' if none is specified
+        vm.direction = vm.direction || 'down';
+
+        // Set the default to be closed
+        vm.isOpen = vm.isOpen || false;
+      }
+
+      // Setup our event listeners
+      function setupListeners() {
+        $element.on('mouseenter', vm.open);
+        $element.on('mouseleave', vm.close);
+      }
+
+      // Setup our watchers
+      function setupWatchers() {
+        // Watch for changes to the direction and update classes/attributes
+        $scope.$watch('vm.direction', function(newDir, oldDir) {
+          // Add the appropriate classes so we can target the direction in the CSS
+          $animate.removeClass($element, 'md-' + oldDir);
+          $animate.addClass($element, 'md-' + newDir);
+        });
+
+
+        // Watch for changes to md-open
+        $scope.$watch('vm.isOpen', function(isOpen) {
+          var toAdd = isOpen ? 'md-is-open' : '';
+          var toRemove = isOpen ? '' : 'md-is-open';
+
+          $animate.setClass($element, toAdd, toRemove);
+        });
+      }
+    }
+  }
+
+  function MdFabSpeedDialFlingAnimation() {
+    function runAnimation(element) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabSpeedDial');
+      var items = el.querySelectorAll('.md-fab-action-item');
+
+      // Grab our element which stores CSS variables
+      var variablesElement = el.querySelector('.md-css-variables');
+
+      // Setup JS variables based on our CSS variables
+      var startZIndex = variablesElement.style.zIndex;
+
+      // Always reset the items to their natural position/state
+      angular.forEach(items, function(item, index) {
+        var styles = item.style;
+
+        styles.transform = '';
+        styles.transitionDelay = '';
+        styles.opacity = 1;
+
+        // Make the items closest to the trigger have the highest z-index
+        item.style.zIndex = (items.length - index) + startZIndex;
+      });
+
+      // If the control is closed, hide the items behind the trigger
+      if (!ctrl.isOpen) {
+        angular.forEach(items, function(item, index) {
+          var newPosition, axis;
+
+          switch (ctrl.direction) {
+            case 'up':
+              newPosition = item.scrollHeight * (index + 1);
+              axis = 'Y';
+              break;
+            case 'down':
+              newPosition = -item.scrollHeight * (index + 1);
+              axis = 'Y';
+              break;
+            case 'left':
+              newPosition = item.scrollWidth * (index + 1);
+              axis = 'X';
+              break;
+            case 'right':
+              newPosition = -item.scrollWidth * (index + 1);
+              axis = 'X';
+              break;
+          }
+
+          item.style.transform = 'translate' + axis + '(' + newPosition + 'px)';
+        });
+      }
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        if (element.hasClass('md-fling')) {
+          runAnimation(element);
+        }
+      },
+      removeClass: function(element, className, done) {
+        runAnimation(element);
+      }
+    }
+  }
+
+  function MdFabSpeedDialScaleAnimation() {
+    var delay = 65;
+
+    function runAnimation(element) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabSpeedDial');
+      var items = el.querySelectorAll('.md-fab-action-item');
+
+      // Always reset the items to their natural position/state
+      angular.forEach(items, function(item, index) {
+        var styles = item.style,
+          offsetDelay = index * delay;
+
+        styles.opacity = ctrl.isOpen ? 1 : 0;
+        styles.transform = ctrl.isOpen ? 'scale(1)' : 'scale(0)';
+        styles.transitionDelay = (ctrl.isOpen ?  offsetDelay : (items.length - offsetDelay)) + 'ms';
+      });
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        runAnimation(element);
+      },
+
+      removeClass: function(element, className, done) {
+        runAnimation(element);
+      }
+    }
+  }
+})();
+
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabToolbar', [
+      'material.core',
+      'material.components.fabTrigger',
+      'material.components.fabActions'
+    ])
+    .directive('mdFabToolbar', MdFabToolbarDirective)
+    .animation('.md-fab-toolbar', MdFabToolbarAnimation);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabToolbar
+   * @module material.components.fabToolbar
+   *
+   * @restrict E
+   *
+   * @description
+   *
+   * The `<md-fab-toolbar>` directive is used present a toolbar of elements (usually `<md-button>`s)
+   * for quick access to common actions when a floating action button is activated (via hover or
+   * keyboard navigation).
+   *
+   * @usage
+   *
+   * <hljs lang="html">
+   * <md-fab-toolbar>
+   *   <md-fab-trigger>
+   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
+   *   </md-fab-trigger>
+   *
+   *   <md-fab-actions>
+   *     <md-button aria-label="Add User">
+   *       <md-icon icon="/img/icons/user.svg"></md-icon>
+   *     </md-button>
+   *
+   *     <md-button aria-label="Add Group">
+   *       <md-icon icon="/img/icons/group.svg"></md-icon>
+   *     </md-button>
+   *   </md-fab-actions>
+   * </md-fab-toolbar>
+   * </hljs>
+   *
+   * @param {expression=} md-open Programmatically control whether or not the toolbar is visible.
+   */
+  function MdFabToolbarDirective() {
+    FabToolbarController.$inject = ["$scope", "$element", "$animate"];
+    return {
+      restrict: 'E',
+      transclude: true,
+      template:
+        '<div class="md-fab-toolbar-wrapper">' +
+        '  <div class="md-fab-toolbar-content" ng-transclude></div>' +
+        '</div>',
+
+      scope: {
+        isOpen: '=?mdOpen'
+      },
+
+      bindToController: true,
+      controller: FabToolbarController,
+      controllerAs: 'vm',
+
+      link: link
+    };
+
+    function FabToolbarController($scope, $element, $animate) {
+      var vm = this;
+
+      // Set the default to be closed
+      vm.isOpen = vm.isOpen || false;
+
+      vm.open = function() {
+        vm.isOpen = true;
+        $scope.$apply();
+      };
+
+      vm.close = function() {
+        vm.isOpen = false;
+        $scope.$apply();
+      };
+
+      // Add our class so we can trigger the animation on start
+      $element.addClass('md-fab-toolbar');
+
+      // Setup some mouse events so the hover effect can be triggered
+      // anywhere over the toolbar
+      $element.on('mouseenter', vm.open);
+      $element.on('mouseleave', vm.close);
+
+      // Watch for changes to md-open and toggle our class
+      $scope.$watch('vm.isOpen', function(isOpen) {
+        var toAdd = isOpen ? 'md-is-open' : '';
+        var toRemove = isOpen ? '' : 'md-is-open';
+
+        $animate.setClass($element, toAdd, toRemove);
+      });
+    }
+
+    function link(scope, element, attributes) {
+      // Don't allow focus on the trigger
+      element.find('md-fab-trigger').find('button').attr('tabindex', '-1');
+
+      // Prepend the background element to the trigger's button
+      element.find('md-fab-trigger').find('button')
+        .prepend('<div class="md-fab-toolbar-background"></div>');
+    }
+  }
+
+  function MdFabToolbarAnimation() {
+    var originalIconDelay;
+
+    function runAnimation(element, className, done) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabToolbar');
+
+      // Grab the relevant child elements
+      var backgroundElement = el.querySelector('.md-fab-toolbar-background');
+      var triggerElement = el.querySelector('md-fab-trigger button');
+      var iconElement = el.querySelector('md-fab-trigger button md-icon');
+      var actions = element.find('md-fab-actions').children();
+
+      // If we have both elements, use them to position the new background
+      if (triggerElement && backgroundElement) {
+        // Get our variables
+        var color = window.getComputedStyle(triggerElement).getPropertyValue('background-color');
+        var width = el.offsetWidth;
+        var height = el.offsetHeight;
+
+        // Make a square
+        var scale = width * 2;
+
+        // Set some basic styles no matter what animation we're doing
+        backgroundElement.style.backgroundColor = color;
+        backgroundElement.style.borderRadius = width + 'px';
+
+        // If we're open
+        if (ctrl.isOpen) {
+
+          // Set the width/height to take up the full toolbar width
+          backgroundElement.style.width = scale + 'px';
+          backgroundElement.style.height = scale + 'px';
+
+          // Set the top/left to move up/left (or right) by the scale width/height
+          backgroundElement.style.top = -(scale / 2) + 'px';
+
+          if (element.hasClass('md-left')) {
+            backgroundElement.style.left = -(scale / 2) + 'px';
+            backgroundElement.style.right = null;
+          }
+
+          if (element.hasClass('md-right')) {
+            backgroundElement.style.right = -(scale / 2) + 'px';
+            backgroundElement.style.left = null;
+          }
+
+          // Set the next close animation to have the proper delays
+          backgroundElement.style.transitionDelay = '0ms';
+          iconElement.style.transitionDelay = '.3s';
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = (actions.length - index) * 25 + 'ms';
+          });
+        } else {
+          // Otherwise, set the width/height to the trigger's width/height
+          backgroundElement.style.width = triggerElement.offsetWidth + 'px';
+          backgroundElement.style.height = triggerElement.offsetHeight + 'px';
+
+          // Reset the position
+          backgroundElement.style.top = '0px';
+
+          if (element.hasClass('md-left')) {
+            backgroundElement.style.left = '0px';
+            backgroundElement.style.right = null;
+          }
+
+          if (element.hasClass('md-right')) {
+            backgroundElement.style.right = '0px';
+            backgroundElement.style.left = null;
+          }
+
+          // Set the next open animation to have the proper delays
+          backgroundElement.style.transitionDelay = '200ms';
+          iconElement.style.transitionDelay = '0ms';
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = (index * 25) + 'ms';
+          });
+        }
+      }
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        runAnimation(element, className, done);
+      },
+
+      removeClass: function(element, className, done) {
+        runAnimation(element, className, done);
+      }
+    }
+  }
+})();
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabTrigger', [ 'material.core' ])
+    .directive('mdFabTrigger', MdFabTriggerDirective);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabTrigger
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the trigger and setup the
+   * proper event listeners.
+   *
+   * @usage
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
+   */
+  function MdFabTriggerDirective() {
+    return {
+      restrict: 'E',
+
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar'],
+
+      link: function(scope, element, attributes, controllers) {
+        // Grab whichever parent controller is used
+        var controller = controllers[0] || controllers[1];
+
+        // Make the children open/close their parent directive
+        if (controller) {
+          angular.forEach(element.children(), function(child) {
+            angular.element(child).on('focus', controller.open);
+            angular.element(child).on('blur', controller.close);
+          });
+        }
+      }
+    }
+  }
+})();
+
+
+})();
+(function(){
+"use strict";
+
 /**
  * @ngdoc module
  * @name material.components.gridList
@@ -47693,11 +48413,12 @@ angular.module('material.components.icon', [
  * When using Material Font Icons with ligatures:
  * <hljs lang="html">
  *  <!-- For Material Design Icons -->
- *  <!-- The class '.material-icons' is auto-added. -->
+ *  <!-- The class '.material-icons' is auto-added if a style has NOT been specified -->
  *  <md-icon> face </md-icon>
- *  <md-icon class="md-light md-48"> face </md-icon>
  *  <md-icon md-font-set="material-icons"> face </md-icon>
  *  <md-icon> #xE87C; </md-icon>
+ *  <!-- The class '.material-icons' must be manually added if other styles are also specified-->
+ *  <md-icon class="material-icons md-light md-48"> face </md-icon>
  * </hljs>
  *
  * When using other Font-Icon libraries:
@@ -47724,35 +48445,8 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
       svgSrc  : '@mdSvgSrc'
     },
     restrict: 'E',
-    transclude:true,
-    template: getTemplate,
-    link: postLink
+    link : postLink
   };
-
-  function getTemplate(element, attr) {
-    var isEmptyAttr  = function(key) { return angular.isDefined(attr[key]) ? attr[key].length == 0 : false    },
-        hasAttrValue = function(key) { return attr[key] && attr[key].length > 0;     },
-        attrValue    = function(key) { return hasAttrValue(key) ? attr[key] : '' };
-
-    // If using the deprecated md-font-icon API
-    // If using ligature-based font-icons, transclude the ligature or NRCs
-
-    var tmplFontIcon = '<span class="md-font {{classNames}}" ng-class="fontIcon"></span>';
-    var tmplFontSet  = '<span class="{{classNames}}" ng-transclude></span>';
-
-    var tmpl = hasAttrValue('mdSvgIcon')     ? ''           :
-               hasAttrValue('mdSvgSrc')      ? ''           :
-               isEmptyAttr('mdFontIcon')     ? ''           :
-               hasAttrValue('mdFontIcon')    ? tmplFontIcon : tmplFontSet;
-
-    // If available, lookup the fontSet style and add to the list of classnames
-    // NOTE: Material Icons expects classnames like `.material-icons.md-48` instead of `.material-icons .md-48`
-
-    var names = (tmpl == tmplFontSet) ? $mdIcon.fontSet(attrValue('mdFontSet'))  + ' ' : '';
-        names = (names + attrValue('class')).trim();
-
-    return $interpolate( tmpl )({ classNames: names });
-  }
 
 
   /**
@@ -47761,6 +48455,8 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
    */
   function postLink(scope, element, attr) {
     $mdTheming(element);
+
+    prepareForFontIcon();
 
     // If using a font-icon, then the textual name of the icon itself
     // provides the aria-label.
@@ -47796,6 +48492,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
 
       });
     }
+
     function parentsHaveText() {
       var parent = element.parent();
       if (parent.attr('aria-label') || parent.text()) {
@@ -47805,6 +48502,29 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
         return true;
       }
       return false;
+    }
+
+    function prepareForFontIcon () {
+      if (!scope.svgIcon && !scope.svgSrc) {
+
+        if (scope.fontIcon) {
+          element.addClass('md-font');
+          element.addClass(scope.fontIcon);
+        }
+
+        if (scope.fontSet) {
+          element.addClass($mdIcon.fontSet(scope.fontSet));
+        }
+
+        // For Material Design font icons, the class '.material-icons'
+        // is auto-added IF a style has not been specified
+
+        if (!scope.fontIcon && !scope.fontSet && !angular.isDefined(attr.class)) {
+
+            element.addClass('material-icons');
+        }
+      }
+
     }
   }
 }
@@ -47890,8 +48610,8 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     * @param {string} id Icon name/id used to register the icon
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height the icon's viewBox.
+    * It is ignored for icons with an existing viewBox. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -47920,8 +48640,9 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     * @param {string} id Icon name/id used to register the iconset
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
+    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
+    * Default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -47949,8 +48670,9 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
+    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
+    * Default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -48000,15 +48722,14 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
 
    /**
     * @ngdoc method
-    * @name $mdIconProvider#defaultIconSize
+    * @name $mdIconProvider#defaultViewBoxSize
     *
     * @description
     * While `<md-icon />` markup can also be style with sizing CSS, this method configures
     * the default width **and** height used for all icons; unless overridden by specific CSS.
     * The default sizing is (24px, 24px).
-    *
-    * @param {string} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox for an icon or an icon set.
+    * All icons in a set should be the same size. The default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -48019,14 +48740,14 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *     // Configure URLs for icons specified by [set:]id.
     *
     *     $mdIconProvider
-    *          .defaultIconSize(36)   // Register a default icon size (width == height)
+    *          .defaultViewBoxSize(36)   // Register a default icon size (width == height)
     *   });
     * </hljs>
     *
     */
 
  var config = {
-   defaultIconSize: 24,
+   defaultViewBoxSize: 24,
    defaultFontSet: 'material-icons',
    fontSets : [ ]
  };
@@ -48034,28 +48755,35 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
  function MdIconProvider() { }
 
  MdIconProvider.prototype = {
-
-   icon : function icon(id, url, iconSize) {
+   icon : function (id, url, viewBoxSize) {
      if ( id.indexOf(':') == -1 ) id = '$default:' + id;
 
-     config[id] = new ConfigurationItem(url, iconSize );
+     config[id] = new ConfigurationItem(url, viewBoxSize );
      return this;
    },
-   iconSet : function iconSet(id, url, iconSize) {
-     config[id] = new ConfigurationItem(url, iconSize );
+
+   iconSet : function (id, url, viewBoxSize) {
+     config[id] = new ConfigurationItem(url, viewBoxSize );
      return this;
    },
-   defaultIconSet : function defaultIconSet(url, iconSize) {
+
+   defaultIconSet : function (url, viewBoxSize) {
      var setName = '$default';
 
      if ( !config[setName] ) {
-       config[setName] = new ConfigurationItem(url, iconSize );
+       config[setName] = new ConfigurationItem(url, viewBoxSize );
      }
 
-     config[setName].iconSize = iconSize || config.defaultIconSize;
+     config[setName].viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
+
      return this;
    },
 
+   defaultViewBoxSize : function (viewBoxSize) {
+     config.defaultViewBoxSize = viewBoxSize;
+     return this;
+   },
+   
    /**
     * Register an alias name associated with a font-icon library style ;
     */
@@ -48128,9 +48856,9 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *  Configuration item stored in the Icon registry; used for lookups
     *  to load if not already cached in the `loaded` cache
     */
-   function ConfigurationItem(url, iconSize) {
+   function ConfigurationItem(url, viewBoxSize) {
      this.url = url;
-     this.iconSize = iconSize || config.defaultIconSize;
+     this.viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
    }
 
  /**
@@ -48328,13 +49056,13 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *  loaded iconCache store.
     */
    function prepareAndStyle() {
-     var iconSize = this.config ? this.config.iconSize : config.defaultIconSize;
+     var viewBoxSize = this.config ? this.config.viewBoxSize : config.defaultViewBoxSize;
          angular.forEach({
            'fit'   : '',
            'height': '100%',
            'width' : '100%',
            'preserveAspectRatio': 'xMidYMid meet',
-           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + iconSize + ' ' + iconSize)
+           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + viewBoxSize + ' ' + viewBoxSize)
          }, function(val, attr) {
            this.element.setAttribute(attr, val);
          }, this);
@@ -48996,6 +49724,640 @@ MdListController.$inject = ["$scope", "$element", "$mdListInkRipple"];
 
 /**
  * @ngdoc module
+ * @name material.components.menu
+ */
+
+angular.module('material.components.menu', [
+  'material.core',
+  'material.components.backdrop'
+])
+.directive('mdMenu', MenuDirective)
+.controller('mdMenuCtrl', MenuController);
+
+/**
+ * @ngdoc directive
+ * @name mdMenu
+ * @module material.components.menu
+ * @restrict E
+ * @description
+ *
+ * Menus are elements that open when clicked. They are useful for displaying
+ * additional options within the context of an action.
+ *
+ * Every `md-menu` must specify exactly two child elements. The first element is what is
+ * left in the DOM and is used to open the menu. This element is called the trigger element.
+ * The trigger element's scope has access to `$mdOpenMenu($event)`
+ * which it may call to open the menu. By passing $event as argument, the
+ * corresponding event is stopped from propagating up the DOM-tree.
+ *
+ * The second element is the `md-menu-content` element which represents the
+ * contents of the menu when it is open. Typically this will contain `md-menu-item`s,
+ * but you can do custom content as well.
+ *
+ * <hljs lang="html">
+ * <md-menu>
+ *  <!-- Trigger element is a md-button with an icon -->
+ *  <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
+ *    <md-icon md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+
+ * ## Sizing Menus
+ *
+ * The width of the menu when it is open may be specified by specifying a `width`
+ * attribute on the `md-menu-content` element.
+ * See the [Material Design Spec](http://www.google.com/design/spec/components/menus.html#menus-specs)
+ * for more information.
+ *
+ *
+ * ## Aligning Menus
+ *
+ * When a menu opens, it is important that the content aligns with the trigger element.
+ * Failure to align menus can result in jarring experiences for users as content
+ * suddenly shifts. To help with this, `md-menu` provides serveral APIs to help
+ * with alignment.
+ *
+ * ### Target Mode
+ *
+ * By default, `md-menu` will attempt to align the `md-menu-content` by aligning
+ * designated child elements in both the trigger and the menu content.
+ *
+ * To specify the alignment element in the `trigger` you can use the `md-menu-origin`
+ * attribute on a child element. If no `md-menu-origin` is specified, the `md-menu`
+ * will be used as the origin element.
+ *
+ * Similarly, the `md-menu-content` may specify a `md-menu-align-target` for a
+ * `md-menu-item` to specify the node that it should try and align with.
+ *
+ * In this example code, we specify an icon to be our origin element, and an
+ * icon in our menu content to be our alignment target. This ensures that both
+ * icons are aligned when the menu opens.
+ *
+ * <hljs lang="html">
+ * <md-menu>
+ *  <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open some menu">
+ *    <md-icon md-menu-origin md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item>
+ *      <md-button ng-click="doSomething()" aria-label="Do something">
+ *        <md-icon md-menu-align-target md-svg-icon="call:phone"></md-icon>
+ *        Do Something
+ *      </md-button>
+ *    </md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+ *
+ * Sometimes we want to specify alignment on the right side of an element, for example
+ * if we have a menu on the right side a toolbar, we want to right align our menu content.
+ *
+ * We can specify the origin by using the `md-position-mode` attribute on both
+ * the `x` and `y` axis. Right now only the `x-axis` has more than one option.
+ * You may specify the default mode of `target target` or
+ * `target-right target` to specify a right-oriented alignment target. See the
+ * position section of the demos for more examples.
+ *
+ * ### Menu Offsets
+ *
+ * It is sometimes unavoidable to need to have a deeper level of control for
+ * the positioning of a menu to ensure perfect alignment. `md-menu` provides
+ * the `md-offset` attribute to allow pixel level specificty of adjusting the
+ * exact positioning.
+ *
+ * This offset is provided in the format of `x y` or `n` where `n` will be used
+ * in both the `x` and `y` axis.
+ *
+ * For example, to move a menu by `2px` from the top, we can use:
+ * <hljs lang="html">
+ * <md-menu md-offset="2 0">
+ *   <!-- menu-content -->
+ * </md-menu>
+ * </hljs>
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-menu>
+ *  <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+ *    <md-icon md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+ *
+ * @param {string} md-position-mode The position mode in the form of
+             `x`, `y`. Default value is `target`,`target`. Right now the `x` axis
+             also suppports `target-right`.
+ * @param {string} md-offset An offset to apply to the dropdown after positioning
+             `x`, `y`. Default value is `0`,`0`.
+ *
+ */
+
+function MenuDirective($mdMenu) {
+  return {
+    restrict: 'E',
+    require: 'mdMenu',
+    controller: 'mdMenuCtrl', // empty function to be built by link
+    scope: true,
+    compile: compile
+  };
+
+  function compile(templateElement) {
+    templateElement.addClass('md-menu');
+    var triggerElement = templateElement.children()[0];
+    if (!triggerElement.hasAttribute('ng-click')) {
+      triggerElement = triggerElement.querySelector('[ng-click]');
+    }
+    triggerElement && triggerElement.setAttribute('aria-haspopup', 'true');
+    if (templateElement.children().length != 2) {
+      throw Error('Invalid HTML for md-menu. Expected two children elements.');
+    }
+    return link;
+  }
+
+  function link(scope, element, attrs, mdMenuCtrl) {
+    // Move everything into a md-menu-container and pass it to the controller
+    var menuContainer = angular.element(
+      '<div class="md-open-menu-container md-whiteframe-z2"></div>'
+    );
+    var menuContents = element.children()[1];
+    menuContainer.append(menuContents);
+    mdMenuCtrl.init(menuContainer);
+
+    scope.$on('$destroy', function() {
+      if (mdMenuCtrl.isOpen) {
+        menuContainer.remove();
+        mdMenuCtrl.close();
+      }
+    });
+
+  }
+}
+MenuDirective.$inject = ["$mdMenu"];
+
+function MenuController($mdMenu, $attrs, $element, $scope) {
+
+  var menuContainer;
+  var ctrl = this;
+  var triggerElement;
+
+  // Called by our linking fn to provide access to the menu-content
+  // element removed during link
+  this.init = function(setMenuContainer) {
+    menuContainer = setMenuContainer;
+    triggerElement = $element[0].querySelector('[ng-click]');
+  };
+
+  // Uses the $mdMenu interim element service to open the menu contents
+  this.open = function openMenu(ev) {
+    ev && ev.stopPropagation();
+
+    ctrl.isOpen = true;
+    triggerElement.setAttribute('aria-expanded', 'true');
+    $mdMenu.show({
+      scope: $scope,
+      mdMenuCtrl: ctrl,
+      element: menuContainer,
+      target: $element[0]
+    });
+  };
+  // Expose a open function to the child scope for html to use
+  $scope.$mdOpenMenu = this.open;
+
+  // Use the $mdMenu interim element service to close the menu contents
+  this.close = function closeMenu(skipFocus) {
+    ctrl.isOpen = false;
+    triggerElement.setAttribute('aria-expanded', 'false');
+    $mdMenu.hide();
+
+    if (!skipFocus) {
+      $element.children()[0].focus();
+    }
+  };
+
+  // Build a nice object out of our string attribute which specifies the
+  // target mode for left and top positioning
+  this.positionMode = function() {
+    var attachment = ($attrs.mdPositionMode || 'target').split(' ');
+
+    // If attachment is a single item, duplicate it for our second value.
+    // ie. 'target' -> 'target target'
+    if (attachment.length == 1) {
+      attachment.push(attachment[0]);
+    }
+
+    return {
+      left: attachment[0],
+      top: attachment[1]
+    };
+  };
+
+  // Build a nice object out of our string attribute which specifies
+  // the offset of top and left in pixels.
+  this.offsets = function() {
+    var offsets = ($attrs.mdOffset || '0 0').split(' ').map(parseFloat);
+    if (offsets.length == 2) {
+      return {
+        left: offsets[0],
+        top: offsets[1]
+      };
+    } else if (offsets.length == 1) {
+      return {
+        top: offsets[0],
+        left: offsets[0]
+      };
+    } else {
+      throw Error('Invalid offsets specified. Please follow format <x, y> or <n>');
+    }
+  };
+}
+MenuController.$inject = ["$mdMenu", "$attrs", "$element", "$scope"];
+
+})();
+(function(){
+"use strict";
+
+angular.module('material.components.menu')
+.provider('$mdMenu', MenuProvider);
+
+/*
+ * Interim element provider for the menu.
+ * Handles behavior for a menu while it is open, including:
+ *    - handling animating the menu opening/closing
+ *    - handling key/mouse events on the menu element
+ *    - handling enabling/disabling scroll while the menu is open
+ *    - handling redrawing during resizes and orientation changes
+ *
+ */
+
+function MenuProvider($$interimElementProvider) {
+  var MENU_EDGE_MARGIN = 8;
+
+  menuDefaultOptions.$inject = ["$$rAF", "$window", "$mdUtil", "$mdTheming", "$timeout", "$mdConstant", "$document"];
+  return $$interimElementProvider('$mdMenu')
+    .setDefaults({
+      methods: ['target'],
+      options: menuDefaultOptions
+    });
+
+  /* @ngInject */
+  function menuDefaultOptions($$rAF, $window, $mdUtil, $mdTheming, $timeout, $mdConstant, $document) {
+    return {
+      parent: 'body',
+      onShow: onShow,
+      onRemove: onRemove,
+      hasBackdrop: true,
+      disableParentScroll: true,
+      skipCompile: true,
+      preserveScope: true,
+      themable: true
+    };
+
+    /**
+     * Boilerplate interimElement onShow function
+     * Handles inserting the menu into the DOM, positioning it, and wiring up
+     * various interaction events
+     */
+    function onShow(scope, element, opts) {
+      // Sanitize and set defaults on opts
+      buildOpts(opts);
+
+      // Wire up theming on our menu element
+      $mdTheming.inherit(opts.menuContentEl, opts.target);
+
+      // Register various listeners to move menu on resize/orientation change
+      handleResizing();
+
+      // Disable scrolling
+      if (opts.disableParentScroll) {
+        opts.restoreScroll = $mdUtil.disableScrollAround(opts.element);
+      }
+
+      // Only activate click listeners after a short time to stop accidental double taps/clicks
+      // from clicking the wrong item
+      $timeout(activateInteraction, 75, false);
+
+      if (opts.backdrop) {
+        $mdTheming.inherit(opts.backdrop, opts.parent);
+        opts.parent.append(opts.backdrop);
+      }
+      showMenu();
+
+      // Return the promise for when our menu is done animating in
+      return $mdUtil.transitionEndPromise(element, {timeout: 350});
+
+      /** Check for valid opts and set some sane defaults */
+      function buildOpts() {
+        if (!opts.target) {
+          throw Error(
+            '$mdMenu.show() expected a target to animate from in options.target'
+          );
+        }
+        angular.extend(opts, {
+          alreadyOpen: false,
+          isRemoved: false,
+          target: angular.element(opts.target), //make sure it's not a naked dom node
+          parent: angular.element(opts.parent),
+          menuContentEl: angular.element(element[0].querySelector('md-menu-content')),
+          backdrop: opts.hasBackdrop && angular.element('<md-backdrop class="md-menu-backdrop md-click-catcher">')
+        });
+      }
+
+      /** Wireup various resize listeners for screen changes */
+      function handleResizing() {
+        opts.resizeFn = function() {
+          positionMenu(element, opts);
+        };
+        angular.element($window).on('resize', opts.resizeFn);
+        angular.element($window).on('orientationchange', opts.resizeFn);
+      }
+
+      /**
+       * Place the menu into the DOM and call positioning related functions
+       */
+      function showMenu() {
+        opts.parent.append(element);
+
+        element.removeClass('md-leave');
+        // Kick off our animation/positioning but first, wait a few frames
+        // so all of our computed positions/sizes are accurate
+        $$rAF(function() {
+          $$rAF(function() {
+            positionMenu(element, opts);
+            // Wait a frame before fading in menu (md-active) so that we don't trigger
+            // transitions on the menu position changing
+            $$rAF(function() {
+              element.addClass('md-active');
+              opts.alreadyOpen = true;
+              element[0].style[$mdConstant.CSS.TRANSFORM] = '';
+            });
+          });
+        });
+      }
+
+
+      /**
+       * Activate interaction on the menu. Wire up keyboard listerns for
+       * clicks, keypresses, backdrop closing, etc.
+       */
+      function activateInteraction() {
+        element.addClass('md-clickable');
+
+        // close on backdrop click
+        opts.backdrop && opts.backdrop.on('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          scope.$apply(function() {
+            opts.mdMenuCtrl.close(true);
+          });
+        });
+
+        // Wire up keyboard listeners.
+        // Close on escape, focus next item on down arrow, focus prev item on up
+        opts.menuContentEl.on('keydown', function(ev) {
+          scope.$apply(function() {
+            switch (ev.keyCode) {
+              case $mdConstant.KEY_CODE.ESCAPE: opts.mdMenuCtrl.close(); break;
+              case $mdConstant.KEY_CODE.UP_ARROW: focusMenuItem(ev, opts.menuContentEl, opts, -1); break;
+              case $mdConstant.KEY_CODE.DOWN_ARROW: focusMenuItem(ev, opts.menuContentEl, opts, 1); break;
+            }
+          });
+        });
+
+        // Close menu on menu item click, if said menu-item is not disabled
+        opts.menuContentEl.on('click', function(e) {
+          var target = e.target;
+          // Traverse up the event until we get to the menuContentEl to see if
+          // there is an ng-click and that the ng-click is not disabled
+          do {
+            if (target == opts.menuContentEl[0]) return;
+            if (hasAnyAttribute(target, ['ng-click', 'data-ng-click', 'x-ng-click'])) {
+              if (!target.hasAttribute('disabled')) {
+                close();
+              }
+              break;
+            }
+          } while (target = target.parentNode)
+
+          function close() {
+            scope.$apply(function() {
+              opts.mdMenuCtrl.close();
+            });
+          }
+
+          function hasAnyAttribute(target, attrs) {
+            if (!target) return false;
+            for (var i = 0, attr; attr = attrs[i]; ++i) {
+              if (target.hasAttribute(attr)) {
+                return true;
+              }
+            }
+            return false;
+          }
+        });
+
+        // kick off initial focus in the menu on the first element
+        var focusTarget = opts.menuContentEl[0].querySelector('[md-menu-focus-target]');
+        if (!focusTarget) focusTarget = opts.menuContentEl[0].firstElementChild.firstElementChild;
+        focusTarget.focus();
+      }
+    }
+
+    /**
+      * Takes a keypress event and focuses the next/previous menu
+      * item from the emitting element
+      * @param {event} e - The origin keypress event
+      * @param {angular.element} menuEl - The menu element
+      * @param {object} opts - The interim element options for the mdMenu
+      * @param {number} direction - The direction to move in (+1 = next, -1 = prev)
+      */
+    function focusMenuItem(e, menuEl, opts, direction) {
+      var currentItem = $mdUtil.getClosest(e.target, 'MD-MENU-ITEM');
+
+      var items = $mdUtil.nodesToArray(menuEl[0].children);
+      var currentIndex = items.indexOf(currentItem);
+
+      // Traverse through our elements in the specified direction (+/-1) and try to
+      // focus them until we find one that accepts focus
+      for (var i = currentIndex + direction; i >= 0 && i < items.length; i = i + direction) {
+        var focusTarget = items[i].firstElementChild || items[i];
+        var didFocus = attemptFocus(focusTarget);
+        if (didFocus) {
+          break;
+        }
+      }
+    }
+
+    /**
+     * Attempts to focus an element. Checks whether that element is the currently
+     * focused element after attempting.
+     * @param {HTMLElement} el - the element to attempt focus on
+     * @returns {bool} - whether the element was successfully focused
+     */
+    function attemptFocus(el) {
+      if (el && el.getAttribute('tabindex') != -1) {
+        el.focus();
+        if ($document[0].activeElement == el) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    /**
+     * Boilerplate interimElement onRemove function
+     * Handles removing the menu from the DOM, cleaning up the element
+     * and removing various listeners
+     */
+    function onRemove(scope, element, opts) {
+      opts.isRemoved = true;
+      element.addClass('md-leave')
+        .removeClass('md-clickable');
+
+      // Disable resizing handlers
+      angular.element($window).off('resize', opts.resizeFn);
+      angular.element($window).off('orientationchange', opts.resizeFn);
+      opts.resizeFn = undefined;
+
+      // Wait for animate out, then remove from the DOM
+      return $mdUtil.transitionEndPromise(element, { timeout: 350 }).then(function() {
+        element.removeClass('md-active');
+        opts.backdrop && opts.backdrop.remove();
+        if (element[0].parentNode === opts.parent[0]) {
+          opts.parent[0].removeChild(element[0]);
+        }
+        opts.restoreScroll && opts.restoreScroll();
+      });
+    }
+
+    /**
+     * Computes menu position and sets the style on the menu container
+     * @param {HTMLElement} el - the menu container element
+     * @param {object} opts - the interim element options object
+     */
+    function positionMenu(el, opts) {
+      if (opts.isRemoved) return;
+
+      var containerNode = el[0],
+          openMenuNode = el[0].firstElementChild,
+          openMenuNodeRect = openMenuNode.getBoundingClientRect(),
+          boundryNode = opts.parent[0],
+          boundryNodeRect = boundryNode.getBoundingClientRect();
+
+      var originNode = opts.target[0].querySelector('[md-menu-origin]') || opts.target[0],
+          originNodeRect = originNode.getBoundingClientRect();
+
+
+      var bounds = {
+        left: boundryNodeRect.left + MENU_EDGE_MARGIN,
+        top: boundryNodeRect.top + MENU_EDGE_MARGIN,
+        bottom: boundryNodeRect.bottom - MENU_EDGE_MARGIN,
+        right: boundryNodeRect.right - MENU_EDGE_MARGIN
+      };
+
+
+      var alignTarget, alignTargetRect, existingOffsets;
+      var positionMode = opts.mdMenuCtrl.positionMode();
+
+      if (positionMode.top == 'target' || positionMode.left == 'target' || positionMode.left == 'target-right') {
+        // TODO: Allow centering on an arbitrary node, for now center on first menu-item's child
+        alignTarget = openMenuNode.firstElementChild.firstElementChild || openMenuNode.firstElementChild;
+        alignTarget = alignTarget.querySelector('[md-menu-align-target]') || alignTarget;
+        alignTargetRect = alignTarget.getBoundingClientRect();
+
+        existingOffsets = {
+          top: parseFloat(containerNode.style.top || 0),
+          left: parseFloat(containerNode.style.left || 0)
+        };
+      }
+
+      var position = { };
+      var transformOrigin = 'top ';
+
+      switch (positionMode.top) {
+        case 'target':
+          position.top = existingOffsets.top + originNodeRect.top - alignTargetRect.top;
+          break;
+        // Future support for mdMenuBar
+        // case 'top':
+        //   position.top = originNodeRect.top;
+        //   break;
+        // case 'bottom':
+        //   position.top = originNodeRect.top + originNodeRect.height;
+        //   break;
+        default:
+          throw new Error('Invalid target mode "' + positionMode.top + '" specified for md-menu on Y axis.');
+      }
+
+      switch (positionMode.left) {
+        case 'target':
+          position.left = existingOffsets.left + originNodeRect.left - alignTargetRect.left;
+          transformOrigin += 'left';
+          break;
+        case 'target-right':
+          position.left = originNodeRect.right - openMenuNodeRect.width + (openMenuNodeRect.right - alignTargetRect.right);
+          transformOrigin += 'right';
+          break;
+        // Future support for mdMenuBar
+        // case 'left':
+        //   position.left = originNodeRect.left;
+        //   transformOrigin += 'left';
+        //   break;
+        // case 'right':
+        //   position.left = originNodeRect.right - containerNode.offsetWidth;
+        //   transformOrigin += 'right';
+        //   break;
+        default:
+          throw new Error('Invalid target mode "' + positionMode.left + '" specified for md-menu on X axis.');
+      }
+
+      var offsets = opts.mdMenuCtrl.offsets();
+      position.top += offsets.top;
+      position.left += offsets.left;
+
+      clamp(position);
+
+      el.css({
+        top: position.top + 'px',
+        left: position.left + 'px'
+      });
+
+      containerNode.style[$mdConstant.CSS.TRANSFORM_ORIGIN] = transformOrigin;
+
+      // Animate a scale out if we aren't just repositioning
+      if (!opts.alreadyOpen) {
+        containerNode.style[$mdConstant.CSS.TRANSFORM] = 'scale(' +
+          Math.min(originNodeRect.width / containerNode.offsetWidth, 1.0) + ',' +
+          Math.min(originNodeRect.height / containerNode.offsetHeight, 1.0) +
+        ')';
+      }
+
+      /**
+       * Clamps the repositioning of the menu within the confines of
+       * bounding element (often the screen/body)
+       */
+      function clamp(pos) {
+        pos.top = Math.max(Math.min(pos.top, bounds.bottom - containerNode.offsetHeight), bounds.top);
+        pos.left = Math.max(Math.min(pos.left, bounds.right - containerNode.offsetWidth), bounds.left);
+      }
+    }
+  }
+}
+MenuProvider.$inject = ["$$interimElementProvider"];
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
  * @name material.components.progressCircular
  * @description Circular Progress module!
  */
@@ -49569,6 +50931,7 @@ angular.module('material.components.select', [
  * @description Displays a select box, bound to an ng-model.
  *
  * @param {expression} ng-model The model!
+ * @param {expression=} md-on-close expression to be evaluated when the select is closed
  * @param {boolean=} multiple Whether it's multiple.
  * @param {string=} placeholder Placeholder hint text.
  * @param {string=} aria-label Optional label for accessibility. Only necessary if no placeholder or
@@ -49683,7 +51046,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
       $mdTheming(element);
 
       if (attr.name && formCtrl) {
-        var selectEl = element.parent()[0].querySelector('select[name=".' + attr.name + '"]')
+        var selectEl = element.parent()[0].querySelector('select[name=".' + attr.name + '"]');
         formCtrl.$removeControl(angular.element(selectEl).controller());
       }
 
@@ -49703,6 +51066,10 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
 
       mdSelectCtrl.setIsPlaceholder = function(val) {
         val ? labelEl.addClass('md-placeholder') : labelEl.removeClass('md-placeholder');
+      };
+
+      mdSelectCtrl.triggerClose = function() {
+        $parse(attr.mdOnClose)(scope);
       };
 
       scope.$$postDigest(function() {
@@ -49768,6 +51135,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
           element.on('keydown', handleKeypress);
         }
       });
+
       if (!attr.disabled && !attr.ngDisabled) {
         element.attr({'tabindex': attr.tabindex, 'aria-disabled': 'false'});
         element.on('click', openSelect);
@@ -49801,6 +51169,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
         selectEl.data('$ngModelController', ngModel);
         selectEl.data('$mdSelectController', mdSelectCtrl);
         selectScope = scope.$new();
+        $mdTheming.inherit(selectContainer, element);
         selectContainer = $compile(selectContainer)(selectScope);
         selectMenuCtrl = selectContainer.find('md-select-menu').controller('mdSelectMenu');
       }
@@ -50006,7 +51375,7 @@ function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
     };
 
     self.selectedLabels = function() {
-      var selectedOptionEls = nodesToArray($element[0].querySelectorAll('md-option[selected]'));
+      var selectedOptionEls = $mdUtil.nodesToArray($element[0].querySelectorAll('md-option[selected]'));
       if (selectedOptionEls.length) {
         return selectedOptionEls.map(function(el) { return el.textContent; }).join(', ');
       } else {
@@ -50269,7 +51638,7 @@ function SelectProvider($$interimElementProvider) {
       }
 
       if (opts.disableParentScroll && !$mdUtil.getClosest(opts.target, 'MD-DIALOG')) {
-        opts.restoreScroll = $mdUtil.disableScrollAround(opts.target);
+        opts.restoreScroll = $mdUtil.disableScrollAround(opts.element);
       } else {
         opts.disableParentScroll = false;
       }
@@ -50278,7 +51647,7 @@ function SelectProvider($$interimElementProvider) {
       $timeout(activateInteraction, 75, false);
 
       if (opts.backdrop) {
-        $mdTheming.inherit(opts.backdrop, opts.parent);
+        $mdTheming.inherit(opts.backdrop, opts.target);
         opts.parent.append(opts.backdrop);
       }
       opts.parent.append(element);
@@ -50347,7 +51716,7 @@ function SelectProvider($$interimElementProvider) {
 
 
         function focusOption(direction) {
-          var optionsArray = nodesToArray(optionNodes);
+          var optionsArray = $mdUtil.nodesToArray(optionNodes);
           var index = optionsArray.indexOf(opts.focusedNode);
           if (index === -1) {
             // We lost the previously focused element, reset to first option
@@ -50412,6 +51781,7 @@ function SelectProvider($$interimElementProvider) {
           opts.restoreScroll();
         }
         if (opts.restoreFocus) opts.target.focus();
+        mdSelect && mdSelect.triggerClose();
       });
     }
 
@@ -50563,14 +51933,6 @@ function SelectProvider($$interimElementProvider) {
 }
 SelectProvider.$inject = ["$$interimElementProvider"];
 
-// Annoying method to copy nodes to an array, thanks to IE
-function nodesToArray(nodes) {
-  var results = [];
-  for (var i = 0; i < nodes.length; ++i) {
-    results.push(nodes.item(i));
-  }
-  return results;
-}
 
 })();
 (function(){
@@ -52129,7 +53491,7 @@ function MdToastDirective() {
  * - $mdToastPreset#action(string) - adds an action button, which resolves the promise returned from `show()` if clicked.
  * - $mdToastPreset#highlightAction(boolean) - sets action button to be highlighted
  * - $mdToastPreset#capsule(boolean) - adds 'md-capsule' class to the toast (curved corners)
- * - $mdToastPreset#theme(boolean) - sets the theme on the toast to theme (default is `$mdThemingProvider`'s default theme)
+ * - $mdToastPreset#theme(string) - sets the theme on the toast to theme (default is `$mdThemingProvider`'s default theme)
  */
 
 /**
@@ -52736,6 +54098,536 @@ MdTooltipDirective.$inject = ["$timeout", "$window", "$$rAF", "$document", "$mdU
 
 /**
  * @ngdoc module
+ * @name material.components.virtualRepeat
+ */
+angular.module('material.components.virtualRepeat', [
+  'material.core'
+])
+.directive('mdVirtualRepeatContainer', VirtualRepeatContainerDirective)
+.directive('mdVirtualRepeat', VirtualRepeatDirective);
+
+
+/**
+ * @ngdoc directive
+ * @name mdVirtualRepeatContainer
+ * @module material.components.virtualRepeat
+ * @restrict E
+ * @description
+ * `md-virtual-repeat-container` provides the scroll container for md-virtual-repeat.
+ *
+ * Virtual repeat is a limited substitute for ng-repeat that renders only
+ * enough dom nodes to fill the container and recycling them as the user scrolls.
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-virtual-repeat-container></md-virtual-repeat-container>
+ *
+ * <md-virtual-repeat-container md-orient-horizontal>
+ *   <div md-virtual-repeat="i in items" md-item-size="20">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ * </hljs>
+ *
+ * @param {boolean=} md-orient-horizontal Whether the container should scroll horizontally
+ *     (defaults to scrolling vertically).
+ */
+function VirtualRepeatContainerDirective() {
+  return {
+    controller: VirtualRepeatContainerController,
+    restrict: 'E',
+    template: virtualRepeatContainerTemplate,
+    compile: function virtualRepeatContainerCompile($element, $attrs) {
+      $element
+          .addClass('md-virtual-repeat-container')
+          .addClass($attrs.hasOwnProperty('mdOrientHorizontal')
+              ? 'md-orient-horizontal'
+              : 'md-orient-vertical');
+    }
+  };
+}
+
+
+function virtualRepeatContainerTemplate($element, $attrs) {
+  return '<div class="md-virtual-repeat-scroller">' +
+    '<div class="md-virtual-repeat-sizer"></div>' +
+    '<div class="md-virtual-repeat-offsetter">' +
+      $element[0].innerHTML +
+    '</div></div>';
+}
+
+
+/** @ngInject */
+function VirtualRepeatContainerController($$rAF, $scope, $element, $attrs) {
+  this.$scope = $scope;
+  this.$element = $element;
+  this.$attrs = $attrs;
+
+  /** @type {number} The width or height of the container */
+  this.size = 0;
+  /** @type {number} The scroll width or height of the scroller */
+  this.scrollSize = 0;
+  /** @type {number} The scrollLeft or scrollTop of the scroller */
+  this.scrollOffset = 0;
+  /** @type {boolean} Whether the scroller is oriented horizontally */
+  this.horizontal = this.$attrs.hasOwnProperty('mdOrientHorizontal');
+  /** @type {!VirtualRepeatController} The repeater inside of this container */
+  this.repeater = null;
+
+  this.scroller = $element[0].getElementsByClassName('md-virtual-repeat-scroller')[0];
+  this.sizer = this.scroller.getElementsByClassName('md-virtual-repeat-sizer')[0];
+  this.offsetter = this.scroller.getElementsByClassName('md-virtual-repeat-offsetter')[0];
+
+  $$rAF(angular.bind(this, this.updateSize));
+
+  // TODO: Come up with a more robust (But hopefully also quick!) way of
+  // detecting that we're not visible.
+  if ($attrs.ngHide) {
+    $scope.$watch($attrs.ngHide, angular.bind(this, function(hidden) {
+      if (!hidden) {
+        $$rAF(angular.bind(this, this.updateSize));
+      }
+    }));
+  }
+}
+VirtualRepeatContainerController.$inject = ["$$rAF", "$scope", "$element", "$attrs"];
+
+
+/** Called by the md-virtual-repeat inside of the container at startup. */
+VirtualRepeatContainerController.prototype.register = function(repeaterCtrl) {
+  this.repeater = repeaterCtrl;
+  
+  angular.element(this.scroller)
+      .on('scroll wheel touchmove touchend', angular.bind(this, this.handleScroll_));
+};
+
+
+/** @return {boolean} Whether the container is configured for horizontal scrolling. */
+VirtualRepeatContainerController.prototype.isHorizontal = function() {
+  return this.horizontal;
+};
+
+
+/** @return {number} The size (width or height) of the container. */
+VirtualRepeatContainerController.prototype.getSize = function() {
+  return this.size;
+};
+
+
+/** Instructs the container to re-measure its size. */
+VirtualRepeatContainerController.prototype.updateSize = function() {
+  this.size = this.isHorizontal()
+      ? this.$element[0].clientWidth
+      : this.$element[0].clientHeight;
+  this.repeater && this.repeater.containerUpdated();
+};
+
+
+/** @return {number} The container's scrollHeight or scrollWidth. */
+VirtualRepeatContainerController.prototype.getScrollSize = function() {
+  return this.scrollSize;
+};
+
+
+/**
+ * Sets the scrollHeight or scrollWidth. Called by the repeater based on
+ * its item count and item size.
+ * @param {number} The new size.
+ */
+VirtualRepeatContainerController.prototype.setScrollSize = function(size) {
+  if (this.scrollSize !== size) {
+    this.sizer.style[this.isHorizontal() ? 'width' : 'height'] = size + 'px';
+  }
+
+  this.scrollSize = size;
+};
+
+
+/** @return {number} The container's current scroll offset. */
+VirtualRepeatContainerController.prototype.getScrollOffset = function() {
+  return this.scrollOffset;
+};
+
+
+VirtualRepeatContainerController.prototype.resetScroll = function() {
+  this.scroller[this.isHorizontal() ? 'scrollLeft' : 'scrollTop'] = 0;
+  this.handleScroll_();
+};
+
+
+VirtualRepeatContainerController.prototype.handleScroll_ = function() {
+  var offset = this.isHorizontal() ? this.scroller.scrollLeft : this.scroller.scrollTop;
+  if (offset === this.scrollOffset) return;
+
+  var itemSize = this.repeater.getItemSize();
+  var numItems = Math.max(0, Math.floor(offset / itemSize) - VirtualRepeatController.NUM_EXTRA);
+
+  var transform = this.isHorizontal() ? 'translateX(' : 'translateY(';
+      transform +=  (numItems * itemSize) + 'px)';
+
+  this.scrollOffset = offset;
+  this.offsetter.style.webkitTransform = transform;
+  this.offsetter.style.transform = transform;
+
+  this.repeater.containerUpdated();
+};
+
+
+/**
+ * @ngdoc directive
+ * @name mdVirtualRepeat
+ * @module material.components.virtualRepeat
+ * @restrict A
+ * @priority 1000
+ * @description
+ * `md-virtual-repeat` specifies an element to repeat using virtual scrolling.
+ *
+ * Virtual repeat is a limited substitute for ng-repeat that renders only
+ * enough dom nodes to fill the container and recycling them as the user scrolls.
+ * Arrays, but not objects are supported for iteration.
+ * Track by, as alias, and (key, value) syntax are not supported.
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-virtual-repeat-container>
+ *   <div md-virtual-repeat="i in items" md-item-size="10">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ *
+ * <md-virtual-repeat-container md-orient-horizontal>
+ *   <div md-virtual-repeat="i in items" md-item-size="20">Hello {{i}}!</div>
+ * </md-virtual-repeat-container>
+ * </hljs>
+ *
+ * @param {number} md-item-size The height or width of the repeated elements (which
+ *     must be identical for each element). Required.
+ * @param {string=} md-extra-name Evaluates to an additional name to which
+ *     the current iterated item can be assigned on the repeated scope. (Needed
+ *     for use in md-autocomplete).
+ */
+function VirtualRepeatDirective($parse) {
+  return {
+    controller: VirtualRepeatController,
+    priority: 1000,
+    require: ['mdVirtualRepeat', '^^mdVirtualRepeatContainer'],
+    restrict: 'A',
+    terminal: true,
+    transclude: 'element',
+    compile: function VirtualRepeatCompile($element, $attrs) {
+      var expression = $attrs.mdVirtualRepeat;
+      var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)\s*$/);
+      var repeatName = match[1];
+      var repeatListExpression = $parse(match[2]);
+      var extraName = $attrs.mdExtraName && $parse($attrs.mdExtraName);
+
+      return function VirtualRepeatLink($scope, $element, $attrs, ctrl, $transclude) {
+        ctrl[0].link_(ctrl[1], $transclude, repeatName, repeatListExpression, extraName);
+      };
+    }
+  };
+}
+VirtualRepeatDirective.$inject = ["$parse"];
+
+
+/** @ngInject */
+function VirtualRepeatController($scope, $element, $attrs, $browser, $document) {
+  this.$scope = $scope;
+  this.$element = $element;
+  this.$attrs = $attrs;
+  this.$browser = $browser;
+  this.$document = $document;
+
+  /** @type {!Function} Backup reference to $browser.$$checkUrlChange */
+  this.browserCheckUrlChange = $browser.$$checkUrlChange;
+  /** @type {number} Most recent starting repeat index (based on scroll offset) */
+  this.newStartIndex = 0;
+  /** @type {number} Most recent ending repeat index (based on scroll offset) */
+  this.newEndIndex = 0;
+  /** @type {number} Previous starting repeat index (based on scroll offset) */
+  this.startIndex = 0;
+  /** @type {number} Previous ending repeat index (based on scroll offset) */
+  this.endIndex = 0;
+  // TODO: measure width/height of first element from dom if not provided.
+  // getComputedStyle?
+  /** @type {number} Height/width of repeated elements. */
+  this.itemSize = $scope.$eval($attrs.mdItemSize);
+  /**
+   * Presently rendered blocks by repeat index.
+   * @type {Object<number, !VirtualRepeatController.Block}
+   */
+  this.blocks = {};
+  /** @type {Array<!VirtualRepeatController.Block>} A pool of presently unused blocks. */
+  this.pooledBlocks = [];
+}
+VirtualRepeatController.$inject = ["$scope", "$element", "$attrs", "$browser", "$document"];
+
+
+/**
+ * An object representing a repeated item.
+ * @typedef {{element: !jqLite, new: boolean, scope: !angular.Scope}}
+ */
+VirtualRepeatController.Block;
+
+
+/**
+ * Number of additional elements to render above and below the visible area inside
+ * of the virtual repeat container. A higher number results in less flicker when scrolling
+ * very quickly in Safari, but comes with a higher rendering and dirty-checking cost.
+ * @const {number}
+ */
+VirtualRepeatController.NUM_EXTRA = 3;
+
+
+/**
+ * Called at startup by the md-virtual-repeat postLink function.
+ * @param {!VirtualRepeatContainerController} container The container's controller.
+ * @param {!Function} transclude The repeated element's bound transclude function.
+ * @param {string} repeatName The left hand side of the repeat expression, indicating
+ *     the name for each item in the array.
+ * @param {!Function} repeatListExpression A compiled expression based on the right hand side
+ *     of the repeat expression. Points to the array to repeat over.
+ * @param {string|undefined} extraName The optional extra repeatName.
+ */
+VirtualRepeatController.prototype.link_ =
+    function(container, transclude, repeatName, repeatListExpression, extraName) {
+  this.container = container;
+  this.transclude = transclude;
+  this.repeatName = repeatName;
+  this.repeatListExpression = repeatListExpression;
+  this.extraName = extraName;
+  this.sized = false;
+
+  this.container.register(this);
+};
+
+
+/**
+ * Called by the container. Informs us that the containers scroll or size has
+ * changed.
+ */
+VirtualRepeatController.prototype.containerUpdated = function() {
+  if (!this.sized) {
+    this.sized = true;
+    this.$scope.$watchCollection(this.repeatListExpression,
+        angular.bind(this, this.virtualRepeatUpdate_));
+    this.items = this.repeatListExpression(this.$scope);
+  }
+
+  this.updateIndexes_();
+
+  if (this.newStartIndex !== this.startIndex ||
+      this.newEndIndex !== this.endIndex ||
+      this.container.getScrollOffset() > this.container.getScrollSize()) {
+    this.virtualRepeatUpdate_(this.items, this.items);
+  }
+};
+
+
+/**
+ * Called by the container. Returns the size of a single repeated item.
+ * @return {number} Size of a repeated item.
+ */
+VirtualRepeatController.prototype.getItemSize = function() {
+  return this.itemSize;
+};
+
+
+/**
+ * Updates the order and visible offset of repeated blocks in response to scrolling
+ * or items updates.
+ * @private
+ */
+VirtualRepeatController.prototype.virtualRepeatUpdate_ = function(items, oldItems) {
+  var itemsLength = items ? items.length : 0;
+
+  // If the number of items shrank, scroll up to the top.
+  if (this.items && itemsLength < this.items.length && this.container.getScrollOffset() !== 0) {
+    this.items = items;
+    this.container.resetScroll();
+    return;
+  }
+
+  this.items = items;
+  if (items !== oldItems) {
+    this.updateIndexes_();
+  }
+
+  this.parentNode = this.$element[0].parentNode;
+  this.container.setScrollSize(itemsLength * this.itemSize);
+
+  // Detach and pool any blocks that are no longer in the viewport.
+  Object.keys(this.blocks).forEach(function(blockIndex) {
+    var index = parseInt(blockIndex, 10);
+    if (index < this.newStartIndex || index >= this.newEndIndex) {
+      this.poolBlock_(index);
+    }
+  }, this);
+
+  // Add needed blocks.
+  // For performance reasons, temporarily block browser url checks as we digest
+  // the restored block scopes ($$checkUrlChange reads window.location to
+  // check for changes and trigger route change, etc, which we don't need when
+  // trying to scroll at 60fps).
+  this.$browser.$$checkUrlChange = angular.noop;
+
+  var i, block,
+      newStartBlocks = [],
+      newEndBlocks = [];
+
+  // Collect blocks at the top.
+  for (i = this.newStartIndex; i < this.newEndIndex && this.blocks[i] == null; i++) {
+    block = this.getBlock_(i);
+    this.updateBlock_(block, i);
+    newStartBlocks.push(block);
+  }
+
+  // Update blocks that are already rendered.
+  for (; this.blocks[i] != null; i++) {
+    this.updateBlock_(this.blocks[i], i);
+  }
+  var maxIndex = i - 1;
+
+  // Collect blocks at the end.
+  for (; i < this.newEndIndex; i++) {
+    block = this.getBlock_(i);
+    this.updateBlock_(block, i);
+    newEndBlocks.push(block);
+  }
+
+  // Attach collected blocks to the document.
+  if (newStartBlocks.length) {
+    this.parentNode.insertBefore(
+        this.domFragmentFromBlocks_(newStartBlocks),
+        this.$element[0].nextSibling);
+  }
+  if (newEndBlocks.length) {
+    this.parentNode.insertBefore(
+        this.domFragmentFromBlocks_(newEndBlocks),
+        this.blocks[maxIndex] && this.blocks[maxIndex].element[0].nextSibling);
+  }
+
+  // Restore $$checkUrlChange.
+  this.$browser.$$checkUrlChange = this.browserCheckUrlChange;
+
+  this.startIndex = this.newStartIndex;
+  this.endIndex = this.newEndIndex;
+};
+
+
+/**
+ * @param {number} index Where the block is to be in the repeated list.
+ * @return {!VirtualRepeatController.Block} A new or pooled block to place at the specified index.
+ * @private
+ */
+VirtualRepeatController.prototype.getBlock_ = function(index) {
+  if (this.pooledBlocks.length) {
+    return this.pooledBlocks.pop();
+  }
+
+  var block;
+  this.transclude(angular.bind(this, function(clone, scope) {
+    block = {
+      element: clone,
+      new: true,
+      scope: scope
+    };
+
+    this.updateScope_(scope, index);
+    this.parentNode.appendChild(clone[0]);
+  }));
+
+  return block;
+};
+
+
+/**
+ * Updates and if not in a digest cycle, digests the specified block's scope to the data
+ * at the specified index.
+ * @param {!VirtualRepeatController.Block} block The block whose scope should be updated.
+ * @param {number} index The index to set.
+ * @private
+ */
+VirtualRepeatController.prototype.updateBlock_ = function(block, index) {
+  this.blocks[index] = block;
+
+  if (!block.new &&
+      (block.scope.$index === index && block.scope[this.repeatName] === this.items[index])) {
+    return;
+  }
+  block.new = false;
+
+  // Update and digest the block's scope.
+  this.updateScope_(block.scope, index);
+
+  // Perform digest before reattaching the block.
+  // Any resulting synchronous dom mutations should be much faster as a result.
+  // This might break some directives, but I'm going to try it for now.
+  if (!this.$scope.$root.$$phase) {
+    block.scope.$digest();
+  }
+};
+
+
+/**
+ * Updates scope to the data at the specified index.
+ * @param {!angular.Scope} scope The scope which should be updated.
+ * @param {number} index The index to set.
+ * @private
+ */
+VirtualRepeatController.prototype.updateScope_ = function(scope, index) {
+  scope.$index = index;
+  scope[this.repeatName] = this.items[index];
+  if (this.extraName) scope[this.extraName(this.$scope)] = this.items[index];
+};
+
+
+/**
+ * Pools the block at the specified index (Pulls its element out of the dom and stores it).
+ * @param {number} index The index at which the block to pool is stored.
+ * @private
+ */
+VirtualRepeatController.prototype.poolBlock_ = function(index) {
+  this.pooledBlocks.push(this.blocks[index]);
+  this.parentNode.removeChild(this.blocks[index].element[0]);
+  delete this.blocks[index];
+};
+
+
+/**
+ * Produces a dom fragment containing the elements from the list of blocks.
+ * @param {!Array<!VirtualRepeatController.Block>} blocks The blocks whose elements
+ *     should be added to the document fragment.
+ * @return {DocumentFragment}
+ * @private
+ */
+VirtualRepeatController.prototype.domFragmentFromBlocks_ = function(blocks) {
+  var fragment = this.$document[0].createDocumentFragment();
+  blocks.forEach(function(block) {
+    fragment.appendChild(block.element[0]);
+  });
+  return fragment;
+};
+
+
+/**
+ * Updates start and end indexes based on length of repeated items and container size.
+ * @private
+ */
+VirtualRepeatController.prototype.updateIndexes_ = function() {
+  var itemsLength = this.items ? this.items.length : 0;
+  var containerLength = Math.ceil(this.container.getSize() / this.itemSize);
+
+  this.newStartIndex = Math.max(0, Math.min(
+      itemsLength - containerLength,
+      Math.floor(this.container.getScrollOffset() / this.itemSize)));
+  this.newEndIndex = Math.min(itemsLength, this.newStartIndex + containerLength +
+      VirtualRepeatController.NUM_EXTRA);
+  this.newStartIndex = Math.max(0, this.newStartIndex - VirtualRepeatController.NUM_EXTRA);
+};
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
  * @name material.components.whiteframe
  */
 angular.module('material.components.whiteframe', []);
@@ -52752,11 +54644,10 @@ var ITEM_HEIGHT = 41,
     MAX_HEIGHT = 5.5 * ITEM_HEIGHT,
     MENU_PADDING = 8;
 
-function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $mdTheming, $window, $animate, $rootElement) {
-
+function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $mdTheming, $window,
+                             $animate, $rootElement, $attrs) {
   //-- private variables
-
-  var self      = this,
+  var ctrl      = this,
       itemParts = $scope.itemsExpr.split(/ in /i),
       itemExpr  = itemParts[1],
       elements  = null,
@@ -52767,41 +54658,45 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
       hasFocus  = false,
       lastCount = 0;
 
-  //-- public variables
+  //-- public variables with handlers
+  defineProperty('hidden', handleHiddenChange, true);
 
-  self.scope    = $scope;
-  self.parent   = $scope.$parent;
-  self.itemName = itemParts[0];
-  self.matches  = [];
-  self.loading  = false;
-  self.hidden   = true;
-  self.index    = null;
-  self.messages = [];
-  self.id       = $mdUtil.nextUid();
+  //-- public variables
+  ctrl.scope      = $scope;
+  ctrl.parent     = $scope.$parent;
+  ctrl.itemName   = itemParts[0];
+  ctrl.matches    = [];
+  ctrl.loading    = false;
+  ctrl.hidden     = true;
+  ctrl.index      = null;
+  ctrl.messages   = [];
+  ctrl.id         = $mdUtil.nextUid();
+  ctrl.isDisabled = null;
+  ctrl.isRequired = null;
 
   //-- public methods
-
-  self.keydown  = keydown;
-  self.blur     = blur;
-  self.focus    = focus;
-  self.clear    = clearValue;
-  self.select   = select;
-  self.getCurrentDisplayValue         = getCurrentDisplayValue;
-  self.registerSelectedItemWatcher    = registerSelectedItemWatcher;
-  self.unregisterSelectedItemWatcher  = unregisterSelectedItemWatcher;
-
-  self.listEnter = function () { noBlur = true; };
-  self.listLeave = function () {
-    noBlur = false;
-    if (!hasFocus) self.hidden = true;
-  };
-  self.mouseUp   = function () { elements.input.focus(); };
+  ctrl.keydown    = keydown;
+  ctrl.blur       = blur;
+  ctrl.focus      = focus;
+  ctrl.clear      = clearValue;
+  ctrl.select     = select;
+  ctrl.listEnter  = onListEnter;
+  ctrl.listLeave  = onListLeave;
+  ctrl.mouseUp    = onMouseup;
+  ctrl.getCurrentDisplayValue         = getCurrentDisplayValue;
+  ctrl.registerSelectedItemWatcher    = registerSelectedItemWatcher;
+  ctrl.unregisterSelectedItemWatcher  = unregisterSelectedItemWatcher;
 
   return init();
 
   //-- initialization methods
 
+  /**
+   * Initialize the controller, setup watchers, gather elements
+   */
   function init () {
+    $mdUtil.initOptionalProperties($scope, $attrs, { searchText: null, selectedItem: null } );
+    $mdTheming($element);
     configureWatchers();
     $timeout(function () {
       gatherElements();
@@ -52810,6 +54705,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     });
   }
 
+  /**
+   * Calculates the dropdown's position and applies the new styles to the menu element
+   * @returns {*}
+   */
   function positionDropdown () {
     if (!elements) return $timeout(positionDropdown, 0, false);
     var hrect  = elements.wrap.getBoundingClientRect(),
@@ -52836,6 +54735,9 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.$.ul.css(styles);
     $timeout(correctHorizontalAlignment, 0, false);
 
+    /**
+     * Makes sure that the menu doesn't go off of the screen on either side.
+     */
     function correctHorizontalAlignment () {
       var dropdown = elements.ul.getBoundingClientRect(),
           styles   = {};
@@ -52846,6 +54748,9 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Moves the dropdown menu to the body tag in order to avoid z-index and overflow issues.
+   */
   function moveDropdown () {
     if (!elements.$.root.length) return;
     $mdTheming(elements.$.ul);
@@ -52854,28 +54759,38 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     if ($animate.pin) $animate.pin(elements.$.ul, $rootElement);
   }
 
+  /**
+   * Sends focus to the input element.
+   */
   function focusElement () {
     if ($scope.autofocus) elements.input.focus();
   }
 
+  /**
+   * Sets up any watchers used by autocomplete
+   */
   function configureWatchers () {
     var wait = parseInt($scope.delay, 10) || 0;
-    $scope.$watch('searchText', wait
-        ? $mdUtil.debounce(handleSearchText, wait)
-        : handleSearchText);
+    $attrs.$observe('disabled', function (value) { ctrl.isDisabled = value; });
+    $attrs.$observe('required', function (value) { ctrl.isRequired = value !== null; });
+    $scope.$watch('searchText', wait ? $mdUtil.debounce(handleSearchText, wait) : handleSearchText);
     registerSelectedItemWatcher(selectedItemChange);
     $scope.$watch('selectedItem', handleSelectedItemChange);
-    $scope.$watch('$mdAutocompleteCtrl.hidden', function (hidden, oldHidden) {
-      if (!hidden && oldHidden) positionDropdown();
-    });
     angular.element($window).on('resize', positionDropdown);
     $scope.$on('$destroy', cleanup);
   }
 
+  /**
+   * Removes any events or leftover elements created by this controller
+   */
   function cleanup () {
+    angular.element($window).off('resize', positionDropdown);
     elements.$.ul.remove();
   }
 
+  /**
+   * Gathers all of the elements needed for this controller
+   */
   function gatherElements () {
     elements = {
       main:  $element[0],
@@ -52889,6 +54804,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.$ = getAngularElements(elements);
   }
 
+  /**
+   * Finds the element that the menu will base its position on
+   * @returns {*}
+   */
   function getSnapTarget () {
     for (var element = $element; element.length; element = element.parent()) {
       if (angular.isDefined(element.attr('md-autocomplete-snap'))) return element[0];
@@ -52896,6 +54815,11 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     return elements.wrap;
   }
 
+  /**
+   * Gathers angular-wrapped versions of each element
+   * @param elements
+   * @returns {{}}
+   */
   function getAngularElements (elements) {
     var obj = {};
     for (var key in elements) {
@@ -52906,14 +54830,61 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
 
   //-- event/change handlers
 
+  /**
+   * Handles changes to the `hidden` property.
+   * @param hidden
+   * @param oldHidden
+   */
+  function handleHiddenChange (hidden, oldHidden) {
+    if (!hidden && oldHidden) positionDropdown();
+    if (!hidden) {
+      if (elements) $timeout(function () { $mdUtil.disableScrollAround(elements.ul); }, 0, false);
+    } else {
+      $mdUtil.enableScrolling();
+    }
+  }
+
+  /**
+   * When the user mouses over the dropdown menu, ignore blur events.
+   */
+  function onListEnter () {
+    noBlur = true;
+  }
+
+  /**
+   * When the user's mouse leaves the menu, blur events may hide the menu again.
+   */
+  function onListLeave () {
+    noBlur = false;
+    if (!hasFocus) ctrl.hidden = true;
+  }
+
+  /**
+   * When the mouse button is released, send focus back to the input field.
+   */
+  function onMouseup () {
+    elements.input.focus();
+  }
+
+  /**
+   * Handles changes to the selected item.
+   * @param selectedItem
+   * @param previousSelectedItem
+   */
   function selectedItemChange (selectedItem, previousSelectedItem) {
     if (selectedItem) {
       $scope.searchText = getDisplayValue(selectedItem);
     }
-    if ($scope.itemChange && selectedItem !== previousSelectedItem)
+    if (angular.isFunction($scope.itemChange) && selectedItem !== previousSelectedItem)
       $scope.itemChange(getItemScope(selectedItem));
   }
 
+  /**
+   * Calls any external watchers listening for the selected item.  Used in conjunction with
+   * `registerSelectedItemWatcher`.
+   * @param selectedItem
+   * @param previousSelectedItem
+   */
   function handleSelectedItemChange(selectedItem, previousSelectedItem) {
     for (var i = 0; i < selectedItemWatchers.length; ++i) {
       selectedItemWatchers[i](selectedItem, previousSelectedItem);
@@ -52941,67 +54912,82 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Handles changes to the searchText property.
+   * @param searchText
+   * @param previousSearchText
+   */
   function handleSearchText (searchText, previousSearchText) {
-    self.index = getDefaultIndex();
+    ctrl.index = getDefaultIndex();
     //-- do nothing on init
     if (searchText === previousSearchText) return;
     //-- clear selected item if search text no longer matches it
     if (searchText !== getDisplayValue($scope.selectedItem)) $scope.selectedItem = null;
     else return;
     //-- trigger change event if available
-    if ($scope.textChange && searchText !== previousSearchText)
+    if (angular.isFunction($scope.textChange) && searchText !== previousSearchText)
       $scope.textChange(getItemScope($scope.selectedItem));
     //-- cancel results if search text is not long enough
     if (!isMinLengthMet()) {
-      self.loading = false;
-      self.matches = [];
-      self.hidden = shouldHide();
+      ctrl.loading = false;
+      ctrl.matches = [];
+      ctrl.hidden = shouldHide();
       updateMessages();
     } else {
       handleQuery();
     }
   }
 
+  /**
+   * Handles input blur event, determines if the dropdown should hide.
+   */
   function blur () {
     hasFocus = false;
-    if (!noBlur) self.hidden = true;
+    if (!noBlur) ctrl.hidden = true;
   }
 
+  /**
+   * Handles input focus event, determines if the dropdown should show.
+   */
   function focus () {
     hasFocus = true;
     //-- if searchText is null, let's force it to be a string
     if (!angular.isString($scope.searchText)) $scope.searchText = '';
     if ($scope.minLength > 0) return;
-    self.hidden = shouldHide();
-    if (!self.hidden) handleQuery();
+    ctrl.hidden = shouldHide();
+    if (!ctrl.hidden) handleQuery();
   }
 
+  /**
+   * Handles keyboard input.
+   * @param event
+   */
   function keydown (event) {
     switch (event.keyCode) {
       case $mdConstant.KEY_CODE.DOWN_ARROW:
-        if (self.loading) return;
+        if (ctrl.loading) return;
         event.preventDefault();
-        self.index = Math.min(self.index + 1, self.matches.length - 1);
+        ctrl.index = Math.min(ctrl.index + 1, ctrl.matches.length - 1);
         updateScroll();
         updateMessages();
         break;
       case $mdConstant.KEY_CODE.UP_ARROW:
-        if (self.loading) return;
+        if (ctrl.loading) return;
         event.preventDefault();
-        self.index = self.index < 0 ? self.matches.length - 1 : Math.max(0, self.index - 1);
+        ctrl.index = ctrl.index < 0 ? ctrl.matches.length - 1 : Math.max(0, ctrl.index - 1);
         updateScroll();
         updateMessages();
         break;
       case $mdConstant.KEY_CODE.TAB:
       case $mdConstant.KEY_CODE.ENTER:
-        if (self.hidden || self.loading || self.index < 0 || self.matches.length < 1) return;
+        if (ctrl.hidden || ctrl.loading || ctrl.index < 0 || ctrl.matches.length < 1) return;
         event.preventDefault();
-        select(self.index);
+        select(ctrl.index);
         break;
       case $mdConstant.KEY_CODE.ESCAPE:
-        self.matches = [];
-        self.hidden = true;
-        self.index = getDefaultIndex();
+        ctrl.matches = [];
+        ctrl.hidden = true;
+        ctrl.index = getDefaultIndex();
         break;
       default:
     }
@@ -53009,51 +54995,106 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
 
   //-- getters
 
+  /**
+   * Returns the minimum length needed to display the dropdown.
+   * @returns {*}
+   */
   function getMinLength () {
     return angular.isNumber($scope.minLength) ? $scope.minLength : 1;
   }
 
+  /**
+   * Returns the display value for an item.
+   * @param item
+   * @returns {*}
+   */
   function getDisplayValue (item) {
     return (item && $scope.itemText) ? $scope.itemText(getItemScope(item)) : item;
   }
 
+  /**
+   * Returns the locals object for compiling item templates.
+   * @param item
+   * @returns {{}}
+   */
   function getItemScope (item) {
     if (!item) return;
     var locals = {};
-    if (self.itemName) locals[self.itemName] = item;
+    if (ctrl.itemName) locals[ctrl.itemName] = item;
     return locals;
   }
 
+  /**
+   * Returns the default index based on whether or not autoselect is enabled.
+   * @returns {number}
+   */
   function getDefaultIndex () {
     return $scope.autoselect ? 0 : -1;
   }
 
+  /**
+   * Determines if the menu should be hidden.
+   * @returns {boolean}
+   */
   function shouldHide () {
     if (!isMinLengthMet()) return true;
   }
 
+  /**
+   * Returns the display value of the current item.
+   * @returns {*}
+   */
   function getCurrentDisplayValue () {
-    return getDisplayValue(self.matches[self.index]);
+    return getDisplayValue(ctrl.matches[ctrl.index]);
   }
 
+  /**
+   * Determines if the minimum length is met by the search text.
+   * @returns {*}
+   */
   function isMinLengthMet () {
-    return $scope.searchText && $scope.searchText.length >= getMinLength();
+    return angular.isDefined($scope.searchText) && $scope.searchText.length >= getMinLength();
   }
 
   //-- actions
 
-  function select (index) {
-    $scope.selectedItem = self.matches[index];
-    self.hidden = true;
-    self.index = 0;
-    self.matches = [];
-    //-- force form to update state for validation
-    $timeout(function () {
-      elements.$.input.controller('ngModel').$setViewValue(getDisplayValue($scope.selectedItem) || $scope.searchText);
-      self.hidden = true;
+  /**
+   * Defines a public property with a handler and a default value.
+   * @param key
+   * @param handler
+   * @param value
+   */
+  function defineProperty (key, handler, value) {
+    Object.defineProperty(ctrl, key, {
+      get: function () { return value; },
+      set: function (newValue) {
+        var oldValue = value;
+        value = newValue;
+        handler(newValue, oldValue);
+      }
     });
   }
 
+  /**
+   * Selects the item at the given index.
+   * @param index
+   */
+  function select (index) {
+    $scope.selectedItem = ctrl.matches[index];
+    ctrl.hidden = true;
+    ctrl.index = 0;
+    ctrl.matches = [];
+    //-- force form to update state for validation
+    $timeout(function () {
+      elements.$.input.controller('ngModel').$setViewValue(getDisplayValue($scope.selectedItem) ||
+          $scope.searchText);
+      ctrl.hidden = true;
+    });
+  }
+
+  /**
+   * Clears the searchText value and selected item.
+   */
   function clearValue () {
     $scope.searchText = '';
     select(-1);
@@ -53066,46 +55107,60 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.input.focus();
   }
 
+  /**
+   * Fetches the results for the provided search text.
+   * @param searchText
+   */
   function fetchResults (searchText) {
     var items = $scope.$parent.$eval(itemExpr),
         term = searchText.toLowerCase();
     if (angular.isArray(items)) {
       handleResults(items);
-    } else {
-      self.loading = true;
+    } else if (items) {
+      ctrl.loading = true;
       if (items.success) items.success(handleResults);
       if (items.then)    items.then(handleResults);
-      if (items.error)   items.error(function () { self.loading = false; });
+      if (items.error)   items.error(function () { ctrl.loading = false; });
     }
     function handleResults (matches) {
       cache[term] = matches;
       if (searchText !== $scope.searchText) return; //-- just cache the results if old request
-      self.loading = false;
+      ctrl.loading = false;
       promise = null;
-      self.matches = matches;
-      self.hidden = shouldHide();
+      ctrl.matches = matches;
+      ctrl.hidden = shouldHide();
       updateMessages();
       positionDropdown();
     }
   }
 
+  /**
+   * Updates the ARIA messages
+   */
   function updateMessages () {
-    self.messages = [ getCountMessage(), getCurrentDisplayValue() ];
+    ctrl.messages = [ getCountMessage(), getCurrentDisplayValue() ];
   }
 
+  /**
+   * Returns the ARIA message for how many results match the current query.
+   * @returns {*}
+   */
   function getCountMessage () {
-    if (lastCount === self.matches.length) return '';
-    lastCount = self.matches.length;
-    switch (self.matches.length) {
+    if (lastCount === ctrl.matches.length) return '';
+    lastCount = ctrl.matches.length;
+    switch (ctrl.matches.length) {
       case 0:  return 'There are no matches available.';
       case 1:  return 'There is 1 match available.';
-      default: return 'There are ' + self.matches.length + ' matches available.';
+      default: return 'There are ' + ctrl.matches.length + ' matches available.';
     }
   }
 
+  /**
+   * Makes sure that the focused element is within view.
+   */
   function updateScroll () {
-    if (!elements.li[self.index]) return;
-    var li  = elements.li[self.index],
+    if (!elements.li[ctrl.index]) return;
+    var li  = elements.li[ctrl.index],
         top = li.offsetTop,
         bot = top + li.offsetHeight,
         hgt = elements.ul.clientHeight;
@@ -53116,6 +55171,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Starts the query to gather the results for the current searchText.  Attempts to return cached
+   * results first, then forwards the process to `fetchResults` if necessary.
+   */
   function handleQuery () {
     var searchText = $scope.searchText,
         term = searchText.toLowerCase();
@@ -53126,16 +55185,16 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
     //-- if results are cached, pull in cached results
     if (!$scope.noCache && cache[term]) {
-      self.matches = cache[term];
+      ctrl.matches = cache[term];
       updateMessages();
     } else {
       fetchResults(searchText);
     }
-    if (hasFocus) self.hidden = shouldHide();
+    if (hasFocus) ctrl.hidden = shouldHide();
   }
 
 }
-MdAutocompleteCtrl.$inject = ["$scope", "$element", "$mdUtil", "$mdConstant", "$timeout", "$mdTheming", "$window", "$animate", "$rootElement"];
+MdAutocompleteCtrl.$inject = ["$scope", "$element", "$mdUtil", "$mdConstant", "$timeout", "$mdTheming", "$window", "$animate", "$rootElement", "$attrs"];
 
 })();
 (function(){
@@ -53249,7 +55308,6 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
   return {
     controller:   'MdAutocompleteCtrl',
     controllerAs: '$mdAutocompleteCtrl',
-    link:         link,
     scope:        {
       inputName:      '@mdInputName',
       inputMinlength: '@mdInputMinlength',
@@ -53285,12 +55343,12 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
           <ul role="presentation"\
               class="md-autocomplete-suggestions md-whiteframe-z1 {{menuClass || \'\'}}"\
               id="ul-{{$mdAutocompleteCtrl.id}}"\
+              ng-hide="$mdAutocompleteCtrl.hidden"\
               ng-mouseenter="$mdAutocompleteCtrl.listEnter()"\
               ng-mouseleave="$mdAutocompleteCtrl.listLeave()"\
               ng-mouseup="$mdAutocompleteCtrl.mouseUp()">\
             <li ng-repeat="(index, item) in $mdAutocompleteCtrl.matches"\
                 ng-class="{ selected: index === $mdAutocompleteCtrl.index }"\
-                ng-hide="$mdAutocompleteCtrl.hidden"\
                 ng-click="$mdAutocompleteCtrl.select(index)"\
                 md-autocomplete-list-item="$mdAutocompleteCtrl.itemName">\
                 ' + itemTemplate + '\
@@ -53336,7 +55394,7 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
                   ng-required="isRequired"\
                   ng-minlength="inputMinlength"\
                   ng-maxlength="inputMaxlength"\
-                  ng-disabled="isDisabled"\
+                  ng-disabled="$mdAutocompleteCtrl.isDisabled"\
                   ng-model="$mdAutocompleteCtrl.scope.searchText"\
                   ng-keydown="$mdAutocompleteCtrl.keydown($event)"\
                   ng-blur="$mdAutocompleteCtrl.blur()"\
@@ -53357,7 +55415,7 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
                 ng-if="!floatingLabel"\
                 autocomplete="off"\
                 ng-required="isRequired"\
-                ng-disabled="isDisabled"\
+                ng-disabled="$mdAutocompleteCtrl.isDisabled"\
                 ng-model="$mdAutocompleteCtrl.scope.searchText"\
                 ng-keydown="$mdAutocompleteCtrl.keydown($event)"\
                 ng-blur="$mdAutocompleteCtrl.blur()"\
@@ -53372,7 +55430,7 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
             <button\
                 type="button"\
                 tabindex="-1"\
-                ng-if="$mdAutocompleteCtrl.scope.searchText && !isDisabled"\
+                ng-if="$mdAutocompleteCtrl.scope.searchText && !$mdAutocompleteCtrl.isDisabled"\
                 ng-click="$mdAutocompleteCtrl.clear()">\
               <md-icon md-svg-icon="md-close"></md-icon>\
               <span class="md-visually-hidden">Clear</span>\
@@ -53382,15 +55440,6 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
       }
     }
   };
-
-  function link (scope, element, attr) {
-    attr.$observe('disabled', function (value) { scope.isDisabled = value; });
-    attr.$observe('required', function (value) { scope.isRequired = value !== null; });
-
-    $mdUtil.initOptionalProperties(scope, attr, {searchText:null, selectedItem:null} );
-
-    $mdTheming(element);
-  }
 }
 MdAutocomplete.$inject = ["$mdTheming", "$mdUtil"];
 
@@ -54566,7 +56615,7 @@ function MdTab () {
         return getLabelElement() || getLabelAttribute() || getElementContents();
         function getLabelAttribute () { return attr.label; }
         function getLabelElement () {
-          var label = element.find('md-tab-label');
+          var label = element.find('md-tab-label').eq(0);
           if (label.length) return label.remove().html();
         }
         function getElementContents () {
@@ -54576,7 +56625,7 @@ function MdTab () {
         }
       }
       function getTemplate () {
-        var content = element.find('md-tab-body'),
+        var content = element.find('md-tab-body').eq(0),
             template = content.length ? content.html() : attr.label ? element.html() : '';
         if (content.length) content.remove();
         else if (attr.label) element.empty();
@@ -54596,8 +56645,8 @@ function MdTab () {
     if (!ctrl) return;
     var tabs = element.parent()[0].getElementsByTagName('md-tab'),
         index = Array.prototype.indexOf.call(tabs, element[0]),
-        body = element.find('md-tab-body').remove(),
-        label = element.find('md-tab-label').remove(),
+        body = element.find('md-tab-body').eq(0).remove(),
+        label = element.find('md-tab-label').eq(0).remove(),
         data = ctrl.insertTab({
           scope:    scope,
           parent:   scope.$parent,
@@ -54691,28 +56740,34 @@ angular
  * @ngInject
  */
 function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $mdTabInkRipple,
-                           $mdUtil, $animate) {
-  var ctrl      = this,
-      locked    = false,
-      elements  = getElements(),
-      queue     = [],
-      destroyed = false;
+                           $mdUtil, $animate, $attrs, $compile, $mdTheming) {
+  //-- define private properties
+  var ctrl       = this,
+      locked     = false,
+      elements   = getElements(),
+      queue      = [],
+      destroyed  = false,
+      loaded     = false;
 
+  //-- define public properties with change handlers
+  defineProperty('focusIndex', handleFocusIndexChange, $scope.selectedIndex || 0);
+  defineProperty('offsetLeft', handleOffsetChange, 0);
+  defineProperty('hasContent', handleHasContent, false);
+
+  //-- define public properties
   ctrl.scope = $scope;
   ctrl.parent = $scope.$parent;
   ctrl.tabs = [];
   ctrl.lastSelectedIndex = null;
-  ctrl.focusIndex = $scope.selectedIndex || 0;
-  ctrl.offsetLeft = 0;
-  ctrl.hasContent = false;
   ctrl.hasFocus = false;
   ctrl.lastClick = true;
+  ctrl.shouldPaginate = false;
+  ctrl.shouldCenterTabs = shouldCenterTabs();
 
+  //-- define public methods
   ctrl.redirectFocus = redirectFocus;
   ctrl.attachRipple = attachRipple;
   ctrl.shouldStretchTabs = shouldStretchTabs;
-  ctrl.shouldPaginate = shouldPaginate;
-  ctrl.shouldCenterTabs = shouldCenterTabs;
   ctrl.insertTab = insertTab;
   ctrl.removeTab = removeTab;
   ctrl.select = select;
@@ -54729,36 +56784,84 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
 
   init();
 
+  /**
+   * Perform initialization for the controller, setup events and watcher(s)
+   */
   function init () {
-    $scope.$watch('selectedIndex', handleSelectedIndexChange);
-    $scope.$watch('$mdTabsCtrl.focusIndex', handleFocusIndexChange);
-    $scope.$watch('$mdTabsCtrl.offsetLeft', handleOffsetChange);
-    $scope.$watch('$mdTabsCtrl.hasContent', handleHasContent);
+    $scope.selectedIndex = $scope.selectedIndex || 0;
+    compileTemplate();
+    configureWatchers();
+    bindEvents();
+    $mdTheming($element);
+    $timeout(function () {
+      updateHeightFromContent();
+      adjustOffset();
+      updatePagination();
+      ctrl.tabs[$scope.selectedIndex] && ctrl.tabs[$scope.selectedIndex].scope.select();
+      loaded = true;
+    });
+  }
+
+  function compileTemplate () {
+    var template = $attrs.$mdTabsTemplate,
+        element  = angular.element(elements.data);
+    element.html(template);
+    $compile(element.contents())(ctrl.parent);
+    delete $attrs.$mdTabsTemplate;
+  }
+
+  function bindEvents () {
     angular.element($window).on('resize', handleWindowResize);
     angular.element(elements.paging).on('DOMSubtreeModified', ctrl.updateInkBarStyles);
-    $timeout(updateHeightFromContent, 0, false);
-    $timeout(adjustOffset);
+    angular.element(elements.paging).on('DOMSubtreeModified', updatePagination);
+  }
+
+  function configureWatchers () {
+    $mdUtil.initOptionalProperties($scope, $attrs);
+    $attrs.$observe('mdNoBar', function (value) { $scope.noInkBar = angular.isDefined(value); });
+    $scope.$watch('selectedIndex', handleSelectedIndexChange);
+    $scope.$watch('dynamicHeight', function (value) {
+      if (value) $element.addClass('md-dynamic-height');
+      else $element.removeClass('md-dynamic-height');
+    });
     $scope.$on('$destroy', cleanup);
   }
 
+  /**
+   * Remove any events defined by this controller
+   */
   function cleanup () {
     destroyed = true;
     angular.element($window).off('resize', handleWindowResize);
     angular.element(elements.paging).off('DOMSubtreeModified', ctrl.updateInkBarStyles);
+    angular.element(elements.paging).off('DOMSubtreeModified', updatePagination);
   }
 
   //-- Change handlers
 
+  /**
+   * Add/remove the `md-no-tab-content` class depending on `ctrl.hasContent`
+   * @param hasContent
+   */
   function handleHasContent (hasContent) {
     $element[hasContent ? 'removeClass' : 'addClass']('md-no-tab-content');
   }
 
+  /**
+   * Apply ctrl.offsetLeft to the paging element when it changes
+   * @param left
+   */
   function handleOffsetChange (left) {
-    var newValue = shouldCenterTabs() ? '' : '-' + left + 'px';
-    angular.element(elements.paging).css('transform', 'translate3d(' + newValue + ', 0, 0)');
+    var newValue = ctrl.shouldCenterTabs ? '' : '-' + left + 'px';
+    angular.element(elements.paging).css($mdConstant.CSS.TRANSFORM, 'translate3d(' + newValue + ', 0, 0)');
     $scope.$broadcast('$mdTabsPaginationChanged');
   }
 
+  /**
+   * Update the UI whenever `ctrl.focusIndex` is updated
+   * @param newIndex
+   * @param oldIndex
+   */
   function handleFocusIndexChange (newIndex, oldIndex) {
     if (newIndex === oldIndex) return;
     if (!elements.tabs[newIndex]) return;
@@ -54766,6 +56869,11 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     redirectFocus();
   }
 
+  /**
+   * Update the UI whenever the selected index changes. Calls user-defined select/deselect methods.
+   * @param newValue
+   * @param oldValue
+   */
   function handleSelectedIndexChange (newValue, oldValue) {
     if (newValue === oldValue) return;
 
@@ -54773,11 +56881,16 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.lastSelectedIndex = oldValue;
     ctrl.updateInkBarStyles();
     updateHeightFromContent();
+    adjustOffset(newValue);
     $scope.$broadcast('$mdTabsChanged');
     ctrl.tabs[oldValue] && ctrl.tabs[oldValue].scope.deselect();
     ctrl.tabs[newValue] && ctrl.tabs[newValue].scope.select();
   }
 
+  /**
+   * Queues up a call to `handleWindowResize` when a resize occurs while the tabs component is
+   * hidden.
+   */
   function handleResizeWhenVisible () {
     //-- if there is already a watcher waiting for resize, do nothing
     if (handleResizeWhenVisible.watcher) return;
@@ -54801,6 +56914,10 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
 
   //-- Event handlers / actions
 
+  /**
+   * Handle user keyboard interactions
+   * @param event
+   */
   function keydown (event) {
     switch (event.keyCode) {
       case $mdConstant.KEY_CODE.LEFT_ARROW:
@@ -54820,18 +56937,30 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.lastClick = false;
   }
 
+  /**
+   * Update the selected index and trigger a click event on the original `md-tab` element in order
+   * to fire user-added click events.
+   * @param index
+   */
   function select (index) {
     if (!locked) ctrl.focusIndex = $scope.selectedIndex = index;
     ctrl.lastClick = true;
     ctrl.tabs[index].element.triggerHandler('click');
   }
 
+  /**
+   * When pagination is on, this makes sure the selected index is in view.
+   * @param event
+   */
   function scroll (event) {
-    if (!shouldPaginate()) return;
+    if (!ctrl.shouldPaginate) return;
     event.preventDefault();
     ctrl.offsetLeft = fixOffset(ctrl.offsetLeft - event.wheelDelta);
   }
 
+  /**
+   * Slides the tabs over approximately one page forward.
+   */
   function nextPage () {
     var viewportWidth = elements.canvas.clientWidth,
         totalWidth = viewportWidth + ctrl.offsetLeft,
@@ -54843,6 +56972,9 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.offsetLeft = fixOffset(tab.offsetLeft);
   }
 
+  /**
+   * Slides the tabs over approximately one page backward.
+   */
   function previousPage () {
     var i, tab;
     for (i = 0; i < elements.tabs.length; i++) {
@@ -54852,14 +56984,22 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.offsetLeft = fixOffset(tab.offsetLeft + tab.offsetWidth - elements.canvas.clientWidth);
   }
 
+  /**
+   * Update size calculations when the window is resized.
+   */
   function handleWindowResize () {
     $scope.$apply(function () {
       ctrl.lastSelectedIndex = $scope.selectedIndex;
       ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
       $timeout(ctrl.updateInkBarStyles, 0, false);
+      $timeout(updatePagination);
     });
   }
 
+  /**
+   * Remove a tab from the data and select the nearest valid tab.
+   * @param tabData
+   */
   function removeTab (tabData) {
     var selectedIndex = $scope.selectedIndex,
         tab = ctrl.tabs.splice(tabData.getIndex(), 1)[0];
@@ -54871,10 +57011,17 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
       ctrl.tabs[$scope.selectedIndex] && ctrl.tabs[$scope.selectedIndex].scope.select();
     }
     $timeout(function () {
+      updatePagination();
       ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
     });
   }
 
+  /**
+   * Create an entry in the tabs array for a new tab at the specified index.
+   * @param tabData
+   * @param index
+   * @returns {*}
+   */
   function insertTab (tabData, index) {
     var proto = {
           getIndex: function () { return ctrl.tabs.indexOf(tab); },
@@ -54882,7 +57029,8 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
           isLeft:   function () { return this.getIndex() < $scope.selectedIndex; },
           isRight:  function () { return this.getIndex() > $scope.selectedIndex; },
           shouldRender: function () { return !$scope.noDisconnect || this.isActive(); },
-          hasFocus: function () { return !ctrl.lastClick && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex; },
+          hasFocus: function () { return !ctrl.lastClick
+              && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex; },
           id:       $mdUtil.nextUid()
         },
         tab = angular.extend(proto, tabData);
@@ -54893,16 +57041,24 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     }
     processQueue();
     updateHasContent();
+    //-- if autoselect is enabled, select the newly added tab
+    if (loaded && $scope.autoselect) $timeout(function () { select(ctrl.tabs.indexOf(tab)); });
+    $timeout(updatePagination);
     return tab;
   }
 
   //-- Getter methods
 
+  /**
+   * Gathers references to all of the DOM elements used by this controller.
+   * @returns {{}}
+   */
   function getElements () {
     var elements      = {};
 
     //-- gather tab bar elements
     elements.wrapper  = $element[0].getElementsByTagName('md-tabs-wrapper')[0];
+    elements.data     = $element[0].getElementsByTagName('md-tab-data')[0];
     elements.canvas   = elements.wrapper.getElementsByTagName('md-tabs-canvas')[0];
     elements.paging   = elements.canvas.getElementsByTagName('md-pagination-wrapper')[0];
     elements.tabs     = elements.paging.getElementsByTagName('md-tab-item');
@@ -54916,34 +57072,62 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     return elements;
   }
 
+  /**
+   * Determines whether or not the left pagination arrow should be enabled.
+   * @returns {boolean}
+   */
   function canPageBack () {
     return ctrl.offsetLeft > 0;
   }
 
+  /**
+   * Determines whether or not the right pagination arrow should be enabled.
+   * @returns {*|boolean}
+   */
   function canPageForward () {
     var lastTab = elements.tabs[elements.tabs.length - 1];
-    return lastTab && lastTab.offsetLeft + lastTab.offsetWidth > elements.canvas.clientWidth + ctrl.offsetLeft;
+    return lastTab && lastTab.offsetLeft + lastTab.offsetWidth > elements.canvas.clientWidth +
+        ctrl.offsetLeft;
   }
 
+  /**
+   * Determines if the UI should stretch the tabs to fill the available space.
+   * @returns {*}
+   */
   function shouldStretchTabs () {
     switch ($scope.stretchTabs) {
       case 'always': return true;
       case 'never':  return false;
-      default:       return !shouldPaginate() && $window.matchMedia('(max-width: 600px)').matches;
+      default:       return !ctrl.shouldPaginate
+          && $window.matchMedia('(max-width: 600px)').matches;
     }
   }
 
+  /**
+   * Determines if the tabs should appear centered.
+   * @returns {string|boolean}
+   */
   function shouldCenterTabs () {
-    return $scope.centerTabs && !shouldPaginate();
+    return $scope.centerTabs && !ctrl.shouldPaginate;
   }
 
+  /**
+   * Determines if pagination is necessary to display the tabs within the available space.
+   * @returns {boolean}
+   */
   function shouldPaginate () {
-    if ($scope.noPagination) return false;
+    if ($scope.noPagination || !loaded) return false;
     var canvasWidth = $element.prop('clientWidth');
-    angular.forEach(elements.tabs, function (tab) { canvasWidth -= tab.offsetWidth; });
+    angular.forEach(elements.dummies, function (tab) { canvasWidth -= tab.offsetWidth; });
     return canvasWidth < 0;
   }
 
+  /**
+   * Finds the nearest tab index that is available.  This is primarily used for when the active
+   * tab is removed.
+   * @param newIndex
+   * @returns {*}
+   */
   function getNearestSafeIndex(newIndex) {
     var maxOffset = Math.max(ctrl.tabs.length - newIndex, newIndex),
         i, tab;
@@ -54958,6 +57142,39 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
 
   //-- Utility methods
 
+  /**
+   * Defines a property using a getter and setter in order to trigger a change handler without
+   * using `$watch` to observe changes.
+   * @param key
+   * @param handler
+   * @param value
+   */
+  function defineProperty (key, handler, value) {
+    Object.defineProperty(ctrl, key, {
+      get: function () { return value; },
+      set: function (newValue) {
+        var oldValue = value;
+        value = newValue;
+        handler(newValue, oldValue);
+      }
+    });
+  }
+
+  /**
+   * Updates whether or not pagination should be displayed.
+   */
+  function updatePagination () {
+    ctrl.shouldPaginate = shouldPaginate();
+    ctrl.shouldCenterTabs = shouldCenterTabs();
+    $timeout(function () {
+      adjustOffset($scope.selectedIndex);
+    });
+  }
+
+  /**
+   * Re-orders the tabs and updates the selected and focus indexes to their new positions.
+   * This is triggered by `tabDirective.js` when the user's tabs have been re-ordered.
+   */
   function updateTabOrder () {
     var selectedItem = ctrl.tabs[$scope.selectedIndex],
         focusItem = ctrl.tabs[ctrl.focusIndex];
@@ -54968,36 +57185,55 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.focusIndex = ctrl.tabs.indexOf(focusItem);
   }
 
-  function incrementSelectedIndex (inc, focus) {
+  /**
+   * This moves the selected or focus index left or right.  This is used by the keydown handler.
+   * @param inc
+   */
+  function incrementSelectedIndex (inc) {
     var newIndex,
-        index = focus ? ctrl.focusIndex : $scope.selectedIndex;
+        index = ctrl.focusIndex;
     for (newIndex = index + inc;
          ctrl.tabs[newIndex] && ctrl.tabs[newIndex].scope.disabled;
          newIndex += inc) {}
     if (ctrl.tabs[newIndex]) {
-      if (focus) ctrl.focusIndex = newIndex;
-      else $scope.selectedIndex = newIndex;
+      ctrl.focusIndex = newIndex;
     }
   }
 
+  /**
+   * This is used to forward focus to dummy elements.  This method is necessary to avoid aniation
+   * issues when attempting to focus an item that is out of view.
+   */
   function redirectFocus () {
     elements.dummies[ctrl.focusIndex].focus();
   }
 
-  function adjustOffset () {
-    if (shouldCenterTabs()) return;
-    var tab = elements.tabs[ctrl.focusIndex],
+  /**
+   * Forces the pagination to move the focused tab into view.
+   */
+  function adjustOffset (index) {
+    if (!elements.tabs[index]) return;
+    if (ctrl.shouldCenterTabs) return;
+    if (index == null) index = ctrl.focusIndex;
+    var tab = elements.tabs[index],
         left = tab.offsetLeft,
         right = tab.offsetWidth + left;
     ctrl.offsetLeft = Math.max(ctrl.offsetLeft, fixOffset(right - elements.canvas.clientWidth));
     ctrl.offsetLeft = Math.min(ctrl.offsetLeft, fixOffset(left));
   }
 
+  /**
+   * Iterates through all queued functions and clears the queue.  This is used for functions that
+   * are called before the UI is ready, such as size calculations.
+   */
   function processQueue () {
     queue.forEach(function (func) { $timeout(func); });
     queue = [];
   }
 
+  /**
+   * Determines if the tab content area is needed.
+   */
   function updateHasContent () {
     var hasContent = false;
     angular.forEach(ctrl.tabs, function (tab) {
@@ -55006,11 +57242,18 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.hasContent = hasContent;
   }
 
+  /**
+   * Moves the indexes to their nearest valid values.
+   */
   function refreshIndex () {
     $scope.selectedIndex = getNearestSafeIndex($scope.selectedIndex);
     ctrl.focusIndex = getNearestSafeIndex(ctrl.focusIndex);
   }
 
+  /**
+   * Calculates the content height of the current tab.
+   * @returns {*}
+   */
   function updateHeightFromContent () {
     if (!$scope.dynamicHeight) return $element.css('height', '');
     if (!ctrl.tabs.length) return queue.push(updateHeightFromContent);
@@ -55033,6 +57276,10 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
         });
   }
 
+  /**
+   * Repositions the ink bar to the selected tab.
+   * @returns {*}
+   */
   function updateInkBarStyles () {
     if (!elements.tabs[$scope.selectedIndex]) return;
     if (!ctrl.tabs.length) return queue.push(ctrl.updateInkBarStyles);
@@ -55048,21 +57295,28 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     angular.element(elements.inkBar).css({ left: left + 'px', right: right + 'px' });
   }
 
+  /**
+   * Adds left/right classes so that the ink bar will animate properly.
+   */
   function updateInkBarClassName () {
     var newIndex = $scope.selectedIndex,
         oldIndex = ctrl.lastSelectedIndex,
         ink = angular.element(elements.inkBar);
-    ink.removeClass('md-left md-right');
     if (!angular.isNumber(oldIndex)) return;
     if (newIndex < oldIndex) {
-      ink.addClass('md-left');
+      ink.addClass('md-left').removeClass('md-right');
     } else if (newIndex > oldIndex) {
-      ink.addClass('md-right');
+      ink.addClass('md-right').removeClass('md-left');
     }
   }
 
+  /**
+   * Takes an offset value and makes sure that it is within the min/max allowed values.
+   * @param value
+   * @returns {*}
+   */
   function fixOffset (value) {
-    if (!elements.tabs.length || !shouldPaginate()) return 0;
+    if (!elements.tabs.length || !ctrl.shouldPaginate) return 0;
     var lastTab = elements.tabs[elements.tabs.length - 1],
         totalWidth = lastTab.offsetLeft + lastTab.offsetWidth;
     value = Math.max(0, value);
@@ -55070,12 +57324,17 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     return value;
   }
 
+  /**
+   * Attaches a ripple to the tab item element.
+   * @param scope
+   * @param element
+   */
   function attachRipple (scope, element) {
     var options = { colorElement: angular.element(elements.inkBar) };
     $mdTabInkRipple.attach(scope, element, options);
   }
 }
-MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdConstant", "$mdTabInkRipple", "$mdUtil", "$animate"];
+MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdConstant", "$mdTabInkRipple", "$mdUtil", "$animate", "$attrs", "$compile", "$mdTheming"];
 
 })();
 (function(){
@@ -55144,6 +57403,7 @@ MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdCon
  * @param {boolean=} md-no-pagination When enabled, pagination will remain off
  * @param {boolean=} md-swipe-content When enabled, swipe gestures will be enabled for the content area to jump between tabs
  * @param {boolean=} md-no-disconnect If your tab content has background tasks (ie. event listeners), you will want to include this to prevent the scope from being disconnected
+ * @param {boolean=} md-autoselect When present, any tabs added after the initial load will be automatically selected
  *
  * @usage
  * <hljs lang="html">
@@ -55179,7 +57439,8 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
       selectedIndex: '=?mdSelected',
       stretchTabs:   '@?mdStretchTabs',
       swipeContent:  '=?mdSwipeContent',
-      noDisconnect:  '=?mdNoDisconnect'
+      noDisconnect:  '=?mdNoDisconnect',
+      autoselect:    '=?mdAutoselect'
     },
     template: function (element, attr) {
       attr["$mdTabsTemplate"] = element.html();
@@ -55192,7 +57453,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-label="Previous Page"\
               aria-disabled="{{!$mdTabsCtrl.canPageBack()}}"\
               ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageBack() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate()"\
+              ng-if="$mdTabsCtrl.shouldPaginate"\
               ng-click="$mdTabsCtrl.previousPage()">\
             <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
           </md-prev-button>\
@@ -55202,7 +57463,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-label="Next Page"\
               aria-disabled="{{!$mdTabsCtrl.canPageForward()}}"\
               ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageForward() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate()"\
+              ng-if="$mdTabsCtrl.shouldPaginate"\
               ng-click="$mdTabsCtrl.nextPage()">\
             <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
           </md-next-button>\
@@ -55211,13 +57472,13 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-activedescendant="tab-item-{{$mdTabsCtrl.tabs[$mdTabsCtrl.focusIndex].id}}"\
               ng-focus="$mdTabsCtrl.redirectFocus()"\
               ng-class="{\
-                  \'md-paginated\': $mdTabsCtrl.shouldPaginate(),\
-                  \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs()\
+                  \'md-paginated\': $mdTabsCtrl.shouldPaginate,\
+                  \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs\
               }"\
               ng-keydown="$mdTabsCtrl.keydown($event)"\
               role="tablist">\
             <md-pagination-wrapper\
-                ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs() }"\
+                ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs }"\
                 md-tab-scroll="$mdTabsCtrl.scroll($event)">\
               <md-tab-item\
                   tabindex="-1"\
@@ -55243,6 +57504,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
             </md-pagination-wrapper>\
             <div class="md-visually-hidden md-dummy-wrapper">\
               <md-dummy-tab\
+                  class="md-tab"\
                   tabindex="-1"\
                   id="tab-item-{{tab.id}}"\
                   role="tab"\
@@ -55283,26 +57545,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
       ';
     },
     controller: 'MdTabsController',
-    controllerAs: '$mdTabsCtrl',
-    link: function (scope, element, attr) {
-      compileTabData(attr.$mdTabsTemplate);
-      delete attr.$mdTabsTemplate;
-
-      $mdUtil.initOptionalProperties(scope, attr);
-
-      //-- watch attributes
-      attr.$observe('mdNoBar', function (value) { scope.noInkBar = angular.isDefined(value); });
-      //-- set default value for selectedIndex
-      scope.selectedIndex = angular.isNumber(scope.selectedIndex) ? scope.selectedIndex : 0;
-      //-- apply themes
-      $mdTheming(element);
-
-      function compileTabData (template) {
-        var dataElement = element.find('md-tab-data');
-        dataElement.html(template);
-        $compile(dataElement.contents())(scope.$parent);
-      }
-    }
+    controllerAs: '$mdTabsCtrl'
   };
 }
 MdTabs.$inject = ["$mdTheming", "$mdUtil", "$compile"];
@@ -55350,18 +57593,26 @@ MdTemplate.$inject = ["$compile", "$mdUtil", "$timeout"];
 
 })();
 (function(){ 
-angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ; sets LTR and RTL within the same style call */md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop.md-opaque.md-THEME_NAME-theme {  background-color: '{{foreground-4-0.5}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme, .md-button.md-THEME_NAME-theme {  border-radius: 3px; }  a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {    background-color: transparent; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-icon-button, .md-button.md-THEME_NAME-theme.md-icon-button {    border-radius: 50%; }  a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {      color: '{{primary-contrast}}';      background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {        color: '{{primary-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {        background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {        background-color: '{{primary-600}}'; }    a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {      color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {    color: '{{background-contrast}}';    background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {      color: '{{background-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {      background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {      background-color: '{{background-200}}'; }  a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {      color: '{{warn-contrast}}';      background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {        color: '{{warn-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {        background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {        background-color: '{{warn-700}}'; }    a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {      color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {      color: '{{accent-contrast}}';      background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {        color: '{{accent-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {        background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {        background-color: '{{accent-700}}'; }    a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {      color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {    color: '{{foreground-3}}';    cursor: not-allowed; }    a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {      color: '{{foreground-3}}'; }  a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {    background-color: '{{foreground-4}}'; }  a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {    background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages, md-input-container.md-THEME_NAME-theme [ng-message], md-input-container.md-THEME_NAME-theme [data-ng-message], md-input-container.md-THEME_NAME-theme [x-ng-message] {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-label {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label.md-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-label {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-label {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-label {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-label.md-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme .md-select-label {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-label.md-placeholder {    color: '{{foreground-2}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  border-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
+angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ; sets LTR and RTL within the same style call */md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop.md-opaque.md-THEME_NAME-theme {  background-color: '{{foreground-4-0.5}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme, .md-button.md-THEME_NAME-theme {  border-radius: 3px; }  a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {    background-color: transparent; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-icon-button, .md-button.md-THEME_NAME-theme.md-icon-button {    border-radius: 50%; }  a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {      color: '{{primary-contrast}}';      background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {        color: '{{primary-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {        background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {        background-color: '{{primary-600}}'; }    a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {      color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {    color: '{{background-contrast}}';    background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {      color: '{{background-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {      background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {      background-color: '{{background-200}}'; }  a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {      color: '{{warn-contrast}}';      background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {        color: '{{warn-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {        background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {        background-color: '{{warn-700}}'; }    a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {      color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {      color: '{{accent-contrast}}';      background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {        color: '{{accent-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {        background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {        background-color: '{{accent-700}}'; }    a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {      color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {    color: '{{foreground-3}}';    cursor: not-allowed; }    a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {      color: '{{foreground-3}}'; }  a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {    background-color: '{{foreground-4}}'; }  a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {    background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages, md-input-container.md-THEME_NAME-theme [ng-message], md-input-container.md-THEME_NAME-theme [data-ng-message], md-input-container.md-THEME_NAME-theme [x-ng-message] {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-label {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label.md-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-label {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-label {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-label {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-label.md-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme .md-select-label {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-label.md-placeholder {    color: '{{foreground-2}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  border-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
 })();
 
 
 })(window, window.angular);
 ///#source 1 1 /Scripts/angular-messages.js
 /**
- * @license AngularJS v1.3.15
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.1
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
+
+/* jshint ignore:start */
+// this code is in the core, but not in angular-messages.js
+var isArray = angular.isArray;
+var forEach = angular.forEach;
+var isString = angular.isString;
+var jqLite = angular.element;
+/* jshint ignore:end */
 
 /**
  * @ngdoc module
@@ -55375,8 +57626,8 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  * `ngMessage` directives are designed to handle the complexity, inheritance and priority
  * sequencing based on the order of how the messages are defined in the template.
  *
- * Currently, the ngMessages module only contains the code for the `ngMessages`
- * and `ngMessage` directives.
+ * Currently, the ngMessages module only contains the code for the `ngMessages`, `ngMessagesInclude`
+ * `ngMessage` and `ngMessageExp` directives.
  *
  * # Usage
  * The `ngMessages` directive listens on a key/value collection which is set on the ngMessages attribute.
@@ -55386,10 +57637,15 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  *
  * ```html
  * <form name="myForm">
- *   <input type="text" ng-model="field" name="myField" required minlength="5" />
- *   <div ng-messages="myForm.myField.$error">
+ *   <label>
+ *     Enter text:
+ *     <input type="text" ng-model="field" name="myField" required minlength="5" />
+ *   </label>
+ *   <div ng-messages="myForm.myField.$error" role="alert">
  *     <div ng-message="required">You did not enter a field</div>
- *     <div ng-message="minlength">The value entered is too short</div>
+ *     <div ng-message="minlength, maxlength">
+ *       Your email must be between 5 and 100 characters long
+ *     </div>
  *   </div>
  * </form>
  * ```
@@ -55401,7 +57657,7 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  *
  * ```javascript
  * <!-- keep in mind that ngModel automatically sets these error flags -->
- * myField.$error = { minlength : true, required : false };
+ * myField.$error = { minlength : true, required : true };
  * ```
  *
  * Then the `required` message will be displayed first. When required is false then the `minlength` message
@@ -55415,7 +57671,11 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  * ngMessages directive to make this happen.
  *
  * ```html
+ * <!-- attribute-style usage -->
  * <div ng-messages="myForm.myField.$error" ng-messages-multiple>...</div>
+ *
+ * <!-- element-style usage -->
+ * <ng-messages for="myForm.myField.$error" multiple>...</ng-messages>
  * ```
  *
  * ## Reusing and Overriding Messages
@@ -55428,12 +57688,15 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  *   <div ng-message="required">This field is required</div>
  *   <div ng-message="minlength">This field is too short</div>
  * </script>
- * <div ng-messages="myForm.myField.$error" ng-messages-include="error-messages"></div>
+ *
+ * <div ng-messages="myForm.myField.$error" role="alert">
+ *   <div ng-messages-include="error-messages"></div>
+ * </div>
  * ```
  *
  * However, including generic messages may not be useful enough to match all input fields, therefore,
  * `ngMessages` provides the ability to override messages defined in the remote template by redefining
- * then within the directive container.
+ * them within the directive container.
  *
  * ```html
  * <!-- a generic template of error messages known as "my-custom-messages" -->
@@ -55443,19 +57706,26 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  * </script>
  *
  * <form name="myForm">
- *   <input type="email"
- *          id="email"
- *          name="myEmail"
- *          ng-model="email"
- *          minlength="5"
- *          required />
- *
- *   <div ng-messages="myForm.myEmail.$error" ng-messages-include="my-custom-messages">
+ *   <label>
+ *     Email address
+ *     <input type="email"
+ *            id="email"
+ *            name="myEmail"
+ *            ng-model="email"
+ *            minlength="5"
+ *            required />
+ *   </label>
+ *   <!-- any ng-message elements that appear BEFORE the ng-messages-include will
+ *        override the messages present in the ng-messages-include template -->
+ *   <div ng-messages="myForm.myEmail.$error" role="alert">
  *     <!-- this required message has overridden the template message -->
  *     <div ng-message="required">You did not enter your email address</div>
  *
  *     <!-- this is a brand new message and will appear last in the prioritization -->
  *     <div ng-message="email">Your email address is invalid</div>
+ *
+ *     <!-- and here are the generic error messages -->
+ *     <div ng-messages-include="my-custom-messages"></div>
  *   </div>
  * </form>
  * ```
@@ -55465,20 +57735,80 @@ angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ;
  * email addresses, date fields, autocomplete inputs, etc...), specialized error messages can be applied
  * while more generic messages can be used to handle other, more general input errors.
  *
+ * ## Dynamic Messaging
+ * ngMessages also supports using expressions to dynamically change key values. Using arrays and
+ * repeaters to list messages is also supported. This means that the code below will be able to
+ * fully adapt itself and display the appropriate message when any of the expression data changes:
+ *
+ * ```html
+ * <form name="myForm">
+ *   <label>
+ *     Email address
+ *     <input type="email"
+ *            name="myEmail"
+ *            ng-model="email"
+ *            minlength="5"
+ *            required />
+ *   </label>
+ *   <div ng-messages="myForm.myEmail.$error" role="alert">
+ *     <div ng-message="required">You did not enter your email address</div>
+ *     <div ng-repeat="errorMessage in errorMessages">
+ *       <!-- use ng-message-exp for a message whose key is given by an expression -->
+ *       <div ng-message-exp="errorMessage.type">{{ errorMessage.text }}</div>
+ *     </div>
+ *   </div>
+ * </form>
+ * ```
+ *
+ * The `errorMessage.type` expression can be a string value or it can be an array so
+ * that multiple errors can be associated with a single error message:
+ *
+ * ```html
+ *   <label>
+ *     Email address
+ *     <input type="email"
+ *            ng-model="data.email"
+ *            name="myEmail"
+ *            ng-minlength="5"
+ *            ng-maxlength="100"
+ *            required />
+ *   </label>
+ *   <div ng-messages="myForm.myEmail.$error" role="alert">
+ *     <div ng-message-exp="'required'">You did not enter your email address</div>
+ *     <div ng-message-exp="['minlength', 'maxlength']">
+ *       Your email must be between 5 and 100 characters long
+ *     </div>
+ *   </div>
+ * ```
+ *
+ * Feel free to use other structural directives such as ng-if and ng-switch to further control
+ * what messages are active and when. Be careful, if you place ng-message on the same element
+ * as these structural directives, Angular may not be able to determine if a message is active
+ * or not. Therefore it is best to place the ng-message on a child element of the structural
+ * directive.
+ *
+ * ```html
+ * <div ng-messages="myForm.myEmail.$error" role="alert">
+ *   <div ng-if="showRequiredError">
+ *     <div ng-message="required">Please enter something</div>
+ *   </div>
+ * </div>
+ * ```
+ *
  * ## Animations
- * If the `ngAnimate` module is active within the application then both the `ngMessages` and
- * `ngMessage` directives will trigger animations whenever any messages are added and removed
- * from the DOM by the `ngMessages` directive.
+ * If the `ngAnimate` module is active within the application then the `ngMessages`, `ngMessage` and
+ * `ngMessageExp` directives will trigger animations whenever any messages are added and removed from
+ * the DOM by the `ngMessages` directive.
  *
  * Whenever the `ngMessages` directive contains one or more visible messages then the `.ng-active` CSS
  * class will be added to the element. The `.ng-inactive` CSS class will be applied when there are no
- * animations present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
+ * messages present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
  * hook into the animations whenever these classes are added/removed.
  *
  * Let's say that our HTML code for our messages container looks like so:
  *
  * ```html
- * <div ng-messages="myMessages" class="my-messages">
+ * <div ng-messages="myMessages" class="my-messages" role="alert">
  *   <div ng-message="alert" class="some-message">...</div>
  *   <div ng-message="fail" class="some-message">...</div>
  * </div>
@@ -55527,14 +57857,14 @@ angular.module('ngMessages', [])
     *
     * @description
     * `ngMessages` is a directive that is designed to show and hide messages based on the state
-    * of a key/value object that it listens on. The directive itself compliments error message
+    * of a key/value object that it listens on. The directive itself complements error message
     * reporting with the `ngModel` $error object (which stores a key/value state of validation errors).
     *
     * `ngMessages` manages the state of internal messages within its container element. The internal
     * messages use the `ngMessage` directive and will be inserted/removed from the page depending
     * on if they're present within the key/value object. By default, only one message will be displayed
     * at a time and this depends on the prioritization of the messages within the template. (This can
-    * be changed by using the ng-messages-multiple on the directive container.)
+    * be changed by using the `ng-messages-multiple` or `multiple` attribute on the directive container.)
     *
     * A remote template can also be used to promote message reusability and messages can also be
     * overridden.
@@ -55544,24 +57874,23 @@ angular.module('ngMessages', [])
     * @usage
     * ```html
     * <!-- using attribute directives -->
-    * <ANY ng-messages="expression">
-    *   <ANY ng-message="keyValue1">...</ANY>
-    *   <ANY ng-message="keyValue2">...</ANY>
-    *   <ANY ng-message="keyValue3">...</ANY>
+    * <ANY ng-messages="expression" role="alert">
+    *   <ANY ng-message="stringValue">...</ANY>
+    *   <ANY ng-message="stringValue1, stringValue2, ...">...</ANY>
+    *   <ANY ng-message-exp="expressionValue">...</ANY>
     * </ANY>
     *
     * <!-- or by using element directives -->
-    * <ng-messages for="expression">
-    *   <ng-message when="keyValue1">...</ng-message>
-    *   <ng-message when="keyValue2">...</ng-message>
-    *   <ng-message when="keyValue3">...</ng-message>
+    * <ng-messages for="expression" role="alert">
+    *   <ng-message when="stringValue">...</ng-message>
+    *   <ng-message when="stringValue1, stringValue2, ...">...</ng-message>
+    *   <ng-message when-exp="expressionValue">...</ng-message>
     * </ng-messages>
     * ```
     *
     * @param {string} ngMessages an angular expression evaluating to a key/value object
     *                 (this is typically the $error object on an ngModel instance).
     * @param {string=} ngMessagesMultiple|multiple when set, all messages will be displayed with true
-    * @param {string=} ngMessagesInclude|include when set, the specified template will be included into the ng-messages container
     *
     * @example
     * <example name="ngMessages-directive" module="ngMessagesExample"
@@ -55569,17 +57898,18 @@ angular.module('ngMessages', [])
     *          animations="true" fixBase="true">
     *   <file name="index.html">
     *     <form name="myForm">
-    *       <label>Enter your name:</label>
-    *       <input type="text"
-    *              name="myName"
-    *              ng-model="name"
-    *              ng-minlength="5"
-    *              ng-maxlength="20"
-    *              required />
-    *
+    *       <label>
+    *         Enter your name:
+    *         <input type="text"
+    *                name="myName"
+    *                ng-model="name"
+    *                ng-minlength="5"
+    *                ng-maxlength="20"
+    *                required />
+    *       </label>
     *       <pre>myForm.myName.$error = {{ myForm.myName.$error | json }}</pre>
     *
-    *       <div ng-messages="myForm.myName.$error" style="color:maroon">
+    *       <div ng-messages="myForm.myName.$error" style="color:maroon" role="alert">
     *         <div ng-message="required">You did not enter a field</div>
     *         <div ng-message="minlength">Your field is too short</div>
     *         <div ng-message="maxlength">Your field is too long</div>
@@ -55591,91 +57921,220 @@ angular.module('ngMessages', [])
     *   </file>
     * </example>
     */
-  .directive('ngMessages', ['$compile', '$animate', '$templateRequest',
-                   function($compile,    $animate,   $templateRequest) {
-    var ACTIVE_CLASS = 'ng-active';
-    var INACTIVE_CLASS = 'ng-inactive';
+   .directive('ngMessages', ['$animate', function($animate) {
+     var ACTIVE_CLASS = 'ng-active';
+     var INACTIVE_CLASS = 'ng-inactive';
 
-    return {
-      restrict: 'AE',
-      controller: function() {
-        this.$renderNgMessageClasses = angular.noop;
+     return {
+       require: 'ngMessages',
+       restrict: 'AE',
+       controller: ['$element', '$scope', '$attrs', function($element, $scope, $attrs) {
+         var ctrl = this;
+         var latestKey = 0;
 
-        var messages = [];
-        this.registerMessage = function(index, message) {
-          for (var i = 0; i < messages.length; i++) {
-            if (messages[i].type == message.type) {
-              if (index != i) {
-                var temp = messages[index];
-                messages[index] = messages[i];
-                if (index < messages.length) {
-                  messages[i] = temp;
-                } else {
-                  messages.splice(0, i); //remove the old one (and shift left)
-                }
-              }
-              return;
-            }
-          }
-          messages.splice(index, 0, message); //add the new one (and shift right)
-        };
+         var messages = this.messages = {};
+         var renderLater, cachedCollection;
 
-        this.renderMessages = function(values, multiple) {
-          values = values || {};
+         this.render = function(collection) {
+           collection = collection || {};
 
-          var found;
-          angular.forEach(messages, function(message) {
-            if ((!found || multiple) && truthyVal(values[message.type])) {
-              message.attach();
-              found = true;
-            } else {
-              message.detach();
-            }
-          });
+           renderLater = false;
+           cachedCollection = collection;
 
-          this.renderElementClasses(found);
+           // this is true if the attribute is empty or if the attribute value is truthy
+           var multiple = isAttrTruthy($scope, $attrs.ngMessagesMultiple) ||
+                          isAttrTruthy($scope, $attrs.multiple);
 
-          function truthyVal(value) {
-            return value !== null && value !== false && value;
-          }
-        };
-      },
-      require: 'ngMessages',
-      link: function($scope, element, $attrs, ctrl) {
-        ctrl.renderElementClasses = function(bool) {
-          bool ? $animate.setClass(element, ACTIVE_CLASS, INACTIVE_CLASS)
-               : $animate.setClass(element, INACTIVE_CLASS, ACTIVE_CLASS);
-        };
+           var unmatchedMessages = [];
+           var matchedKeys = {};
+           var messageItem = ctrl.head;
+           var messageFound = false;
+           var totalMessages = 0;
 
-        //JavaScript treats empty strings as false, but ng-message-multiple by itself is an empty string
-        var multiple = angular.isString($attrs.ngMessagesMultiple) ||
-                       angular.isString($attrs.multiple);
+           // we use != instead of !== to allow for both undefined and null values
+           while (messageItem != null) {
+             totalMessages++;
+             var messageCtrl = messageItem.message;
 
-        var cachedValues, watchAttr = $attrs.ngMessages || $attrs['for']; //for is a reserved keyword
-        $scope.$watchCollection(watchAttr, function(values) {
-          cachedValues = values;
-          ctrl.renderMessages(values, multiple);
-        });
+             var messageUsed = false;
+             if (!messageFound) {
+               forEach(collection, function(value, key) {
+                 if (!messageUsed && truthy(value) && messageCtrl.test(key)) {
+                   // this is to prevent the same error name from showing up twice
+                   if (matchedKeys[key]) return;
+                   matchedKeys[key] = true;
 
-        var tpl = $attrs.ngMessagesInclude || $attrs.include;
-        if (tpl) {
-          $templateRequest(tpl)
-            .then(function processTemplate(html) {
-              var after, container = angular.element('<div/>').html(html);
-              angular.forEach(container.children(), function(elm) {
-               elm = angular.element(elm);
-               after ? after.after(elm)
-                     : element.prepend(elm); //start of the container
-               after = elm;
-               $compile(elm)($scope);
-              });
-              ctrl.renderMessages(cachedValues, multiple);
-            });
-        }
-      }
-    };
-  }])
+                   messageUsed = true;
+                   messageCtrl.attach();
+                 }
+               });
+             }
 
+             if (messageUsed) {
+               // unless we want to display multiple messages then we should
+               // set a flag here to avoid displaying the next message in the list
+               messageFound = !multiple;
+             } else {
+               unmatchedMessages.push(messageCtrl);
+             }
+
+             messageItem = messageItem.next;
+           }
+
+           forEach(unmatchedMessages, function(messageCtrl) {
+             messageCtrl.detach();
+           });
+
+           unmatchedMessages.length !== totalMessages
+              ? $animate.setClass($element, ACTIVE_CLASS, INACTIVE_CLASS)
+              : $animate.setClass($element, INACTIVE_CLASS, ACTIVE_CLASS);
+         };
+
+         $scope.$watchCollection($attrs.ngMessages || $attrs['for'], ctrl.render);
+
+         this.reRender = function() {
+           if (!renderLater) {
+             renderLater = true;
+             $scope.$evalAsync(function() {
+               if (renderLater) {
+                 cachedCollection && ctrl.render(cachedCollection);
+               }
+             });
+           }
+         };
+
+         this.register = function(comment, messageCtrl) {
+           var nextKey = latestKey.toString();
+           messages[nextKey] = {
+             message: messageCtrl
+           };
+           insertMessageNode($element[0], comment, nextKey);
+           comment.$$ngMessageNode = nextKey;
+           latestKey++;
+
+           ctrl.reRender();
+         };
+
+         this.deregister = function(comment) {
+           var key = comment.$$ngMessageNode;
+           delete comment.$$ngMessageNode;
+           removeMessageNode($element[0], comment, key);
+           delete messages[key];
+           ctrl.reRender();
+         };
+
+         function findPreviousMessage(parent, comment) {
+           var prevNode = comment;
+           var parentLookup = [];
+           while (prevNode && prevNode !== parent) {
+             var prevKey = prevNode.$$ngMessageNode;
+             if (prevKey && prevKey.length) {
+               return messages[prevKey];
+             }
+
+             // dive deeper into the DOM and examine its children for any ngMessage
+             // comments that may be in an element that appears deeper in the list
+             if (prevNode.childNodes.length && parentLookup.indexOf(prevNode) == -1) {
+               parentLookup.push(prevNode);
+               prevNode = prevNode.childNodes[prevNode.childNodes.length - 1];
+             } else {
+               prevNode = prevNode.previousSibling || prevNode.parentNode;
+             }
+           }
+         }
+
+         function insertMessageNode(parent, comment, key) {
+           var messageNode = messages[key];
+           if (!ctrl.head) {
+             ctrl.head = messageNode;
+           } else {
+             var match = findPreviousMessage(parent, comment);
+             if (match) {
+               messageNode.next = match.next;
+               match.next = messageNode;
+             } else {
+               messageNode.next = ctrl.head;
+               ctrl.head = messageNode;
+             }
+           }
+         }
+
+         function removeMessageNode(parent, comment, key) {
+           var messageNode = messages[key];
+
+           var match = findPreviousMessage(parent, comment);
+           if (match) {
+             match.next = messageNode.next;
+           } else {
+             ctrl.head = messageNode.next;
+           }
+         }
+       }]
+     };
+
+     function isAttrTruthy(scope, attr) {
+      return (isString(attr) && attr.length === 0) || //empty attribute
+             truthy(scope.$eval(attr));
+     }
+
+     function truthy(val) {
+       return isString(val) ? val.length : !!val;
+     }
+   }])
+
+   /**
+    * @ngdoc directive
+    * @name ngMessagesInclude
+    * @restrict AE
+    * @scope
+    *
+    * @description
+    * `ngMessagesInclude` is a directive with the purpose to import existing ngMessage template
+    * code from a remote template and place the downloaded template code into the exact spot
+    * that the ngMessagesInclude directive is placed within the ngMessages container. This allows
+    * for a series of pre-defined messages to be reused and also allows for the developer to
+    * determine what messages are overridden due to the placement of the ngMessagesInclude directive.
+    *
+    * @usage
+    * ```html
+    * <!-- using attribute directives -->
+    * <ANY ng-messages="expression" role="alert">
+    *   <ANY ng-messages-include="remoteTplString">...</ANY>
+    * </ANY>
+    *
+    * <!-- or by using element directives -->
+    * <ng-messages for="expression" role="alert">
+    *   <ng-messages-include src="expressionValue1">...</ng-messages-include>
+    * </ng-messages>
+    * ```
+    *
+    * {@link module:ngMessages Click here} to learn more about `ngMessages` and `ngMessage`.
+    *
+    * @param {string} ngMessagesInclude|src a string value corresponding to the remote template.
+    */
+   .directive('ngMessagesInclude',
+     ['$templateRequest', '$document', '$compile', function($templateRequest, $document, $compile) {
+
+     return {
+       restrict: 'AE',
+       require: '^^ngMessages', // we only require this for validation sake
+       link: function($scope, element, attrs) {
+         var src = attrs.ngMessagesInclude || attrs.src;
+         $templateRequest(src).then(function(html) {
+           $compile(html)($scope, function(contents) {
+             element.after(contents);
+
+             // the anchor is placed for debugging purposes
+             var anchor = jqLite($document[0].createComment(' ngMessagesInclude: ' + src + ' '));
+             element.after(anchor);
+
+             // we don't want to pollute the DOM anymore by keeping an empty directive element
+             element.remove();
+           });
+         });
+       }
+     };
+   }])
 
    /**
     * @ngdoc directive
@@ -55695,72 +58154,133 @@ angular.module('ngMessages', [])
     * @usage
     * ```html
     * <!-- using attribute directives -->
+    * <ANY ng-messages="expression" role="alert">
+    *   <ANY ng-message="stringValue">...</ANY>
+    *   <ANY ng-message="stringValue1, stringValue2, ...">...</ANY>
+    * </ANY>
+    *
+    * <!-- or by using element directives -->
+    * <ng-messages for="expression" role="alert">
+    *   <ng-message when="stringValue">...</ng-message>
+    *   <ng-message when="stringValue1, stringValue2, ...">...</ng-message>
+    * </ng-messages>
+    * ```
+    *
+    * @param {expression} ngMessage|when a string value corresponding to the message key.
+    */
+  .directive('ngMessage', ngMessageDirectiveFactory('AE'))
+
+
+   /**
+    * @ngdoc directive
+    * @name ngMessageExp
+    * @restrict AE
+    * @scope
+    *
+    * @description
+    * `ngMessageExp` is a directive with the purpose to show and hide a particular message.
+    * For `ngMessageExp` to operate, a parent `ngMessages` directive on a parent DOM element
+    * must be situated since it determines which messages are visible based on the state
+    * of the provided key/value map that `ngMessages` listens on.
+    *
+    * @usage
+    * ```html
+    * <!-- using attribute directives -->
     * <ANY ng-messages="expression">
-    *   <ANY ng-message="keyValue1">...</ANY>
-    *   <ANY ng-message="keyValue2">...</ANY>
-    *   <ANY ng-message="keyValue3">...</ANY>
+    *   <ANY ng-message-exp="expressionValue">...</ANY>
     * </ANY>
     *
     * <!-- or by using element directives -->
     * <ng-messages for="expression">
-    *   <ng-message when="keyValue1">...</ng-message>
-    *   <ng-message when="keyValue2">...</ng-message>
-    *   <ng-message when="keyValue3">...</ng-message>
+    *   <ng-message when-exp="expressionValue">...</ng-message>
     * </ng-messages>
     * ```
     *
-    * @param {string} ngMessage a string value corresponding to the message key.
+    * {@link module:ngMessages Click here} to learn more about `ngMessages` and `ngMessage`.
+    *
+    * @param {expression} ngMessageExp|whenExp an expression value corresponding to the message key.
     */
-  .directive('ngMessage', ['$animate', function($animate) {
-    var COMMENT_NODE = 8;
+  .directive('ngMessageExp', ngMessageDirectiveFactory('A'));
+
+function ngMessageDirectiveFactory(restrict) {
+  return ['$animate', function($animate) {
     return {
-      require: '^ngMessages',
+      restrict: 'AE',
       transclude: 'element',
       terminal: true,
-      restrict: 'AE',
-      link: function($scope, $element, $attrs, ngMessages, $transclude) {
-        var index, element;
+      require: '^^ngMessages',
+      link: function(scope, element, attrs, ngMessagesCtrl, $transclude) {
+        var commentNode = element[0];
 
-        var commentNode = $element[0];
-        var parentNode = commentNode.parentNode;
-        for (var i = 0, j = 0; i < parentNode.childNodes.length; i++) {
-          var node = parentNode.childNodes[i];
-          if (node.nodeType == COMMENT_NODE && node.nodeValue.indexOf('ngMessage') >= 0) {
-            if (node === commentNode) {
-              index = j;
-              break;
-            }
-            j++;
-          }
+        var records;
+        var staticExp = attrs.ngMessage || attrs.when;
+        var dynamicExp = attrs.ngMessageExp || attrs.whenExp;
+        var assignRecords = function(items) {
+          records = items
+              ? (isArray(items)
+                    ? items
+                    : items.split(/[\s,]+/))
+              : null;
+          ngMessagesCtrl.reRender();
+        };
+
+        if (dynamicExp) {
+          assignRecords(scope.$eval(dynamicExp));
+          scope.$watchCollection(dynamicExp, assignRecords);
+        } else {
+          assignRecords(staticExp);
         }
 
-        ngMessages.registerMessage(index, {
-          type: $attrs.ngMessage || $attrs.when,
+        var currentElement, messageCtrl;
+        ngMessagesCtrl.register(commentNode, messageCtrl = {
+          test: function(name) {
+            return contains(records, name);
+          },
           attach: function() {
-            if (!element) {
-              $transclude($scope, function(clone) {
-                $animate.enter(clone, null, $element);
-                element = clone;
+            if (!currentElement) {
+              $transclude(scope, function(elm) {
+                $animate.enter(elm, null, element);
+                currentElement = elm;
+
+                // in the event that the parent element is destroyed
+                // by any other structural directive then it's time
+                // to deregister the message from the controller
+                currentElement.on('$destroy', function() {
+                  if (currentElement) {
+                    ngMessagesCtrl.deregister(commentNode);
+                    messageCtrl.detach();
+                  }
+                });
               });
             }
           },
-          detach: function(now) {
-            if (element) {
-              $animate.leave(element);
-              element = null;
+          detach: function() {
+            if (currentElement) {
+              var elm = currentElement;
+              currentElement = null;
+              $animate.leave(elm);
             }
           }
         });
       }
     };
-  }]);
+  }];
+
+  function contains(collection, key) {
+    if (collection) {
+      return isArray(collection)
+          ? collection.indexOf(key) >= 0
+          : collection.hasOwnProperty(key);
+    }
+  }
+}
 
 
 })(window, window.angular);
 
 ///#source 1 1 /Scripts/angular-resource.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -56430,7 +58950,7 @@ angular.module('ngResource', ['ng']).
 
 ///#source 1 1 /Scripts/angular-sanitize.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -56664,7 +59184,7 @@ var uriAttrs = makeMap("background,cite,href,longdesc,src,usemap,xlink:href");
 var htmlAttrs = makeMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' +
     'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' +
     'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' +
-    'scope,scrolling,shape,size,span,start,summary,target,title,type,' +
+    'scope,scrolling,shape,size,span,start,summary,tabindex,target,title,type,' +
     'valign,value,vspace,width');
 
 // SVG attributes (without "id" and "name" attributes)
@@ -57062,8 +59582,8 @@ angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider);
  */
 angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
   var LINKY_URL_REGEXP =
-        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"”’]/,
-      MAILTO_REGEXP = /^mailto:/;
+        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"”’]/i,
+      MAILTO_REGEXP = /^mailto:/i;
 
   return function(text, target) {
     if (!text) return text;
@@ -59991,7 +62511,7 @@ angular.module('ui.utils',  [
 
 ///#source 1 1 /Scripts/angular-route.js
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -60985,743 +63505,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 ///#source 1 1 /Scripts/ng-file-upload-all.js
 /**!
  * AngularJS file upload/drop directive and service with progress and abort
- * @author  Danial  <danial.farid@gmail.com>
- * @version 5.0.7
- */
-var ngFileUpload = angular.module('ngFileUpload', []);
-
-ngFileUpload.version = '5.0.7';
-ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
-  function patchXHR(fnName, newFn) {
-    window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
-  }
-
-  if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
-    patchXHR('setRequestHeader', function (orig) {
-      return function (header, value) {
-        if (header === '__setXHR_') {
-          var val = value(this);
-          // fix for angular < 1.2.0
-          if (val instanceof Function) {
-            val(this);
-          }
-        } else {
-          orig.apply(this, arguments);
-        }
-      };
-    });
-  }
-
-  function sendHttp(config) {
-    config.method = config.method || 'POST';
-    config.headers = config.headers || {};
-
-    var deferred = $q.defer();
-    var promise = deferred.promise;
-
-    config.headers.__setXHR_ = function () {
-      return function (xhr) {
-        if (!xhr) return;
-        config.__XHR = xhr;
-        if (config.xhrFn) config.xhrFn(xhr);
-        xhr.upload.addEventListener('progress', function (e) {
-          e.config = config;
-          if (deferred.notify) {
-            deferred.notify(e);
-          } else if (promise.progressFunc) {
-            $timeout(function () {
-              promise.progressFunc(e);
-            });
-          }
-        }, false);
-        //fix for firefox not firing upload progress end, also IE8-9
-        xhr.upload.addEventListener('load', function (e) {
-          if (e.lengthComputable) {
-            e.config = config;
-            if (deferred.notify) {
-              deferred.notify(e);
-            } else if (promise.progressFunc) {
-              $timeout(function () {
-                promise.progressFunc(e);
-              });
-            }
-          }
-        }, false);
-      };
-    };
-
-    $http(config).then(function (r) {
-      deferred.resolve(r);
-    }, function (e) {
-      deferred.reject(e);
-    }, function (n) {
-      deferred.notify(n);
-    });
-
-    promise.success = function (fn) {
-      promise.then(function (response) {
-        fn(response.data, response.status, response.headers, config);
-      });
-      return promise;
-    };
-
-    promise.error = function (fn) {
-      promise.then(null, function (response) {
-        fn(response.data, response.status, response.headers, config);
-      });
-      return promise;
-    };
-
-    promise.progress = function (fn) {
-      promise.progressFunc = fn;
-      promise.then(null, null, function (update) {
-        fn(update);
-      });
-      return promise;
-    };
-    promise.abort = function () {
-      if (config.__XHR) {
-        $timeout(function () {
-          config.__XHR.abort();
-        });
-      }
-      return promise;
-    };
-    promise.xhr = function (fn) {
-      config.xhrFn = (function (origXhrFn) {
-        return function () {
-          if (origXhrFn) origXhrFn.apply(promise, arguments);
-          fn.apply(promise, arguments);
-        };
-      })(config.xhrFn);
-      return promise;
-    };
-
-    return promise;
-  }
-
-  this.upload = function (config) {
-    function addFieldToFormData(formData, val, key) {
-      if (val !== undefined) {
-        if (angular.isDate(val)) {
-          val = val.toISOString();
-        }
-        if (angular.isString(val)) {
-          formData.append(key, val);
-        } else if (config.sendFieldsAs === 'form') {
-          if (angular.isObject(val)) {
-            for (var k in val) {
-              if (val.hasOwnProperty(k)) {
-                addFieldToFormData(formData, val[k], key + '[' + k + ']');
-              }
-            }
-          } else {
-            formData.append(key, val);
-          }
-        } else {
-          val = angular.isString(val) ? val : JSON.stringify(val);
-          if (config.sendFieldsAs === 'json-blob') {
-            formData.append(key, new Blob([val], {type: 'application/json'}));
-          } else {
-            formData.append(key, val);
-          }
-        }
-      }
-    }
-
-    config.headers = config.headers || {};
-    config.headers['Content-Type'] = undefined;
-    config.transformRequest = config.transformRequest ?
-      (angular.isArray(config.transformRequest) ?
-        config.transformRequest : [config.transformRequest]) : [];
-    config.transformRequest.push(function (data) {
-      var formData = new FormData();
-      var allFields = {};
-      var key;
-      for (key in config.fields) {
-        if (config.fields.hasOwnProperty(key)) {
-          allFields[key] = config.fields[key];
-        }
-      }
-      if (data) allFields.data = data;
-      for (key in allFields) {
-        if (allFields.hasOwnProperty(key)) {
-          var val = allFields[key];
-          if (config.formDataAppender) {
-            config.formDataAppender(formData, key, val);
-          } else {
-            addFieldToFormData(formData, val, key);
-          }
-        }
-      }
-
-      if (config.file != null) {
-        var fileFormName = config.fileFormDataName || 'file';
-
-        if (angular.isArray(config.file)) {
-          var isFileFormNameString = angular.isString(fileFormName);
-          for (var i = 0; i < config.file.length; i++) {
-            formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i],
-              (config.fileName && config.fileName[i]) || config.file[i].name);
-          }
-        } else {
-          formData.append(fileFormName, config.file, config.fileName || config.file.name);
-        }
-      }
-      return formData;
-    });
-
-    return sendHttp(config);
-  };
-
-  this.http = function (config) {
-    config.transformRequest = config.transformRequest || function (data) {
-        if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof Blob) {
-          return data;
-        }
-        return $http.defaults.transformRequest[0](arguments);
-      };
-    return sendHttp(config);
-  };
-}
-
-]);
-
-(function () {
-    ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile',
-        function ($parse, $timeout, $compile) {
-            return {
-                restrict: 'AEC',
-                require: '?ngModel',
-                link: function (scope, elem, attr, ngModel) {
-                    linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile);
-                }
-            };
-        }]);
-
-    function linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile) {
-        /** @namespace attr.ngfSelect */
-        /** @namespace attr.ngfChange */
-        /** @namespace attr.ngModel */
-        /** @namespace attr.ngModelRejected */
-        /** @namespace attr.ngfMultiple */
-        /** @namespace attr.ngfCapture */
-        /** @namespace attr.ngfAccept */
-        /** @namespace attr.ngfMaxSize */
-        /** @namespace attr.ngfMinSize */
-        /** @namespace attr.ngfResetOnClick */
-        /** @namespace attr.ngfResetModelOnClick */
-        /** @namespace attr.ngfKeep */
-        /** @namespace attr.ngfKeepDistinct */
-
-        if (elem.attr('__ngf_gen__')) {
-            return;
-        }
-
-        scope.$on('$destroy', function () {
-            if (elem.$$ngfRefElem) elem.$$ngfRefElem.remove();
-        });
-
-        var disabled = false;
-        if (attr.ngfSelect.search(/\W+$files\W+/) === -1) {
-            scope.$watch(attr.ngfSelect, function (val) {
-                disabled = val === false;
-            });
-        }
-        function isInputTypeFile() {
-            return elem[0].tagName.toLowerCase() === 'input' && attr.type && attr.type.toLowerCase() === 'file';
-        }
-
-        var isUpdating = false;
-
-        function changeFn(evt) {
-            if (!isUpdating) {
-                isUpdating = true;
-                try {
-                    var fileList = evt.__files_ || (evt.target && evt.target.files);
-                    var files = [], rejFiles = [];
-
-                    for (var i = 0; i < fileList.length; i++) {
-                        var file = fileList.item(i);
-                        if (validate(scope, $parse, attr, file, evt)) {
-                            files.push(file);
-                        } else {
-                            rejFiles.push(file);
-                        }
-                    }
-                    updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, files, rejFiles, evt);
-                    if (files.length === 0) evt.target.value = files;
-//                if (evt.target && evt.target.getAttribute('__ngf_gen__')) {
-//                    angular.element(evt.target).remove();
-//                }
-                } finally {
-                    isUpdating = false;
-                }
-            }
-        }
-
-        function bindAttrToFileInput(fileElem) {
-            if (attr.ngfMultiple) fileElem.attr('multiple', $parse(attr.ngfMultiple)(scope));
-            if (attr.ngfCapture) fileElem.attr('capture', $parse(attr.ngfCapture)(scope));
-            if (attr.accept) fileElem.attr('accept', attr.accept);
-            for (var i = 0; i < elem[0].attributes.length; i++) {
-                var attribute = elem[0].attributes[i];
-                if ((isInputTypeFile() && attribute.name !== 'type') ||
-                    (attribute.name !== 'type' && attribute.name !== 'class' &&
-                    attribute.name !== 'id' && attribute.name !== 'style')) {
-                    fileElem.attr(attribute.name, attribute.value);
-                }
-            }
-        }
-
-        function createFileInput(evt, resetOnClick) {
-            if (elem.attr('disabled') || disabled) return;
-
-            if (!resetOnClick && (evt || isInputTypeFile())) return elem.$$ngfRefElem || elem;
-
-            var fileElem = angular.element('<input type="file">');
-            bindAttrToFileInput(fileElem);
-
-            if (isInputTypeFile()) {
-                elem.replaceWith(fileElem);
-                elem = fileElem;
-                fileElem.attr('__ngf_gen__', true);
-                $compile(elem)(scope);
-            } else {
-                fileElem.css('visibility', 'hidden').css('position', 'absolute').css('overflow', 'hidden')
-                    .css('width', '0px').css('height', '0px').css('z-index', '-100000').css('border', 'none')
-                    .css('margin', '0px').css('padding', '0px').attr('tabindex', '-1');
-                if (elem.$$ngfRefElem) {
-                    elem.$$ngfRefElem.remove();
-                }
-                elem.$$ngfRefElem = fileElem;
-                document.body.appendChild(fileElem[0]);
-            }
-
-            return fileElem;
-        }
-
-        function resetModel(evt) {
-            updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, [], [], evt, true);
-        }
-
-        function clickHandler(evt) {
-            if (evt != null) {
-                evt.preventDefault();
-                evt.stopPropagation();
-            }
-            var resetOnClick = $parse(attr.ngfResetOnClick)(scope) !== false;
-            var fileElem = createFileInput(evt, resetOnClick);
-
-            function clickAndAssign(evt) {
-                if (evt) {
-                    fileElem[0].click();
-                }
-                if (isInputTypeFile() || !evt) {
-                    elem.bind('click touchend', clickHandler);
-                }
-            }
-
-            if (fileElem) {
-                if (!evt || resetOnClick) fileElem.bind('change', changeFn);
-                if (evt && resetOnClick && $parse(attr.ngfResetModelOnClick)(scope) !== false) resetModel(evt);
-
-                // fix for android native browser < 4.4
-                if (shouldClickLater(navigator.userAgent)) {
-                    setTimeout(function () {
-                        clickAndAssign(evt);
-                    }, 0);
-                } else {
-                    clickAndAssign(evt);
-                }
-            }
-            return false;
-        }
-
-        if (window.FileAPI && window.FileAPI.ngfFixIE) {
-            window.FileAPI.ngfFixIE(elem, createFileInput, bindAttrToFileInput, changeFn);
-        } else {
-            clickHandler();
-            //if (!isInputTypeFile()) {
-            //  elem.bind('click touchend', clickHandler);
-            //}
-        }
-    }
-
-    function shouldClickLater(ua) {
-        // android below 4.4
-        var m = ua.match(/Android[^\d]*(\d+)\.(\d+)/);
-        if (m && m.length > 2) {
-            return parseInt(m[1]) < 4 || (parseInt(m[1]) === 4 && parseInt(m[2]) < 4);
-        }
-
-        // safari on windows
-        return /.*Windows.*Safari.*/.test(ua);
-    }
-
-    ngFileUpload.validate = function (scope, $parse, attr, file, evt) {
-        function globStringToRegex(str) {
-            if (str.length > 2 && str[0] === '/' && str[str.length - 1] === '/') {
-                return str.substring(1, str.length - 1);
-            }
-            var split = str.split(','), result = '';
-            if (split.length > 1) {
-                for (var i = 0; i < split.length; i++) {
-                    result += '(' + globStringToRegex(split[i]) + ')';
-                    if (i < split.length - 1) {
-                        result += '|';
-                    }
-                }
-            } else {
-                if (str.indexOf('.') === 0) {
-                    str = '*' + str;
-                }
-                result = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&') + '$';
-                result = result.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
-            }
-            return result;
-        }
-
-        var accept = $parse(attr.ngfAccept)(scope, {$file: file, $event: evt});
-        var fileSizeMax = $parse(attr.ngfMaxSize)(scope, {$file: file, $event: evt}) || 9007199254740991;
-        var fileSizeMin = $parse(attr.ngfMinSize)(scope, {$file: file, $event: evt}) || -1;
-        if (accept != null && angular.isString(accept)) {
-            var regexp = new RegExp(globStringToRegex(accept), 'gi');
-            accept = (file.type != null && regexp.test(file.type.toLowerCase())) ||
-                (file.name != null && regexp.test(file.name.toLowerCase()));
-        }
-        return (accept == null || accept) && (file.size == null || (file.size < fileSizeMax && file.size > fileSizeMin));
-    };
-
-    ngFileUpload.updateModel = function ($parse, $timeout, scope, ngModel, attr, fileChange,
-                                         files, rejFiles, evt, noDelay) {
-        function update() {
-            if ($parse(attr.ngfKeep)(scope) === true) {
-                var prevFiles = (ngModel.$modelValue || []).slice(0);
-                if (!files || !files.length) {
-                    files = prevFiles;
-                } else if ($parse(attr.ngfKeepDistinct)(scope) === true) {
-                    var len = prevFiles.length;
-                    for (var i = 0; i < files.length; i++) {
-                        for (var j = 0; j < len; j++) {
-                            if (files[i].name === prevFiles[j].name) break;
-                        }
-                        if (j === len) {
-                            prevFiles.push(files[i]);
-                        }
-                    }
-                    files = prevFiles;
-                } else {
-                    files = prevFiles.concat(files);
-                }
-            }
-            if (ngModel) {
-                $parse(attr.ngModel).assign(scope, files);
-                $timeout(function () {
-                    if (ngModel) {
-                        ngModel.$setViewValue(files != null && files.length === 0 ? null : files);
-                    }
-                });
-            }
-            if (attr.ngModelRejected) {
-                $parse(attr.ngModelRejected).assign(scope, rejFiles);
-            }
-            if (fileChange) {
-                $parse(fileChange)(scope, {
-                    $files: files,
-                    $rejectedFiles: rejFiles,
-                    $event: evt
-                });
-            }
-        }
-
-        if (noDelay) {
-            update();
-        } else {
-            $timeout(function () {
-                update();
-            });
-        }
-    };
-
-    var validate = ngFileUpload.validate;
-    var updateModel = ngFileUpload.updateModel;
-
-})();
-
-(function () {
-  var validate = ngFileUpload.validate;
-  var updateModel = ngFileUpload.updateModel;
-
-  ngFileUpload.directive('ngfDrop', ['$parse', '$timeout', '$location', function ($parse, $timeout, $location) {
-    return {
-      restrict: 'AEC',
-      require: '?ngModel',
-      link: function (scope, elem, attr, ngModel) {
-        linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location);
-      }
-    };
-  }]);
-
-  ngFileUpload.directive('ngfNoFileDrop', function () {
-    return function (scope, elem) {
-      if (dropAvailable()) elem.css('display', 'none');
-    };
-  });
-
-  ngFileUpload.directive('ngfDropAvailable', ['$parse', '$timeout', function ($parse, $timeout) {
-    return function (scope, elem, attr) {
-      if (dropAvailable()) {
-        var fn = $parse(attr.ngfDropAvailable);
-        $timeout(function () {
-          fn(scope);
-          if (fn.assign) {
-            fn.assign(scope, true);
-          }
-        });
-      }
-    };
-  }]);
-
-  function linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
-    var available = dropAvailable();
-    if (attr.dropAvailable) {
-      $timeout(function () {
-        if (scope[attr.dropAvailable]) {
-          scope[attr.dropAvailable].value = available;
-        } else {
-          scope[attr.dropAvailable] = available;
-        }
-      });
-    }
-    if (!available) {
-      if ($parse(attr.ngfHideOnDropNotAvailable)(scope) === true) {
-        elem.css('display', 'none');
-      }
-      return;
-    }
-
-    var disabled = false;
-    if (attr.ngfDrop.search(/\W+$files\W+/) === -1) {
-      scope.$watch(attr.ngfDrop, function(val) {
-        disabled = val === false;
-      });
-    }
-
-    var leaveTimeout = null;
-    var stopPropagation = $parse(attr.ngfStopPropagation);
-    var dragOverDelay = 1;
-    var actualDragOverClass;
-
-    elem[0].addEventListener('dragover', function (evt) {
-      if (elem.attr('disabled') || disabled) return;
-      evt.preventDefault();
-      if (stopPropagation(scope)) evt.stopPropagation();
-      // handling dragover events from the Chrome download bar
-      if (navigator.userAgent.indexOf('Chrome') > -1) {
-        var b = evt.dataTransfer.effectAllowed;
-        evt.dataTransfer.dropEffect = ('move' === b || 'linkMove' === b) ? 'move' : 'copy';
-      }
-      $timeout.cancel(leaveTimeout);
-      if (!scope.actualDragOverClass) {
-        actualDragOverClass = calculateDragOverClass(scope, attr, evt);
-      }
-      elem.addClass(actualDragOverClass);
-    }, false);
-    elem[0].addEventListener('dragenter', function (evt) {
-      if (elem.attr('disabled') || disabled) return;
-      evt.preventDefault();
-      if (stopPropagation(scope)) evt.stopPropagation();
-    }, false);
-    elem[0].addEventListener('dragleave', function () {
-      if (elem.attr('disabled') || disabled) return;
-      leaveTimeout = $timeout(function () {
-        elem.removeClass(actualDragOverClass);
-        actualDragOverClass = null;
-      }, dragOverDelay || 1);
-    }, false);
-    elem[0].addEventListener('drop', function (evt) {
-      if (elem.attr('disabled') || disabled) return;
-      evt.preventDefault();
-      if (stopPropagation(scope)) evt.stopPropagation();
-      elem.removeClass(actualDragOverClass);
-      actualDragOverClass = null;
-      extractFiles(evt, function (files, rejFiles) {
-        updateModel($parse, $timeout, scope, ngModel, attr,
-          attr.ngfChange || attr.ngfDrop, files, rejFiles, evt);
-      }, $parse(attr.ngfAllowDir)(scope) !== false, attr.multiple || $parse(attr.ngfMultiple)(scope));
-    }, false);
-
-    function calculateDragOverClass(scope, attr, evt) {
-      var accepted = true;
-      var items = evt.dataTransfer.items;
-      if (items != null) {
-        for (var i = 0; i < items.length && accepted; i++) {
-          accepted = accepted &&
-            (items[i].kind === 'file' || items[i].kind === '') &&
-            validate(scope, $parse, attr, items[i], evt);
-        }
-      }
-      var clazz = $parse(attr.ngfDragOverClass)(scope, {$event: evt});
-      if (clazz) {
-        if (clazz.delay) dragOverDelay = clazz.delay;
-        if (clazz.accept) clazz = accepted ? clazz.accept : clazz.reject;
-      }
-      return clazz || attr.ngfDragOverClass || 'dragover';
-    }
-
-    function extractFiles(evt, callback, allowDir, multiple) {
-      var files = [], rejFiles = [], items = evt.dataTransfer.items, processing = 0;
-
-      function addFile(file) {
-        if (validate(scope, $parse, attr, file, evt)) {
-          files.push(file);
-        } else {
-          rejFiles.push(file);
-        }
-      }
-
-      function traverseFileTree(files, entry, path) {
-        if (entry != null) {
-          if (entry.isDirectory) {
-            var filePath = (path || '') + entry.name;
-            addFile({name: entry.name, type: 'directory', path: filePath});
-            var dirReader = entry.createReader();
-            var entries = [];
-            processing++;
-            var readEntries = function () {
-              dirReader.readEntries(function (results) {
-                try {
-                  if (!results.length) {
-                    for (var i = 0; i < entries.length; i++) {
-                      traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/');
-                    }
-                    processing--;
-                  } else {
-                    entries = entries.concat(Array.prototype.slice.call(results || [], 0));
-                    readEntries();
-                  }
-                } catch (e) {
-                  processing--;
-                  console.error(e);
-                }
-              }, function () {
-                processing--;
-              });
-            };
-            readEntries();
-          } else {
-            processing++;
-            entry.file(function (file) {
-              try {
-                processing--;
-                file.path = (path ? path : '') + file.name;
-                addFile(file);
-              } catch (e) {
-                processing--;
-                console.error(e);
-              }
-            }, function () {
-              processing--;
-            });
-          }
-        }
-      }
-
-      if (items && items.length > 0 && $location.protocol() !== 'file') {
-        for (var i = 0; i < items.length; i++) {
-          if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
-            var entry = items[i].webkitGetAsEntry();
-            if (entry.isDirectory && !allowDir) {
-              continue;
-            }
-            if (entry != null) {
-              traverseFileTree(files, entry);
-            }
-          } else {
-            var f = items[i].getAsFile();
-            if (f != null) addFile(f);
-          }
-          if (!multiple && files.length > 0) break;
-        }
-      } else {
-        var fileList = evt.dataTransfer.files;
-        if (fileList != null) {
-          for (var j = 0; j < fileList.length; j++) {
-            addFile(fileList.item(j));
-            if (!multiple && files.length > 0) {
-              break;
-            }
-          }
-        }
-      }
-      var delays = 0;
-      (function waitForProcess(delay) {
-        $timeout(function () {
-          if (!processing) {
-            if (!multiple && files.length > 1) {
-              i = 0;
-              while (files[i].type === 'directory') i++;
-              files = [files[i]];
-            }
-            callback(files, rejFiles);
-          } else {
-            if (delays++ * 10 < 20 * 1000) {
-              waitForProcess(10);
-            }
-          }
-        }, delay || 0);
-      })();
-    }
-  }
-
-  ngFileUpload.directive('ngfSrc', ['$parse', '$timeout', function ($parse, $timeout) {
-    return {
-      restrict: 'AE',
-      link: function (scope, elem, attr) {
-        if (window.FileReader) {
-          scope.$watch(attr.ngfSrc, function (file) {
-            if (file &&
-              validate(scope, $parse, attr, file, null) &&
-              (!window.FileAPI || navigator.userAgent.indexOf('MSIE 8') === -1 || file.size < 20000) &&
-              (!window.FileAPI || navigator.userAgent.indexOf('MSIE 9') === -1 || file.size < 4000000)) {
-              $timeout(function () {
-                //prefer URL.createObjectURL for handling refrences to files of all sizes
-                //since it doesn´t build a large string in memory
-                var URL = window.URL || window.webkitURL;
-                if (URL && URL.createObjectURL) {
-                  elem.attr('src', URL.createObjectURL(file));
-                } else {
-                  var fileReader = new FileReader();
-                  fileReader.readAsDataURL(file);
-                  fileReader.onload = function (e) {
-                    $timeout(function () {
-                      elem.attr('src', e.target.result);
-                    });
-                  };
-                }
-              });
-            } else {
-              elem.attr('src', attr.ngfDefaultSrc || '');
-            }
-          });
-        }
-      }
-    };
-  }]);
-
-  function dropAvailable() {
-    var div = document.createElement('div');
-    return ('draggable' in div) && ('ondrop' in div);
-  }
-
-})();
-
-/**!
- * AngularJS file upload/drop directive and service with progress and abort
  * FileAPI Flash shim for old browsers not supporting FormData
  * @author  Danial  <danial.farid@gmail.com>
- * @version 5.0.7
+ * @version 5.0.9
  */
 
 (function () {
@@ -62145,6 +63931,736 @@ if (!window.FileReader) {
     };
   };
 }
+
+/**!
+ * AngularJS file upload/drop directive and service with progress and abort
+ * @author  Danial  <danial.farid@gmail.com>
+ * @version 5.0.9
+ */
+
+if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
+  window.XMLHttpRequest.prototype.setRequestHeader = (function (orig) {
+    return function (header, value) {
+      if (header === '__setXHR_') {
+        var val = value(this);
+        // fix for angular < 1.2.0
+        if (val instanceof Function) {
+          val(this);
+        }
+      } else {
+        orig.apply(this, arguments);
+      }
+    };
+  })(window.XMLHttpRequest.prototype.setRequestHeader);
+}
+
+var ngFileUpload = angular.module('ngFileUpload', []);
+
+ngFileUpload.version = '5.0.9';
+ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
+  function sendHttp(config) {
+    config.method = config.method || 'POST';
+    config.headers = config.headers || {};
+
+    var deferred = $q.defer();
+    var promise = deferred.promise;
+
+    config.headers.__setXHR_ = function () {
+      return function (xhr) {
+        if (!xhr) return;
+        config.__XHR = xhr;
+        if (config.xhrFn) config.xhrFn(xhr);
+        xhr.upload.addEventListener('progress', function (e) {
+          e.config = config;
+          if (deferred.notify) {
+            deferred.notify(e);
+          } else if (promise.progressFunc) {
+            $timeout(function () {
+              promise.progressFunc(e);
+            });
+          }
+        }, false);
+        //fix for firefox not firing upload progress end, also IE8-9
+        xhr.upload.addEventListener('load', function (e) {
+          if (e.lengthComputable) {
+            e.config = config;
+            if (deferred.notify) {
+              deferred.notify(e);
+            } else if (promise.progressFunc) {
+              $timeout(function () {
+                promise.progressFunc(e);
+              });
+            }
+          }
+        }, false);
+      };
+    };
+
+    $http(config).then(function (r) {
+      deferred.resolve(r);
+    }, function (e) {
+      deferred.reject(e);
+    }, function (n) {
+      deferred.notify(n);
+    });
+
+    promise.success = function (fn) {
+      promise.then(function (response) {
+        fn(response.data, response.status, response.headers, config);
+      });
+      return promise;
+    };
+
+    promise.error = function (fn) {
+      promise.then(null, function (response) {
+        fn(response.data, response.status, response.headers, config);
+      });
+      return promise;
+    };
+
+    promise.progress = function (fn) {
+      promise.progressFunc = fn;
+      promise.then(null, null, function (update) {
+        fn(update);
+      });
+      return promise;
+    };
+    promise.abort = function () {
+      if (config.__XHR) {
+        $timeout(function () {
+          config.__XHR.abort();
+        });
+      }
+      return promise;
+    };
+    promise.xhr = function (fn) {
+      config.xhrFn = (function (origXhrFn) {
+        return function () {
+          if (origXhrFn) origXhrFn.apply(promise, arguments);
+          fn.apply(promise, arguments);
+        };
+      })(config.xhrFn);
+      return promise;
+    };
+
+    return promise;
+  }
+
+  this.upload = function (config) {
+    function addFieldToFormData(formData, val, key) {
+      if (val !== undefined) {
+        if (angular.isDate(val)) {
+          val = val.toISOString();
+        }
+        if (angular.isString(val)) {
+          formData.append(key, val);
+        } else if (config.sendFieldsAs === 'form') {
+          if (angular.isObject(val)) {
+            for (var k in val) {
+              if (val.hasOwnProperty(k)) {
+                addFieldToFormData(formData, val[k], key + '[' + k + ']');
+              }
+            }
+          } else {
+            formData.append(key, val);
+          }
+        } else {
+          val = angular.isString(val) ? val : JSON.stringify(val);
+          if (config.sendFieldsAs === 'json-blob') {
+            formData.append(key, new Blob([val], {type: 'application/json'}));
+          } else {
+            formData.append(key, val);
+          }
+        }
+      }
+    }
+
+    config.headers = config.headers || {};
+    config.headers['Content-Type'] = undefined;
+    config.transformRequest = config.transformRequest ?
+      (angular.isArray(config.transformRequest) ?
+        config.transformRequest : [config.transformRequest]) : [];
+    config.transformRequest.push(function (data) {
+      var formData = new FormData();
+      var allFields = {};
+      var key;
+      for (key in config.fields) {
+        if (config.fields.hasOwnProperty(key)) {
+          allFields[key] = config.fields[key];
+        }
+      }
+      if (data) allFields.data = data;
+      for (key in allFields) {
+        if (allFields.hasOwnProperty(key)) {
+          var val = allFields[key];
+          if (config.formDataAppender) {
+            config.formDataAppender(formData, key, val);
+          } else {
+            addFieldToFormData(formData, val, key);
+          }
+        }
+      }
+
+      if (config.file != null) {
+        var fileFormName = config.fileFormDataName || 'file';
+
+        if (angular.isArray(config.file)) {
+          var isFileFormNameString = angular.isString(fileFormName);
+          for (var i = 0; i < config.file.length; i++) {
+            formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i],
+              (config.fileName && config.fileName[i]) || config.file[i].name);
+          }
+        } else {
+          formData.append(fileFormName, config.file, config.fileName || config.file.name);
+        }
+      }
+      return formData;
+    });
+
+    return sendHttp(config);
+  };
+
+  this.http = function (config) {
+    config.transformRequest = config.transformRequest || function (data) {
+        if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof Blob) {
+          return data;
+        }
+        return $http.defaults.transformRequest[0](arguments);
+      };
+    return sendHttp(config);
+  };
+}
+
+]);
+
+(function () {
+    ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile',
+        function ($parse, $timeout, $compile) {
+            return {
+                restrict: 'AEC',
+                require: '?ngModel',
+                link: function (scope, elem, attr, ngModel) {
+                    linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile);
+                }
+            };
+        }]);
+
+    function linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile) {
+        /** @namespace attr.ngfSelect */
+        /** @namespace attr.ngfChange */
+        /** @namespace attr.ngModel */
+        /** @namespace attr.ngModelRejected */
+        /** @namespace attr.ngfMultiple */
+        /** @namespace attr.ngfCapture */
+        /** @namespace attr.ngfAccept */
+        /** @namespace attr.ngfMaxSize */
+        /** @namespace attr.ngfMinSize */
+        /** @namespace attr.ngfResetOnClick */
+        /** @namespace attr.ngfResetModelOnClick */
+        /** @namespace attr.ngfKeep */
+        /** @namespace attr.ngfKeepDistinct */
+
+        if (elem.attr('__ngf_gen__')) {
+            return;
+        }
+
+        scope.$on('$destroy', function () {
+            if (elem.$$ngfRefElem) elem.$$ngfRefElem.remove();
+        });
+
+        var disabled = false;
+        if (attr.ngfSelect.search(/\W+$files\W+/) === -1) {
+            scope.$watch(attr.ngfSelect, function (val) {
+                disabled = val === false;
+            });
+        }
+        function isInputTypeFile() {
+            return elem[0].tagName.toLowerCase() === 'input' && attr.type && attr.type.toLowerCase() === 'file';
+        }
+
+        var isUpdating = false;
+
+        function changeFn(evt) {
+            if (!isUpdating) {
+                isUpdating = true;
+                try {
+                    var fileList = evt.__files_ || (evt.target && evt.target.files);
+                    var files = [], rejFiles = [];
+
+                    for (var i = 0; i < fileList.length; i++) {
+                        var file = fileList.item(i);
+                        if (validate(scope, $parse, attr, file, evt)) {
+                            files.push(file);
+                        } else {
+                            rejFiles.push(file);
+                        }
+                    }
+                    updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, files, rejFiles, evt);
+                    if (files.length === 0) evt.target.value = files;
+//                if (evt.target && evt.target.getAttribute('__ngf_gen__')) {
+//                    angular.element(evt.target).remove();
+//                }
+                } finally {
+                    isUpdating = false;
+                }
+            }
+        }
+
+        function bindAttrToFileInput(fileElem) {
+            if (attr.ngfMultiple) fileElem.attr('multiple', $parse(attr.ngfMultiple)(scope));
+            if (attr.ngfCapture) fileElem.attr('capture', $parse(attr.ngfCapture)(scope));
+            if (attr.accept) fileElem.attr('accept', attr.accept);
+            for (var i = 0; i < elem[0].attributes.length; i++) {
+                var attribute = elem[0].attributes[i];
+                if ((isInputTypeFile() && attribute.name !== 'type') ||
+                    (attribute.name !== 'type' && attribute.name !== 'class' &&
+                    attribute.name !== 'id' && attribute.name !== 'style')) {
+                    fileElem.attr(attribute.name, attribute.value);
+                }
+            }
+        }
+
+        function createFileInput(evt, resetOnClick) {
+            if (!resetOnClick && (evt || isInputTypeFile())) return elem.$$ngfRefElem || elem;
+
+            var fileElem = angular.element('<input type="file">');
+            bindAttrToFileInput(fileElem);
+
+            if (isInputTypeFile()) {
+                elem.replaceWith(fileElem);
+                elem = fileElem;
+                fileElem.attr('__ngf_gen__', true);
+                $compile(elem)(scope);
+            } else {
+                fileElem.css('visibility', 'hidden').css('position', 'absolute').css('overflow', 'hidden')
+                    .css('width', '0px').css('height', '0px').css('z-index', '-100000').css('border', 'none')
+                    .css('margin', '0px').css('padding', '0px').attr('tabindex', '-1');
+                if (elem.$$ngfRefElem) {
+                    elem.$$ngfRefElem.remove();
+                }
+                elem.$$ngfRefElem = fileElem;
+                document.body.appendChild(fileElem[0]);
+            }
+
+            return fileElem;
+        }
+
+        function resetModel(evt) {
+            updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, [], [], evt, true);
+        }
+
+        function clickHandler(evt) {
+            if (elem.attr('disabled') || disabled) return false;
+            if (evt != null) {
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+            var resetOnClick = $parse(attr.ngfResetOnClick)(scope) !== false;
+            var fileElem = createFileInput(evt, resetOnClick);
+
+            function clickAndAssign(evt) {
+                if (evt) {
+                    fileElem[0].click();
+                }
+                if (isInputTypeFile() || !evt) {
+                    elem.bind('click touchend', clickHandler);
+                }
+            }
+
+            if (fileElem) {
+                if (!evt || resetOnClick) fileElem.bind('change', changeFn);
+                if (evt && resetOnClick && $parse(attr.ngfResetModelOnClick)(scope) !== false) resetModel(evt);
+
+                // fix for android native browser < 4.4
+                if (shouldClickLater(navigator.userAgent)) {
+                    setTimeout(function () {
+                        clickAndAssign(evt);
+                    }, 0);
+                } else {
+                    clickAndAssign(evt);
+                }
+            }
+            return false;
+        }
+
+        if (window.FileAPI && window.FileAPI.ngfFixIE) {
+            window.FileAPI.ngfFixIE(elem, createFileInput, bindAttrToFileInput, changeFn);
+        } else {
+            clickHandler();
+            //if (!isInputTypeFile()) {
+            //  elem.bind('click touchend', clickHandler);
+            //}
+        }
+    }
+
+    function shouldClickLater(ua) {
+        // android below 4.4
+        var m = ua.match(/Android[^\d]*(\d+)\.(\d+)/);
+        if (m && m.length > 2) {
+            return parseInt(m[1]) < 4 || (parseInt(m[1]) === 4 && parseInt(m[2]) < 4);
+        }
+
+        // safari on windows
+        return /.*Windows.*Safari.*/.test(ua);
+    }
+
+    ngFileUpload.validate = function (scope, $parse, attr, file, evt) {
+        function globStringToRegex(str) {
+            if (str.length > 2 && str[0] === '/' && str[str.length - 1] === '/') {
+                return str.substring(1, str.length - 1);
+            }
+            var split = str.split(','), result = '';
+            if (split.length > 1) {
+                for (var i = 0; i < split.length; i++) {
+                    result += '(' + globStringToRegex(split[i]) + ')';
+                    if (i < split.length - 1) {
+                        result += '|';
+                    }
+                }
+            } else {
+                if (str.indexOf('.') === 0) {
+                    str = '*' + str;
+                }
+                result = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&') + '$';
+                result = result.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
+            }
+            return result;
+        }
+
+        var accept = $parse(attr.ngfAccept)(scope, {$file: file, $event: evt});
+        var fileSizeMax = $parse(attr.ngfMaxSize)(scope, {$file: file, $event: evt}) || 9007199254740991;
+        var fileSizeMin = $parse(attr.ngfMinSize)(scope, {$file: file, $event: evt}) || -1;
+        if (accept != null && angular.isString(accept)) {
+            var regexp = new RegExp(globStringToRegex(accept), 'gi');
+            accept = (file.type != null && regexp.test(file.type.toLowerCase())) ||
+                (file.name != null && regexp.test(file.name.toLowerCase()));
+        }
+        return (accept == null || accept) && (file.size == null || (file.size < fileSizeMax && file.size > fileSizeMin));
+    };
+
+    ngFileUpload.updateModel = function ($parse, $timeout, scope, ngModel, attr, fileChange,
+                                         files, rejFiles, evt, noDelay) {
+        function update() {
+            if ($parse(attr.ngfKeep)(scope) === true) {
+                var prevFiles = (ngModel.$modelValue || []).slice(0);
+                if (!files || !files.length) {
+                    files = prevFiles;
+                } else if ($parse(attr.ngfKeepDistinct)(scope) === true) {
+                    var len = prevFiles.length;
+                    for (var i = 0; i < files.length; i++) {
+                        for (var j = 0; j < len; j++) {
+                            if (files[i].name === prevFiles[j].name) break;
+                        }
+                        if (j === len) {
+                            prevFiles.push(files[i]);
+                        }
+                    }
+                    files = prevFiles;
+                } else {
+                    files = prevFiles.concat(files);
+                }
+            }
+            if (ngModel) {
+                $parse(attr.ngModel).assign(scope, files);
+                $timeout(function () {
+                    if (ngModel) {
+                        ngModel.$setViewValue(files != null && files.length === 0 ? null : files);
+                    }
+                });
+            }
+            if (attr.ngModelRejected) {
+                $parse(attr.ngModelRejected).assign(scope, rejFiles);
+            }
+            if (fileChange) {
+                $parse(fileChange)(scope, {
+                    $files: files,
+                    $rejectedFiles: rejFiles,
+                    $event: evt
+                });
+            }
+        }
+
+        if (noDelay) {
+            update();
+        } else {
+            $timeout(function () {
+                update();
+            });
+        }
+    };
+
+    var validate = ngFileUpload.validate;
+    var updateModel = ngFileUpload.updateModel;
+
+})();
+
+(function () {
+  var validate = ngFileUpload.validate;
+  var updateModel = ngFileUpload.updateModel;
+
+  ngFileUpload.directive('ngfDrop', ['$parse', '$timeout', '$location', function ($parse, $timeout, $location) {
+    return {
+      restrict: 'AEC',
+      require: '?ngModel',
+      link: function (scope, elem, attr, ngModel) {
+        linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location);
+      }
+    };
+  }]);
+
+  ngFileUpload.directive('ngfNoFileDrop', function () {
+    return function (scope, elem) {
+      if (dropAvailable()) elem.css('display', 'none');
+    };
+  });
+
+  ngFileUpload.directive('ngfDropAvailable', ['$parse', '$timeout', function ($parse, $timeout) {
+    return function (scope, elem, attr) {
+      if (dropAvailable()) {
+        var fn = $parse(attr.ngfDropAvailable);
+        $timeout(function () {
+          fn(scope);
+          if (fn.assign) {
+            fn.assign(scope, true);
+          }
+        });
+      }
+    };
+  }]);
+
+  function linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
+    var available = dropAvailable();
+    if (attr.dropAvailable) {
+      $timeout(function () {
+        if (scope[attr.dropAvailable]) {
+          scope[attr.dropAvailable].value = available;
+        } else {
+          scope[attr.dropAvailable] = available;
+        }
+      });
+    }
+    if (!available) {
+      if ($parse(attr.ngfHideOnDropNotAvailable)(scope) === true) {
+        elem.css('display', 'none');
+      }
+      return;
+    }
+
+    var disabled = false;
+    if (attr.ngfDrop.search(/\W+$files\W+/) === -1) {
+      scope.$watch(attr.ngfDrop, function(val) {
+        disabled = val === false;
+      });
+    }
+
+    var leaveTimeout = null;
+    var stopPropagation = $parse(attr.ngfStopPropagation);
+    var dragOverDelay = 1;
+    var actualDragOverClass;
+
+    elem[0].addEventListener('dragover', function (evt) {
+      if (elem.attr('disabled') || disabled) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+      // handling dragover events from the Chrome download bar
+      if (navigator.userAgent.indexOf('Chrome') > -1) {
+        var b = evt.dataTransfer.effectAllowed;
+        evt.dataTransfer.dropEffect = ('move' === b || 'linkMove' === b) ? 'move' : 'copy';
+      }
+      $timeout.cancel(leaveTimeout);
+      if (!scope.actualDragOverClass) {
+        actualDragOverClass = calculateDragOverClass(scope, attr, evt);
+      }
+      elem.addClass(actualDragOverClass);
+    }, false);
+    elem[0].addEventListener('dragenter', function (evt) {
+      if (elem.attr('disabled') || disabled) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+    }, false);
+    elem[0].addEventListener('dragleave', function () {
+      if (elem.attr('disabled') || disabled) return;
+      leaveTimeout = $timeout(function () {
+        elem.removeClass(actualDragOverClass);
+        actualDragOverClass = null;
+      }, dragOverDelay || 1);
+    }, false);
+    elem[0].addEventListener('drop', function (evt) {
+      if (elem.attr('disabled') || disabled) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+      elem.removeClass(actualDragOverClass);
+      actualDragOverClass = null;
+      extractFiles(evt, function (files, rejFiles) {
+        updateModel($parse, $timeout, scope, ngModel, attr,
+          attr.ngfChange || attr.ngfDrop, files, rejFiles, evt);
+      }, $parse(attr.ngfAllowDir)(scope) !== false, attr.multiple || $parse(attr.ngfMultiple)(scope));
+    }, false);
+
+    function calculateDragOverClass(scope, attr, evt) {
+      var accepted = true;
+      var items = evt.dataTransfer.items;
+      if (items != null) {
+        for (var i = 0; i < items.length && accepted; i++) {
+          accepted = accepted &&
+            (items[i].kind === 'file' || items[i].kind === '') &&
+            validate(scope, $parse, attr, items[i], evt);
+        }
+      }
+      var clazz = $parse(attr.ngfDragOverClass)(scope, {$event: evt});
+      if (clazz) {
+        if (clazz.delay) dragOverDelay = clazz.delay;
+        if (clazz.accept) clazz = accepted ? clazz.accept : clazz.reject;
+      }
+      return clazz || attr.ngfDragOverClass || 'dragover';
+    }
+
+    function extractFiles(evt, callback, allowDir, multiple) {
+      var files = [], rejFiles = [], items = evt.dataTransfer.items, processing = 0;
+
+      function addFile(file) {
+        if (validate(scope, $parse, attr, file, evt)) {
+          files.push(file);
+        } else {
+          rejFiles.push(file);
+        }
+      }
+
+      function traverseFileTree(files, entry, path) {
+        if (entry != null) {
+          if (entry.isDirectory) {
+            var filePath = (path || '') + entry.name;
+            addFile({name: entry.name, type: 'directory', path: filePath});
+            var dirReader = entry.createReader();
+            var entries = [];
+            processing++;
+            var readEntries = function () {
+              dirReader.readEntries(function (results) {
+                try {
+                  if (!results.length) {
+                    for (var i = 0; i < entries.length; i++) {
+                      traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/');
+                    }
+                    processing--;
+                  } else {
+                    entries = entries.concat(Array.prototype.slice.call(results || [], 0));
+                    readEntries();
+                  }
+                } catch (e) {
+                  processing--;
+                  console.error(e);
+                }
+              }, function () {
+                processing--;
+              });
+            };
+            readEntries();
+          } else {
+            processing++;
+            entry.file(function (file) {
+              try {
+                processing--;
+                file.path = (path ? path : '') + file.name;
+                addFile(file);
+              } catch (e) {
+                processing--;
+                console.error(e);
+              }
+            }, function () {
+              processing--;
+            });
+          }
+        }
+      }
+
+      if (items && items.length > 0 && $location.protocol() !== 'file') {
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
+            var entry = items[i].webkitGetAsEntry();
+            if (entry.isDirectory && !allowDir) {
+              continue;
+            }
+            if (entry != null) {
+              traverseFileTree(files, entry);
+            }
+          } else {
+            var f = items[i].getAsFile();
+            if (f != null) addFile(f);
+          }
+          if (!multiple && files.length > 0) break;
+        }
+      } else {
+        var fileList = evt.dataTransfer.files;
+        if (fileList != null) {
+          for (var j = 0; j < fileList.length; j++) {
+            addFile(fileList.item(j));
+            if (!multiple && files.length > 0) {
+              break;
+            }
+          }
+        }
+      }
+      var delays = 0;
+      (function waitForProcess(delay) {
+        $timeout(function () {
+          if (!processing) {
+            if (!multiple && files.length > 1) {
+              i = 0;
+              while (files[i].type === 'directory') i++;
+              files = [files[i]];
+            }
+            callback(files, rejFiles);
+          } else {
+            if (delays++ * 10 < 20 * 1000) {
+              waitForProcess(10);
+            }
+          }
+        }, delay || 0);
+      })();
+    }
+  }
+
+  ngFileUpload.directive('ngfSrc', ['$parse', '$timeout', function ($parse, $timeout) {
+    return {
+      restrict: 'AE',
+      link: function (scope, elem, attr) {
+        if (window.FileReader) {
+          scope.$watch(attr.ngfSrc, function (file) {
+            if (file &&
+              validate(scope, $parse, attr, file, null) &&
+              (!window.FileAPI || navigator.userAgent.indexOf('MSIE 8') === -1 || file.size < 20000) &&
+              (!window.FileAPI || navigator.userAgent.indexOf('MSIE 9') === -1 || file.size < 4000000)) {
+              $timeout(function () {
+                //prefer URL.createObjectURL for handling refrences to files of all sizes
+                //since it doesn´t build a large string in memory
+                var URL = window.URL || window.webkitURL;
+                if (URL && URL.createObjectURL) {
+                  elem.attr('src', URL.createObjectURL(file));
+                } else {
+                  var fileReader = new FileReader();
+                  fileReader.readAsDataURL(file);
+                  fileReader.onload = function (e) {
+                    $timeout(function () {
+                      elem.attr('src', e.target.result);
+                    });
+                  };
+                }
+              });
+            } else {
+              elem.attr('src', attr.ngfDefaultSrc || '');
+            }
+          });
+        }
+      }
+    };
+  }]);
+
+  function dropAvailable() {
+    var div = document.createElement('div');
+    return ('draggable' in div) && ('ondrop' in div);
+  }
+
+})();
 
 ///#source 1 1 /Scripts/underscore.js
 //     Underscore.js 1.8.3

@@ -1,32 +1,29 @@
 /**!
  * AngularJS file upload/drop directive and service with progress and abort
  * @author  Danial  <danial.farid@gmail.com>
- * @version 5.0.7
+ * @version 5.0.9
  */
+
+if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
+  window.XMLHttpRequest.prototype.setRequestHeader = (function (orig) {
+    return function (header, value) {
+      if (header === '__setXHR_') {
+        var val = value(this);
+        // fix for angular < 1.2.0
+        if (val instanceof Function) {
+          val(this);
+        }
+      } else {
+        orig.apply(this, arguments);
+      }
+    };
+  })(window.XMLHttpRequest.prototype.setRequestHeader);
+}
+
 var ngFileUpload = angular.module('ngFileUpload', []);
 
-ngFileUpload.version = '5.0.7';
+ngFileUpload.version = '5.0.9';
 ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
-  function patchXHR(fnName, newFn) {
-    window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
-  }
-
-  if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
-    patchXHR('setRequestHeader', function (orig) {
-      return function (header, value) {
-        if (header === '__setXHR_') {
-          var val = value(this);
-          // fix for angular < 1.2.0
-          if (val instanceof Function) {
-            val(this);
-          }
-        } else {
-          orig.apply(this, arguments);
-        }
-      };
-    });
-  }
-
   function sendHttp(config) {
     config.method = config.method || 'POST';
     config.headers = config.headers || {};
@@ -290,8 +287,6 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
         }
 
         function createFileInput(evt, resetOnClick) {
-            if (elem.attr('disabled') || disabled) return;
-
             if (!resetOnClick && (evt || isInputTypeFile())) return elem.$$ngfRefElem || elem;
 
             var fileElem = angular.element('<input type="file">');
@@ -321,6 +316,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
         }
 
         function clickHandler(evt) {
+            if (elem.attr('disabled') || disabled) return false;
             if (evt != null) {
                 evt.preventDefault();
                 evt.stopPropagation();
