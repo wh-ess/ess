@@ -171,6 +171,11 @@
     <Content Include="Content\simple-line-icons.css" />
     <Content Include="Content\treeGrid.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
+    <Content Include="demo\movieDemo\1.jpg" />
+    <Content Include="demo\movieDemo\2.jpg" />
+    <Content Include="demo\movieDemo\app.js" />
+    <Content Include="demo\movieDemo\bg_screen.gif" />
+    <Content Include="demo\movieDemo\ico_seat.gif" />
     <Content Include="demo\movieDemo\movieDemo.html" />
     <Content Include="demo\movieDemo\movieList.html" />
     <Content Include="demo\movieDemo\seatSelect.html" />

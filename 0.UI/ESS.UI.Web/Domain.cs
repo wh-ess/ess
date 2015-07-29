@@ -1,10 +1,10 @@
 ﻿#region
 
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Http;
-using ESS.Framework.Common.Configurations;
 using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Configurations;
 using ESS.Framework.CQRS.Event;
@@ -13,6 +13,7 @@ using ESS.Framework.Data.Redis;
 using ESS.Framework.Licensing.OAuth;
 using ESS.Framework.UI.Configurations;
 using Owin;
+using Configuration = ESS.Framework.Common.Configurations.Configuration;
 
 #endregion
 
@@ -22,10 +23,10 @@ namespace ESS.UI.Web
     {
         public static void Setup(IAppBuilder app, HttpConfiguration config)
         {
-            //var connString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            //IEventStore es = = new MessageDispatcher(new SqlEventStore(connString));
+            var connString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            IEventStore es =  new SqlEventStore(connString);
 
-            IEventStore es = new RedisEventStore("127.0.0.1", "6379");
+            //IEventStore es = new RedisEventStore("127.0.0.1", "6379");
 
             var assemblies = BuildManager.GetReferencedAssemblies()
                 .Cast<Assembly>()
@@ -34,7 +35,7 @@ namespace ESS.UI.Web
 
             Configuration.Create()
                 .RegisterCommonComponents()
-                .UseRedisRepository()
+                .UseInMemoryRepository()
                 .RegisterBusinessComponents(assemblies)
                 .InitializeCQRSAssemblies(es, assemblies)
                 .RegisterController(config, assemblies)

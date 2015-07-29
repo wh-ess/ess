@@ -1,10 +1,594 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-</head>
-<body>
+﻿<div class="seatTable" id="seatTable">
+    <div class="inner">
+        <div class="seatInfo">
+            <span><img src="" class="RJSZuO" align="middle">可选</span>
+            <span><img src="" class="bPRxja" align="middle">已选</span>
+            <span><img src="" class="osIyCa" align="middle">不可选</span>
+            <span><img src="" class="repairSeat" align="middle">维修中</span>
+        </div>
+    </div>
+    <div class="inner">
+        <div class="wrapper" id="wrapper">
 
-</body>
-</html>
+            <div id="wrapped" style=" margin:0 auto; overflow:visible;">
+                <div class="room_screen">2号厅银幕<span> </span></div>
+                <div class="showSeat" style="margin:10px auto 0;width: 100%">
+                    <div class="seatlist" style="margin:0 auto;width: 100%">
+                        <dl class="clear" ng-repeat="ss in seats">
+                            <dd ng-repeat="s in ss" ng-switch="s.background">
+                                <div ng-switch-when="noSeat" class="{{s.background}}"></div>
+                                <div ng-switch-default class="{{s.background}}" ng-click="clickSeat(s)"></div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner">
+        <md-chips ng-model="orderSeats" readonly="true">
+            <md-chip-template>
+                <strong>{{$chip.no}}</strong>
+                <em>(36)</em>
+            </md-chip-template>
+        </md-chips>
+    </div>
+</div>
+
+
+
+
+
+<style type="text/css">
+    .bPRxja, .cwEceu, .Mdacjw, .repairSeat, .RJSZuO, .osIyCa, .hAislet, .vAislet, .hWall, .hWallt, .vWall, .vWallt, .loverSeat, .pewNo .N, .spNoticeBox a.more, .salesTypeBox span {
+        background: url(/demo/movieDemo/ico_seat.gif) no-repeat;
+    }
+
+    .LinDoor, .LoutDoor, .LinAndOutDoor, .RinDoor, .RoutDoor, .RinAndOutDoor, .DinDoor, .DoutDoor, .DinAndOutDoor {
+        background: url(bg_inout.gif) no-repeat;
+    }
+
+    .seatGroup {
+        overflow: hidden;
+    }
+
+    .ui_left, .ui_right {
+        float: left;
+    }
+
+    .ui_left {
+        width: 870px;
+    }
+
+    .ui_right {
+        width: 310px;
+        background: #fffaf4;
+        margin-bottom: -30000px;
+        padding-bottom: 30000px;
+    }
+
+        .ui_right .inner {
+            padding: 20px 15px;
+        }
+
+    .seatView {
+        position: relative;
+        min-height: 550px;
+        border: 1px solid #ffefdf;
+    }
+
+    .seatInfo {
+        text-align: center;
+        padding: 10px;
+    }
+
+        .seatInfo span {
+            margin: 0 10px;
+        }
+
+            .seatInfo span img {
+                vertical-align: -8px;
+                cursor: default;
+            }
+
+    .changeScreen {
+        position: relative;
+    }
+
+        .changeScreen .cs {
+            position: absolute;
+            padding-right: 10px;
+            right: 0;
+            top: 0;
+            font-size: 12px;
+            font-weight: normal;
+            background: url(ico_pub.gif) right -346px no-repeat #fffaf4;
+            cursor: pointer;
+        }
+
+        .changeScreen .select {
+            background-position: right -370px;
+        }
+
+    .pewNo {
+        position: absolute;
+        z-index: 5;
+        width: 22px;
+        text-align: center;
+        height: 100%;
+        bottom: 60px;
+        left: 0px;
+    }
+
+        .pewNo span {
+            display: block;
+            width: 22px;
+            height: 26px;
+            line-height: 26px;
+            color: #fff;
+            font-size: 11px;
+            background-color: #fff;
+        }
+
+        .pewNo .N {
+            background-position: -40px 4px;
+            background-color: #fff;
+        }
+
+    .room_screen {
+        width: 100%;
+        height: 38px;
+        text-align: center;
+        background: url(/demo/movieDemo/bg_screen.gif) center 0 no-repeat;
+        line-height: 29px;
+        margin: 10px auto 0 auto;
+    }
+
+        .room_screen span {
+            color: #999;
+            margin-left: 10px;
+        }
+
+    .wrapper {
+        position: relative;
+        padding-bottom: 20px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .showSeat {
+        padding: 0 60px 40px 60px;
+        margin: 20px auto 0;
+        position: relative;
+    }
+
+    .LinDoor, .LoutDoor, .LinAndOutDoor, .RinDoor, .RoutDoor, .RinAndOutDoor, .DinDoor, .DoutDoor, .DinAndOutDoor {
+        display: block;
+        left: 0;
+        top: 0;
+        zoom: 1;
+        position: relative;
+        z-index: 10;
+    }
+
+    .LinDoor, .LoutDoor, .LinAndOutDoor, .RinDoor, .RoutDoor, .RinAndOutDoor {
+        width: 26px;
+        height: 60px;
+    }
+
+    .DinDoor, .DoutDoor, .DinAndOutDoor {
+        width: 60px;
+        height: 26px;
+    }
+
+    .LinDoor {
+        background-position: 0 0;
+    }
+
+    .LoutDoor {
+        background-position: -27px 0;
+    }
+
+    .LinAndOutDoor {
+        background-position: -54px 0;
+    }
+
+    .RinDoor {
+        background-position: 0 -61px;
+    }
+
+    .RoutDoor {
+        background-position: -27px -61px;
+    }
+
+    .RinAndOutDoor {
+        background-position: -54px -61px;
+    }
+
+    .DinDoor {
+        background-position: 0 -122px;
+    }
+
+    .DoutDoor {
+        background-position: 0 -149px;
+    }
+
+    .DinAndOutDoor {
+        background-position: 0 -176px;
+    }
+
+    .seatlist dl {
+        text-align: center;
+        height: 26px;
+        _overflow: hidden;
+    }
+
+    .seatlist dd {
+        float: left;
+        width: 30px;
+        height: 26px;
+        text-align: center;
+    }
+
+    .cwEceu, .Mdacjw, .bPRxja, .RJSZuO, .osIyCa, .hAisle, .hAislet, .vAisle, .vAislet, .hWall, .hWallt, .vWall, .vWallt, .repairSeat {
+        width: 30px;
+        height: 26px;
+        line-height: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        _font-size: 8px;
+        font-weight: bold;
+        color: green;
+        text-align: center;
+    }
+
+    .bPRxja {
+        background-position: 4px -24px;
+    }
+
+    .cwEceu {
+        background-position: 4px 4px;
+    }
+
+    .OsjyCQ {
+        background-position: 4px 4px;
+    }
+
+    .RJSZuO {
+        background-position: 4px 4px;
+    }
+
+    .xBqDso {
+        background-position: 4px 4px;
+    }
+
+    .Mdacjw {
+        background-position: 4px -54px;
+    }
+
+    .OxBqDs {
+        background-position: 4px -54px;
+    }
+
+    .osIyCa {
+        background-position: 4px -54px;
+    }
+
+    .ORjSZu {
+        background-position: 4px -54px;
+    }
+
+    .loverSeat {
+        width: 59px;
+        height: 26px;
+        background-position: 4px -86px;
+    }
+
+    .lover_l .cwEceu {
+        background-position: 4px -86px;
+    }
+
+    .lover_r .cwEceu {
+        background-position: -26px -86px;
+    }
+
+    .lover_l .RJSZuO {
+        background-position: 4px -86px;
+    }
+
+    .lover_r .RJSZuO {
+        background-position: -26px -86px;
+    }
+
+    .lover_l .Mdacjw {
+        background-position: 4px -146px;
+    }
+
+    .lover_r .Mdacjw {
+        background-position: -26px -146px;
+    }
+
+    .lover_l .osIyCa {
+        background-position: 4px -146px;
+    }
+
+    .lover_r .osIyCa {
+        background-position: -26px -146px;
+    }
+
+    .lover_l .bPRxja {
+        background-position: 4px -116px;
+    }
+
+    .lover_r .bPRxja {
+        background-position: -26px -116px;
+    }
+
+    .hWall {
+        background-position: 0 -332px;
+    }
+
+    .hWallt {
+        background-position: 0 -357px;
+    }
+
+    .vWall {
+        background-position: -39px -346px;
+    }
+
+    .vWallt {
+        background-position: -39px -427px;
+    }
+
+    .hAislet {
+        background-position: 0 -386px;
+    }
+
+    .vAislet {
+        background-position: -42px -385px;
+    }
+
+    .repairSeat {
+        background-position: 4px -711px;
+    }
+
+    .noSeat {
+        width: 30px;
+        height: 26px;
+    }
+
+    .hAisle, .hAislet, .vAisle, .vAislet, .hWall, .hWallt, .vWall, .vWallt {
+        color: #ddd;
+        font-size: 12px;
+        font-weight: normal;
+        cursor: default;
+    }
+
+    .hAisle, .hAislet {
+        border-top: 1px dashed #ddd;
+        border-bottom: 1px dashed #ddd;
+        height: 22px;
+        line-height: 22px;
+        margin: 1px 0;
+    }
+
+    .vAisle, .vAislet {
+        border-left: 1px dashed #ddd;
+        border-right: 1px dashed #ddd;
+        width: 22px;
+        line-height: 22px;
+        margin: 0 3px;
+    }
+
+    .spNoticeBox {
+        background: #ffd;
+        border: 1px solid #ffcb99;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+        .spNoticeBox a.more {
+            display: block;
+            width: 21px;
+            height: 21px;
+            top: 5px;
+            right: 5px;
+            background-position: 3px -471px;
+            cursor: pointer;
+        }
+
+            .spNoticeBox a.more:hover {
+                background-position: -42px -471px;
+                background-color: #ffddc6;
+            }
+
+
+    .leftBox {
+        padding: 15px;
+        border: 1px solid #ffefdf;
+        border-top: 0;
+        line-height: 24px;
+    }
+
+    .rightBox {
+        border-top: 1px solid #fed;
+        padding: 15px 0;
+    }
+
+    .ui_layout h2 {
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 5px;
+        display: inline-block;
+    }
+
+    p em, .ui_media .ui_pic {
+        color: #666;
+    }
+
+    .pewSeat {
+        padding-bottom: 15px;
+    }
+
+        .pewSeat .innerCont p {
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+            .pewSeat .innerCont p em {
+                font-size: 12px;
+                font-weight: normal;
+            }
+
+    .mobileInfo {
+        margin: 15px 0 5px;
+    }
+
+        .mobileInfo .text {
+            width: 150px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            font-family: verdana;
+        }
+
+    .packageBox {
+        color: #666;
+        padding-right: 60px;
+        position: relative;
+    }
+
+        .packageBox h2 {
+            color: #333;
+            display: inline;
+            background: #fdb;
+            font-weight: normal;
+            font-size: 12px;
+            padding: 5px;
+            overflow: hidden;
+            height: 18px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        .packageBox .more {
+            position: absolute;
+            top: 2px;
+            text-align: right;
+            background: #fffaf4;
+            _right: 10px;
+        }
+
+    .pews {
+        border: 1px solid #fc9;
+        color: #f60;
+        background: #fff;
+        float: left;
+        padding: 0 10px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        margin: 0 5px 5px 0;
+    }
+
+    .ui_tips_tishi {
+        position: absolute;
+        left: -49px;
+        cursor: pointer;
+        top: 65px;
+        width: 60px;
+        height: 46px;
+        background-position: 0 -526px;
+        text-indent: -9999px;
+        overflow: hidden;
+    }
+
+    .ui_right .ui_addInfo {
+        float: left;
+        margin: 7px 0 0 20px;
+    }
+
+    .salesTypeBox {
+        display: inline-block;
+        position: relative;
+        float: left;
+        max-width: 200px;
+        border: 1px solid #89c163;
+        height: 26px;
+        line-height: 26px;
+        font-weight: normal;
+        color: #89c163;
+        overflow: hidden;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+        padding-right: 15px;
+    }
+
+        .salesTypeBox em {
+            background: #89c163;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: Verdana,'微软雅黑','宋体';
+            color: #fff;
+            float: left;
+            display: block;
+            width: 26px;
+            height: 26px;
+            overflow: hidden;
+            word-wrap: break-word;
+            text-overflow: ellipsis;
+            text-align: center;
+            margin-right: 6px;
+        }
+
+        .salesTypeBox span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-indent: -999px;
+            overflow: hidden;
+            background-position: 1px -678px;
+        }
+
+    .sp_gotoUp, .sp_gotoDown {
+        background: url(floor.gif) no-repeat;
+        z-index: 10;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 110px;
+        height: 110px;
+        overflow: hidden;
+        text-indent: -9999px;
+    }
+
+    .sp_gotoUp {
+        background-position: 0 -111px;
+    }
+
+    .sp_gotoDown {
+        background-position: 0 0;
+    }
+
+    .freeServer {
+        display: inline-block;
+        cursor: default;
+        height: 22px;
+        line-height: 22px;
+        background: #9c7;
+        color: #fff;
+        vertical-align: 2px;
+        margin-left: 4px;
+        font-family: '宋体',Verdana;
+        padding: 0 10px;
+        border-radius: 3px;
+    }
+</style>

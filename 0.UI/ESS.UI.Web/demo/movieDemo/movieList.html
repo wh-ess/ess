@@ -1,1 +1,11 @@
-﻿
+﻿<md-list class="md-whiteframe-z2">
+    <md-list-item class="md-2-line" ng-repeat="m in movies" ng-click="go('/selectSeat/'+m.id)">
+        <img ng-src="{{m.img}}" class="md-avatar" alt="{{m.title}}" />
+        <div class="md-list-item-text">
+            <h3>{{ m.title }}</h3>
+            <p>{{ m.note }}</p>
+        </div>
+        <div class="md-secondary">{{m.score}}</div>
+        <md-divider></md-divider>
+    </md-list-item>
+</md-list>
