@@ -1,7 +1,7 @@
 /**!
  * AngularJS file upload/drop directive and service with progress and abort
  * @author  Danial  <danial.farid@gmail.com>
- * @version 5.1.0
+ * @version 6.0.2
  */
 
 if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
@@ -22,7 +22,7 @@ if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
 
 var ngFileUpload = angular.module('ngFileUpload', []);
 
-ngFileUpload.version = '5.1.0';
+ngFileUpload.version = '6.0.2';
 ngFileUpload.defaults = {};
 
 ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
@@ -255,6 +255,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     /** @namespace attr.ngfChange */
     /** @namespace attr.ngModel */
     /** @namespace attr.ngModelRejected */
+    /** @namespace attr.ngfModel */
     /** @namespace attr.ngfMultiple */
     /** @namespace attr.ngfCapture */
     /** @namespace attr.ngfAccept */
@@ -321,6 +322,10 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
         if ((isInputTypeFile() && attribute.name !== 'type') ||
           (attribute.name !== 'type' && attribute.name !== 'class' &&
           attribute.name !== 'id' && attribute.name !== 'style')) {
+          if (attribute.value == null || attribute.value === '') {
+            if (attribute.name === 'required') attribute.value = 'required';
+            if (attribute.name === 'multiple') attribute.value = 'multiple';
+          }
           fileElem.attr(attribute.name, attribute.value);
         }
       }
@@ -488,7 +493,8 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
   ngFileUpload.updateModel = function ($parse, $timeout, scope, ngModel, attr, fileChange,
                                        files, rejFiles, evt, noDelay) {
     function update() {
-      if ($parse(getAttr(attr, 'ngfKeep'))(scope) === true) {
+      var keep = $parse(getAttr(attr, 'ngfKeep'))(scope);
+      if (keep === true) {
         var prevFiles = (ngModel.$modelValue || []).slice(0);
         if (!files || !files.length) {
           files = prevFiles;
@@ -507,20 +513,28 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
           files = prevFiles.concat(files);
         }
       }
+      var file = files && files.length ? files[0] : null;
       if (ngModel) {
-        $parse(getAttr(attr, 'ngModel')).assign(scope, files);
+        var singleModel = !$parse(getAttr(attr, 'ngfMultiple'))(scope) && ! getAttr(attr, 'multiple') && !keep;
+        $parse(getAttr(attr, 'ngModel')).assign(scope, singleModel ? file : files);
         $timeout(function () {
           if (ngModel) {
-            ngModel.$setViewValue(files != null && files.length === 0 ? null : files);
+            ngModel.$setViewValue(singleModel ? file : (files != null && files.length === 0 ? null : files));
           }
         });
       }
+      var ngfModel = getAttr(attr, 'ngfModel');
+      if (ngfModel) {
+        $parse(ngfModel).assign(scope, files);
+      }
+
       if (getAttr(attr, 'ngModelRejected')) {
         $parse(getAttr(attr, 'ngModelRejected')).assign(scope, rejFiles);
       }
       if (fileChange) {
         $parse(fileChange)(scope, {
           $files: files,
+          $file: file,
           $rejectedFiles: rejFiles,
           $event: evt
         });
@@ -780,15 +794,19 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
 
   function fileToSrc(Upload, scope, $parse, attr, name, defaultName, callback) {
       scope.$watch(name, function (file) {
-        if (window.FileReader && ngFileUpload.validate(scope, $parse, attr, file, null)) {
-        Upload.dataUrl(file, function(url) {
-          if (callback) {
-            callback(url);
-          } else {
-            file.dataUrl = url || $parse(defaultName)(scope);
+        if (!angular.isString(file)) {
+          if (window.FileReader && ngFileUpload.validate(scope, $parse, attr, file, null)) {
+            Upload.dataUrl(file, function (url) {
+              if (callback) {
+                callback(url);
+              } else {
+                file.dataUrl = url || $parse(defaultName)(scope);
+              }
+            }, $parse(attr.ngfNoObjectUrl)(scope));
           }
-        }, $parse(attr.ngfNoObjectUrl)(scope));
-      }
+        } else {
+          callback(file);
+        }
       });
   }
 
