@@ -683,6 +683,18 @@
     <Folder Include="app\shared\form\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Common.Autofac\ESS.Framework.Common.Autofac.csproj">
+      <Project>{DDEB5331-2627-46BA-83F4-E57F5DE57397}</Project>
+      <Name>ESS.Framework.Common.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Common.JsonNet\ESS.Framework.Common.JsonNet.csproj">
+      <Project>{4DA3CB65-BA3C-4993-B435-D5B207259B1B}</Project>
+      <Name>ESS.Framework.Common.JsonNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\ESS.Framework.Common.Log4Net\ESS.Framework.Common.Log4Net.csproj">
+      <Project>{DF5631C8-3969-4B51-9380-FC749E8AAAC1}</Project>
+      <Name>ESS.Framework.Common.Log4Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\ESS.Framework.Common\ESS.Framework.Common.csproj">
       <Project>{b5cddc08-747e-4460-94ff-2c81a33dc6cf}</Project>
       <Name>ESS.Framework.Common</Name>

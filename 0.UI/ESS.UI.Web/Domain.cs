@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Http;
+using ESS.Framework.Common.Autofac;
+using ESS.Framework.Common.JsonNet;
+using ESS.Framework.Common.Log4Net;
 using ESS.Framework.CQRS;
 using ESS.Framework.CQRS.Configurations;
 using ESS.Framework.CQRS.Event;
@@ -34,8 +37,11 @@ namespace ESS.UI.Web
                 .ToArray();
 
             Configuration.Create()
+                .UseAutofac()
+                .UseLog4Net()
+                .UseJsonNet()
                 .RegisterCommonComponents()
-                .UseInMemoryRepository()
+                .UseRedisRepository()
                 .RegisterBusinessComponents(assemblies)
                 .InitializeCQRSAssemblies(es, assemblies)
                 .RegisterController(config, assemblies)

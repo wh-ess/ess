@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Reflection;
 using Autofac;
 using ESS.Framework.Common.Components;
 using ESS.Framework.Common.Configurations;
@@ -31,5 +32,20 @@ namespace ESS.Framework.Common.Autofac
             ObjectContainer.SetContainer(new AutofacObjectContainer(containerBuilder));
             return configuration;
         }
+
+        public static Configuration RegisterBusinessComponents(this Configuration configuration, Assembly[] assemblies)
+        {
+            var autofacObjectContainer = ObjectContainer.Current as AutofacObjectContainer;
+            if (autofacObjectContainer != null)
+            {
+                var container = autofacObjectContainer.Container;
+                var builder = new ContainerBuilder();
+                builder.RegisterAssemblyTypes(assemblies);
+                builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
+                builder.Update(container);
+            }
+            return configuration;
+        }
+
     }
 }

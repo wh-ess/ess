@@ -128,6 +128,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESS.Framework.Common.Autofac\ESS.Framework.Common.Autofac.csproj">
+      <Project>{DDEB5331-2627-46BA-83F4-E57F5DE57397}</Project>
+      <Name>ESS.Framework.Common.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESS.Framework.Common\ESS.Framework.Common.csproj">
       <Project>{B5CDDC08-747E-4460-94FF-2C81A33DC6CF}</Project>
       <Name>ESS.Framework.Common</Name>

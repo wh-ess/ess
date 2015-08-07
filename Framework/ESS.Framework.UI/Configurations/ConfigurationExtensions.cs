@@ -30,11 +30,15 @@ namespace ESS.Framework.UI.Configurations
     {
         public static Configuration RegisterController(this Configuration configuration, HttpConfiguration config, Assembly[] ass)
         {
-            var container = (ObjectContainer.Current as AutofacObjectContainer).Container;
-            var builder = new ContainerBuilder();
-            builder.RegisterApiControllers(ass);
-            builder.Update(container);
-            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            var objectContainer = ObjectContainer.Current as AutofacObjectContainer;
+            if (objectContainer != null)
+            {
+                var container = objectContainer.Container;
+                var builder = new ContainerBuilder();
+                builder.RegisterApiControllers(ass);
+                builder.Update(container);
+                config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            }
 
             ModuleBuilder.Build(ass);
 

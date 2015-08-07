@@ -64,7 +64,7 @@ namespace ESS.Framework.Data.InMemory
         {
             return await Task.Run(() =>
                {
-                   TEntity result = null;
+                   TEntity result;
                    _store.TryGetValue(id, out result);
                    return result;
                });
@@ -72,27 +72,27 @@ namespace ESS.Framework.Data.InMemory
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await Task.Run(() =>
-               {
-                   return _store.Values;
-               });
+            
+            return await Task.Run(() => _store.Values);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllPaged(int page, int pageSize)
         {
-            return await Task.Run(() =>
-               {
-                   return _store.Values.Skip((page - 1) * pageSize)
-                       .Take(pageSize);
-               });
+            if (!_store.Any())
+            {
+                return null;
+            }
+            return await Task.Run(() => _store.Values.Skip((page - 1) * pageSize)
+                .Take(pageSize));
         }
 
         public async Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.Run(() =>
-               {
-                   return _store.Values.Where(predicate.Compile());
-               });
+            if (!_store.Any())
+            {
+                return _store.Values;
+            }
+            return await Task.Run(() => _store.Values.Where(predicate.Compile()));
         }
 
         public async Task<IEnumerable<TEntity>> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
