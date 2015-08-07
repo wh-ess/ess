@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
 using Autofac;
 using ESS.Framework.Common.Components;
 

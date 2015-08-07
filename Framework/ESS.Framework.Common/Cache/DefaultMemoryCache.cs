@@ -21,10 +21,11 @@ namespace ESS.Framework.Common.Cache
 
         /// <summary>Get an aggregate from memory cache.
         /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <returns></returns>
         public object Get(string key, Type type)
         {
-            if (key == null) throw new ArgumentNullException("key");
+            if (key == null) throw new ArgumentNullException(nameof(key));
             byte[] value;
             if (_cacheDict.TryGetValue(key, out value))
             {

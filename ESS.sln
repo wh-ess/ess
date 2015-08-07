@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.UI", "0.UI", "{87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}"
 EndProject
@@ -67,6 +67,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Api.Mall", "0.UI\ESS.Api.Mall\ESS.Api.Mall.csproj", "{8D7764C9-74B6-45A5-89BA-573248756FFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Api.Common", "0.UI\ESS.Api.Common\ESS.Api.Common.csproj", "{B3681B24-77D5-4267-8A9A-F67C22ECA13C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Common.Autofac", "Framework\ESS.Framework.Common.Autofac\ESS.Framework.Common.Autofac.csproj", "{DDEB5331-2627-46BA-83F4-E57F5DE57397}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Common.JsonNet", "Framework\ESS.Framework.Common.JsonNet\ESS.Framework.Common.JsonNet.csproj", "{4DA3CB65-BA3C-4993-B435-D5B207259B1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Common.Log4Net", "Framework\ESS.Framework.Common.Log4Net\ESS.Framework.Common.Log4Net.csproj", "{DF5631C8-3969-4B51-9380-FC749E8AAAC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESS.Framework.Common.Cache.Redis", "Framework\ESS.Framework.Common.Cache.Redis\ESS.Framework.Common.Cache.Redis.csproj", "{AAC1E24A-B231-4256-89B9-4E42410788DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,6 +182,22 @@ Global
 		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3681B24-77D5-4267-8A9A-F67C22ECA13C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDEB5331-2627-46BA-83F4-E57F5DE57397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEB5331-2627-46BA-83F4-E57F5DE57397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEB5331-2627-46BA-83F4-E57F5DE57397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEB5331-2627-46BA-83F4-E57F5DE57397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA3CB65-BA3C-4993-B435-D5B207259B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA3CB65-BA3C-4993-B435-D5B207259B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA3CB65-BA3C-4993-B435-D5B207259B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA3CB65-BA3C-4993-B435-D5B207259B1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF5631C8-3969-4B51-9380-FC749E8AAAC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF5631C8-3969-4B51-9380-FC749E8AAAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF5631C8-3969-4B51-9380-FC749E8AAAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF5631C8-3969-4B51-9380-FC749E8AAAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC1E24A-B231-4256-89B9-4E42410788DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC1E24A-B231-4256-89B9-4E42410788DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC1E24A-B231-4256-89B9-4E42410788DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC1E24A-B231-4256-89B9-4E42410788DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,5 +228,9 @@ Global
 		{ECC87B8E-C24C-43A0-9195-08A8A70F1439} = {C6D65EAA-67E6-48D7-9690-412120E823C4}
 		{8D7764C9-74B6-45A5-89BA-573248756FFD} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
 		{B3681B24-77D5-4267-8A9A-F67C22ECA13C} = {87FDD7D5-8AEB-42D7-B8D4-12A764BB700C}
+		{DDEB5331-2627-46BA-83F4-E57F5DE57397} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{4DA3CB65-BA3C-4993-B435-D5B207259B1B} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{DF5631C8-3969-4B51-9380-FC749E8AAAC1} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
+		{AAC1E24A-B231-4256-89B9-4E42410788DD} = {56CCDE76-748B-4F54-B8B5-B9779412A594}
 	EndGlobalSection
 EndGlobal

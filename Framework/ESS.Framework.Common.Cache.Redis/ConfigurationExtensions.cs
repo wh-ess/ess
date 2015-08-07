@@ -1,7 +1,6 @@
-﻿using ESS.Framework.Common.Cache;
-using ESS.Framework.Common.Configurations;
+﻿using ESS.Framework.Common.Configurations;
 
-namespace ESS.Framework.Common.Redis
+namespace ESS.Framework.Common.Cache.Redis
 {
     /// <summary>configuration class Redis extensions.
     /// </summary>

@@ -159,10 +159,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\css\font-awesome.css" />
-    <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\custome.css" />
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\img\icons\ic_menu_24px.svg" />
     <Content Include="Content\img\select.svg" />
     <Content Include="Content\img\select2-spinner.gif" />
@@ -172,6 +169,8 @@
     <Content Include="Content\simple-line-icons.css" />
     <Content Include="Content\treeGrid.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\font-awesome.min.css" />
     <Content Include="demo\movieDemo\1.jpg" />
     <Content Include="demo\movieDemo\2.jpg" />
     <Content Include="demo\movieDemo\app.js" />
@@ -197,6 +196,7 @@
     <Content Include="Fields\Role-Get.xml" />
     <Content Include="Fields\User-ChangePassword.xml" />
     <Content Include="Fields\User-ChangeUserInfo.xml" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\Simple-Line-Icons.dev.svg" />
     <Content Include="fonts\Simple-Line-Icons.svg" />
@@ -231,11 +231,6 @@
     <Content Include="Scripts\angular-ui\ui-utils.js" />
     <Content Include="Scripts\angular-ui\ui-utils.min.js" />
     <Content Include="app\foundation\accessControl\login.controller.js" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="index.appcache" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
@@ -519,6 +514,11 @@
     <Content Include="Scripts\angular-resource.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />

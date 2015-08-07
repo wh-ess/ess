@@ -2,14 +2,13 @@
 
 using System;
 using System.IO;
-using ESS.Framework.Common.Cache;
 using ESS.Framework.Common.Components;
 using ESS.Framework.Common.Serializing;
 using StackExchange.Redis;
 
 #endregion
 
-namespace ESS.Framework.Common.Redis
+namespace ESS.Framework.Common.Cache.Redis
 {
     /// <summary>
     ///     Redis based memory cache implementation.
