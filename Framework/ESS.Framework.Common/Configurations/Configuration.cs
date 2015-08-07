@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using ESS.Framework.Common.Cache;
 using ESS.Framework.Common.Components;
 using ESS.Framework.Common.Logging;
 using ESS.Framework.Common.Retring;
@@ -49,6 +50,7 @@ namespace ESS.Framework.Common.Configurations
 
         public Configuration RegisterCommonComponents()
         {
+            SetDefault<IMemoryCache, DefaultMemoryCache>();
             SetDefault<IBinarySerializer, DefaultBinarySerializer>();
             SetDefault<IScheduleService, ScheduleService>();
             SetDefault<IActionExecutionService, ActionExecutionService>(LifeStyle.Transient);

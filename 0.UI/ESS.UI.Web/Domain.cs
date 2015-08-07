@@ -26,10 +26,10 @@ namespace ESS.UI.Web
     {
         public static void Setup(IAppBuilder app, HttpConfiguration config)
         {
-            var connString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            IEventStore es =  new SqlEventStore(connString);
+            //var connString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            //IEventStore es =  new SqlEventStore(connString);
 
-            //IEventStore es = new RedisEventStore("127.0.0.1", "6379");
+            IEventStore es = new RedisEventStore("127.0.0.1", "6379");
 
             var assemblies = BuildManager.GetReferencedAssemblies()
                 .Cast<Assembly>()
@@ -38,9 +38,9 @@ namespace ESS.UI.Web
 
             Configuration.Create()
                 .UseAutofac()
+                .UseJsonNet()
                 .RegisterCommonComponents()
                 .UseLog4Net()
-                .UseJsonNet()
                 .UseRedisRepository()
                 .RegisterBusinessComponents(assemblies)
                 .InitializeCQRSAssemblies(es, assemblies)

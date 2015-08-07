@@ -95,7 +95,6 @@
     <Compile Include="Serializing\DefaultBinarySerializer.cs" />
     <Compile Include="Serializing\IBinarySerializer.cs" />
     <Compile Include="Serializing\IJsonSerializer.cs" />
-    <Compile Include="Serializing\NotImplementedJsonSerializer.cs" />
     <Compile Include="Socketing\ClientSocket.cs" />
     <Compile Include="Socketing\ISocketEventListener.cs" />
     <Compile Include="Socketing\ReceiveContext.cs" />
