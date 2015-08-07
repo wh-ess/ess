@@ -44,6 +44,14 @@
       <HintPath>..\..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StackExchange.Redis, Version=1.0.316.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\StackExchange.Redis.1.0.481\lib\net45\StackExchange.Redis.dll</HintPath>
@@ -65,9 +73,11 @@
     <Compile Include="Dapper\SqlMapper.cs" />
     <Compile Include="Dapper\SqlMapperAsync.cs" />
     <Compile Include="Dapper\SqlMapperExtensions.cs" />
+    <Compile Include="EF\ConfigurationExtensions.cs" />
+    <Compile Include="EF\EFRepository.cs" />
     <Compile Include="InMemory\ConfigurationExtensions.cs" />
     <Compile Include="InMemory\InMemoryRepository.cs" />
-    <Compile Include="IRepository.cs" />
+    <Compile Include="IRepositoryAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redis\ConfigurationExtensions.cs" />
     <Compile Include="Redis\RedisRepository.cs" />

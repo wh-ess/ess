@@ -20,26 +20,26 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 {
     public class PartyRoleView :ReadModel, ISubscribeTo<PartyRoleCreated>, ISubscribeTo<PartyRoleEdited>, ISubscribeTo<PartyRoleDeleted>
     {
-        private readonly IRepository<PartyRoleItem, Guid> _repository;
+        private readonly IRepositoryAsync<PartyRoleItem, Guid> _repositoryAsync;
 
-        public PartyRoleView(IRepository<PartyRoleItem, Guid> repository)
+        public PartyRoleView(IRepositoryAsync<PartyRoleItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<PartyRoleItem>> PartyRoleList(Expression<Func<PartyRoleItem, bool>> condition)
+        public async Task<IEnumerable<PartyRoleItem>> PartyRoleList(Expression<Func<PartyRoleItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<PartyRoleItem>> PartyRoleList()
+        public async Task<IEnumerable<PartyRoleItem>> PartyRoleList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<PartyRoleItem> GetPartyRole(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         
@@ -49,7 +49,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
         {
             var item = Mapper.DynamicMap<PartyRoleItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(PartyRoleEdited e)
@@ -58,20 +58,20 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public void Handle(PartyRoleDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
         private void Update(Guid id, Action<PartyRoleItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()

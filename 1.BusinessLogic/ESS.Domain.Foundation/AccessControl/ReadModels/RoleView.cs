@@ -21,32 +21,32 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         ISubscribeTo<UserAssigned>,
         ISubscribeTo<PrivigeSet>
     {
-        private readonly IRepository<RoleItem, Guid> _repository;
+        private readonly IRepositoryAsync<RoleItem, Guid> _repositoryAsync;
 
-        public RoleView(IRepository<RoleItem, Guid> repository)
+        public RoleView(IRepositoryAsync<RoleItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<RoleItem>> RoleList()
+        public async Task<IEnumerable<RoleItem>> RoleList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
         public Task<RoleItem> GetRole(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
-        public Task<IEnumerable<RoleItem>> RoleList(Expression<Func<RoleItem, bool>> condition)
+        public async Task<IEnumerable<RoleItem>> RoleList(Expression<Func<RoleItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
         #region handle
         public void Handle(RoleCreated e)
         {
             var item = Mapper.DynamicMap<RoleItem>(e);
-            _repository.Add(item.Id, item);
+            _repositoryAsync.AddAsync(item.Id, item);
         }
 
         public void Handle(RoleInfoChanged e)
@@ -79,9 +79,9 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         }
         private void Update(Guid id, Action<RoleItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         #endregion

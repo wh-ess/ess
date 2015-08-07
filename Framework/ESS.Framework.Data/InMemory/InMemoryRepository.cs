@@ -12,11 +12,11 @@ using ESS.Framework.Common.Extensions;
 
 namespace ESS.Framework.Data.InMemory
 {
-    public class InMemoryRepository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
+    public class InMemoryRepositoryAsync<TEntity, TKey> : IRepositoryAsync<TEntity, TKey> where TEntity : class
     {
         private ConcurrentDictionary<TKey, TEntity> _store = new ConcurrentDictionary<TKey, TEntity>();
 
-        public async Task<bool> Add(TKey id, TEntity entity)
+        public async Task<bool> AddAsync(TKey id, TEntity entity)
         {
             return await Task.Run(() =>
             {
@@ -25,7 +25,7 @@ namespace ESS.Framework.Data.InMemory
             });
         }
 
-        public async Task<bool> Update(TKey id, TEntity entity)
+        public async Task<bool> UpdateAsync(TKey id, TEntity entity)
         {
             return await Task.Run(() =>
             {
@@ -34,7 +34,7 @@ namespace ESS.Framework.Data.InMemory
             });
         }
 
-        public async Task<bool> Delete(TKey id)
+        public async Task<bool> DeleteAsync(TKey id)
         {
             return await Task.Run(() =>
                {
@@ -43,7 +43,7 @@ namespace ESS.Framework.Data.InMemory
                });
         }
 
-        public async Task<bool> Delete(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Task.Run(() =>
                {
@@ -51,7 +51,7 @@ namespace ESS.Framework.Data.InMemory
                });
         }
 
-        public async Task<bool> DeleteAll()
+        public async Task<bool> DeleteAllAsync()
         {
             return await Task.Run(() =>
                {
@@ -60,7 +60,7 @@ namespace ESS.Framework.Data.InMemory
                });
         }
 
-        public async Task<TEntity> Get(TKey id)
+        public async Task<TEntity> GetAsync(TKey id)
         {
             return await Task.Run(() =>
                {
@@ -70,61 +70,61 @@ namespace ESS.Framework.Data.InMemory
                });
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IQueryable<TEntity>> GetAllAsync()
         {
             
-            return await Task.Run(() => _store.Values);
+            return await Task.Run(() => _store.Values.AsQueryable());
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllPaged(int page, int pageSize)
+        public async Task<IQueryable<TEntity>> GetAllPagedAsync(int page, int pageSize)
         {
             if (!_store.Any())
             {
                 return null;
             }
-            return await Task.Run(() => _store.Values.Skip((page - 1) * pageSize)
+            return await Task.Run(() => _store.Values.AsQueryable().Skip((page - 1) * pageSize)
                 .Take(pageSize));
         }
 
-        public async Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             if (!_store.Any())
             {
-                return _store.Values;
+                return _store.Values.AsQueryable();
             }
-            return await Task.Run(() => _store.Values.Where(predicate.Compile()));
+            return await Task.Run(() => _store.Values.AsQueryable().Where(predicate));
         }
 
-        public async Task<IEnumerable<TEntity>> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
+        public async Task<IQueryable<TEntity>> FindPagedAsync(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            return (await Find(predicate))
+            return (await FindAsync(predicate))
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
 
         }
 
-        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return (await Find(predicate))
+            return (await FindAsync(predicate))
                 .SingleOrDefault();
 
         }
 
-        public async Task<TEntity> First(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return (await Find(predicate))
+            return (await FindAsync(predicate))
                 .FirstOrDefault();
 
         }
 
-        public async Task<int> Count()
+        public async Task<int> CountAsync()
         {
             return await Task.Run(() => _store.Count);
         }
 
-        public async Task<int> Count(Expression<Func<TEntity, bool>> criteria)
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria)
         {
-            return (await Find(criteria))
+            return (await FindAsync(criteria))
                 .Count();
 
         }

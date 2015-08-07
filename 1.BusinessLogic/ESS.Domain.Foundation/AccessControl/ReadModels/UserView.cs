@@ -17,21 +17,21 @@ using ESS.Framework.Licensing.OAuth;
 namespace ESS.Domain.Foundation.AccessControl.ReadModels
 {
     public class UserView
-        : IAuthService,ISubscribeTo<UserCreated>, ISubscribeTo<UserInfoChanged>, ISubscribeTo<UserPasswordChanged>, ISubscribeTo<UserLocked>,
+        : IAuthService, ISubscribeTo<UserCreated>, ISubscribeTo<UserInfoChanged>, ISubscribeTo<UserPasswordChanged>, ISubscribeTo<UserLocked>,
             ISubscribeTo<UserUnlocked>
     {
-        private readonly IRepository<UserItem, Guid> _repository; 
-        private readonly IRepository<RoleItem, Guid> _roleRepository;
+        private readonly IRepositoryAsync<UserItem, Guid> _repositoryAsync;
+        private readonly IRepositoryAsync<RoleItem, Guid> _roleRepositoryAsync;
 
-        public UserView(IRepository<UserItem, Guid> repository, IRepository<RoleItem, Guid> roleRepository)
+        public UserView(IRepositoryAsync<UserItem, Guid> repositoryAsync, IRepositoryAsync<RoleItem, Guid> roleRepositoryAsync)
         {
-            _repository = repository;
-            _roleRepository = roleRepository;
+            _repositoryAsync = repositoryAsync;
+            _roleRepositoryAsync = roleRepositoryAsync;
         }
 
-        public IEnumerable<UserItem> UserList(Expression<Func<UserItem, bool>> condition)
+        public async Task<IQueryable<UserItem>> UserList(Expression<Func<UserItem, bool>> condition)
         {
-            var users = _repository.Find(condition).Result.ToList();
+            var users = await _repositoryAsync.FindAsync(condition);
             foreach (var u in users)
             {
                 AddRelation(u);
@@ -39,9 +39,9 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
             return users;
         }
 
-        public IEnumerable<UserItem> UserList()
+        public async Task<IQueryable<UserItem>> UserList()
         {
-            var users = _repository.GetAll().Result.ToList();
+            var users = await _repositoryAsync.GetAllAsync();
             foreach (var u in users)
             {
                 AddRelation(u);
@@ -51,15 +51,15 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
         public UserItem GetUser(Guid id)
         {
-            var user = _repository.Get(id).Result;
+            var user = _repositoryAsync.GetAsync(id).Result;
             AddRelation(user);
             return user;
         }
 
         public void AddRelation(UserItem user)
         {
-            var roles = _roleRepository.Find(c => c.Users.Any(d => d.Id == user.Id));
-            user.Roles = roles.Result.Select(c=>c.Name).ToList();
+            var roles = _roleRepositoryAsync.FindAsync(c => c.Users.Any(d => d.Id == user.Id)).Result;
+            user.Roles = roles.Select(c => c.Name).ToList();
         }
 
         #region handle
@@ -68,7 +68,7 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
         {
             var item = Mapper.DynamicMap<UserItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(UserLocked e)
@@ -93,17 +93,17 @@ namespace ESS.Domain.Foundation.AccessControl.ReadModels
 
         private void Update(Guid id, Action<UserItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         #endregion
 
         public async Task<IUser> FindUser(string userName, string password)
         {
-            return await _repository.First(c => c.UserName == userName && c.Password == password);
+            return await _repositoryAsync.FirstAsync(c => c.UserName == userName && c.Password == password);
         }
     }
 

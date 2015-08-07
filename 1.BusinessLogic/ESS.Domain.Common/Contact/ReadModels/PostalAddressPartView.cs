@@ -16,26 +16,26 @@ namespace ESS.Domain.Common.Contact.ReadModels
     public class PostalAddressPartView
         : ISubscribeTo<PostalAddressPartCreated>, ISubscribeTo<PostalAddressPartChanged>, ISubscribeTo<PostalAddressPartDeleted>
     {
-        private readonly IRepository<PostalAddressPartItem, Guid> _repository;
+        private readonly IRepositoryAsync<PostalAddressPartItem, Guid> _repositoryAsync;
 
-        public PostalAddressPartView(IRepository<PostalAddressPartItem, Guid> repository)
+        public PostalAddressPartView(IRepositoryAsync<PostalAddressPartItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList(Expression<Func<PostalAddressPartItem, bool>> condition)
+        public async Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList(Expression<Func<PostalAddressPartItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList()
+        public async Task<IEnumerable<PostalAddressPartItem>> PostalAddressPartList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<PostalAddressPartItem> GetPostalAddressPart(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -44,12 +44,12 @@ namespace ESS.Domain.Common.Contact.ReadModels
         {
             var item = Mapper.DynamicMap<PostalAddressPartItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(PostalAddressPartDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -61,10 +61,10 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<PostalAddressPartItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
 

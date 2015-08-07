@@ -21,20 +21,20 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
     public class PartyView
         :ReadModel, ISubscribeTo<PartyCreated>, ISubscribeTo<PartyNameChanged>, ISubscribeTo<PartyDeleted>
     {
-        private readonly IRepository<PartyItem, Guid> _repository;
-        private readonly IRepository<PartyRoleItem, Guid> _partyRoleRepository;
-        private readonly IRepository<CategoryItem, Guid> _categoryRepository;
+        private readonly IRepositoryAsync<PartyItem, Guid> _repositoryAsync;
+        private readonly IRepositoryAsync<PartyRoleItem, Guid> _partyRoleRepositoryAsync;
+        private readonly IRepositoryAsync<CategoryItem, Guid> _categoryRepositoryAsync;
 
-        public PartyView(IRepository<PartyItem, Guid> repository, IRepository<PartyRoleItem, Guid> partyRoleRepository, IRepository<CategoryItem, Guid> categoryRepository)
+        public PartyView(IRepositoryAsync<PartyItem, Guid> repositoryAsync, IRepositoryAsync<PartyRoleItem, Guid> partyRoleRepositoryAsync, IRepositoryAsync<CategoryItem, Guid> categoryRepositoryAsync)
         {
-            _repository = repository;
-            _partyRoleRepository = partyRoleRepository;
-            _categoryRepository = categoryRepository;
+            _repositoryAsync = repositoryAsync;
+            _partyRoleRepositoryAsync = partyRoleRepositoryAsync;
+            _categoryRepositoryAsync = categoryRepositoryAsync;
         }
 
         public IEnumerable<PartyItem> PartyList(Expression<Func<PartyItem, bool>> condition)
         {
-            var partys = _repository.Find(condition).Result.ToList();
+            var partys = _repositoryAsync.FindAsync(condition).Result.ToList();
             foreach (var p in partys)
             {
                 AddRelation(p);
@@ -44,7 +44,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public IEnumerable<PartyItem> PartyList()
         {
-            var partys = _repository.GetAll().Result.ToList();
+            var partys = _repositoryAsync.GetAllAsync().Result.ToList();
             foreach (var p in partys)
             {
                 AddRelation(p);
@@ -54,14 +54,14 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
 
         public PartyItem GetParty(Guid id)
         {
-            var p = _repository.Get(id).Result;
+            var p = _repositoryAsync.GetAsync(id).Result;
             AddRelation(p);
             return p;
         }
 
         private void AddRelation(PartyItem p)
         {
-            var partyRoles = _partyRoleRepository.Find(c => c.Party.Id == p.Id).Result;
+            var partyRoles = _partyRoleRepositoryAsync.FindAsync(c => c.Party.Id == p.Id).Result;
             foreach (var r in partyRoles)
             {
                 p.PartyRoles.Add(r.Type.Name);
@@ -73,7 +73,7 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
         {
             var item = Mapper.DynamicMap<PartyItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
         public void Handle(PartyNameChanged e)
         {
@@ -84,21 +84,21 @@ namespace ESS.Domain.Common.PartyRole.ReadModels
         }
         public void Handle(PartyDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
         private void Update(Guid id, Action<PartyItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()

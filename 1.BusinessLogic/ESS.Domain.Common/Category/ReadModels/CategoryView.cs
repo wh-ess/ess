@@ -17,30 +17,30 @@ namespace ESS.Domain.Common.Category.ReadModels
         : ISubscribeTo<CategoryCreated>, ISubscribeTo<CategoryNameChanged>, ISubscribeTo<CategoryDeleted>, ISubscribeTo<CategoryParentChanged>,
             ISubscribeTo<CategoryTypeChanged>, ISubscribeTo<CategoryDateChanged>
     {
-        private readonly IRepository<CategoryItem, Guid> _repository;
+        private readonly IRepositoryAsync<CategoryItem, Guid> _repositoryAsync;
 
-        public CategoryView(IRepository<CategoryItem, Guid> repository)
+        public CategoryView(IRepositoryAsync<CategoryItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<CategoryItem>> CategoryList(Expression<Func<CategoryItem, bool>> condition)
+        public async Task<IEnumerable<CategoryItem>> CategoryList(Expression<Func<CategoryItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<CategoryItem>> CategoryList()
+        public async Task<IEnumerable<CategoryItem>> CategoryList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
-        public Task<CategoryItem> GetCategory(Guid id)
+        public async Task<CategoryItem> GetCategory(Guid id)
         {
-            return _repository.Get(id);
+            return await _repositoryAsync.GetAsync(id);
         }
-        public Task<IEnumerable<CategoryItem>> GetCategoryBySchemeType(string schemeName, string typeName)
+        public async Task<IEnumerable<CategoryItem>> GetCategoryBySchemeType(string schemeName, string typeName)
         {
-            return _repository.Find(c => c.Type.Scheme.Name==schemeName && c.Type.Name == typeName);
+            return await _repositoryAsync.FindAsync(c => c.Type.Scheme.Name==schemeName && c.Type.Name == typeName);
         }
         #region handle
 
@@ -48,12 +48,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             var item = Mapper.DynamicMap<CategoryItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(CategoryDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -83,10 +83,10 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         #endregion

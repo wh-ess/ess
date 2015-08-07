@@ -14,33 +14,33 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
 {
     public class DropDownView : ISubscribeTo<DropDownCreated>, ISubscribeTo<DropDownEdited>, ISubscribeTo<DropDownDeleted>
     {
-        private readonly IRepository<DropDownItem, Guid> _repository;
+        private readonly IRepositoryAsync<DropDownItem, Guid> _repositoryAsync;
 
-        public DropDownView(IRepository<DropDownItem, Guid> repository)
+        public DropDownView(IRepositoryAsync<DropDownItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<DropDownItem>> GetDropDown(string key)
+        public async Task<IEnumerable<DropDownItem>> GetDropDown(string key)
         {
-            return _repository.Find(c => c.Key.ToLower() == key.ToLower());
+            return await _repositoryAsync.FindAsync(c => c.Key.ToLower() == key.ToLower());
         }
 
         #region handle
 
         public void Handle(DropDownCreated e)
         {
-            _repository.Add(e.Id, new DropDownItem { Id = e.Id, IsSystem = e.IsSystem, Key = e.Key, Text = e.Text, Value = e.Value });
+            _repositoryAsync.AddAsync(e.Id, new DropDownItem { Id = e.Id, IsSystem = e.IsSystem, Key = e.Key, Text = e.Text, Value = e.Value });
         }
 
         public void Handle(DropDownDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
         public void Handle(DropDownEdited e)
         {
-            _repository.Update(e.Id, new DropDownItem { Id = e.Id, IsSystem = e.IsSystem, Key = e.Key, Text = e.Text, Value = e.Value });
+            _repositoryAsync.UpdateAsync(e.Id, new DropDownItem { Id = e.Id, IsSystem = e.IsSystem, Key = e.Key, Text = e.Text, Value = e.Value });
         }
 
         #endregion

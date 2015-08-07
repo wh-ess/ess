@@ -21,11 +21,11 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
     {
         public readonly string Path = Framework.Common.Utilities.Path.ServerPath() + "/Fields";
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(List<FieldItem>));
-        private readonly IRepository<FieldItem, Guid> _repository;
+        private readonly IRepositoryAsync<FieldItem, Guid> _repositoryAsync;
 
-        public FieldView(IRepository<FieldItem, Guid> repository)
+        public FieldView(IRepositoryAsync<FieldItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
             if (!Directory.Exists(Path))
             {
                 Directory.CreateDirectory(Path);

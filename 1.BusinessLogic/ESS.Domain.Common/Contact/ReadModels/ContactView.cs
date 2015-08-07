@@ -17,26 +17,26 @@ namespace ESS.Domain.Common.Contact.ReadModels
     public class ContactView
         : ISubscribeTo<ContactCreated>, ISubscribeTo<ContactChanged>, ISubscribeTo<ContactDeleted>
     {
-        private readonly IRepository<ContactItem, Guid> _repository;
+        private readonly IRepositoryAsync<ContactItem, Guid> _repositoryAsync;
 
-        public ContactView(IRepository<ContactItem, Guid> repository)
+        public ContactView(IRepositoryAsync<ContactItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<ContactItem>> ContactList(Expression<Func<ContactItem, bool>> condition)
+        public async Task<IEnumerable<ContactItem>> ContactList(Expression<Func<ContactItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<ContactItem>> ContactList()
+        public async Task<IEnumerable<ContactItem>> ContactList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<ContactItem> GetContact(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -45,12 +45,12 @@ namespace ESS.Domain.Common.Contact.ReadModels
         {
             var item = Mapper.DynamicMap<ContactItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(ContactDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -62,10 +62,10 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<ContactItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
 

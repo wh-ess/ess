@@ -16,26 +16,26 @@ namespace ESS.Domain.Common.Contact.ReadModels
     public class GeographicBoundaryView
         : ISubscribeTo<GeographicBoundaryCreated>, ISubscribeTo<GeographicBoundaryChanged>, ISubscribeTo<GeographicBoundaryDeleted>
     {
-        private readonly IRepository<GeographicBoundaryItem, Guid> _repository;
+        private readonly IRepositoryAsync<GeographicBoundaryItem, Guid> _repositoryAsync;
 
-        public GeographicBoundaryView(IRepository<GeographicBoundaryItem, Guid> repository)
+        public GeographicBoundaryView(IRepositoryAsync<GeographicBoundaryItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList(Expression<Func<GeographicBoundaryItem, bool>> condition)
+        public async Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList(Expression<Func<GeographicBoundaryItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList()
+        public async Task<IEnumerable<GeographicBoundaryItem>> GeographicBoundaryList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<GeographicBoundaryItem> GetGeographicBoundary(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -44,12 +44,12 @@ namespace ESS.Domain.Common.Contact.ReadModels
         {
             var item = Mapper.DynamicMap<GeographicBoundaryItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(GeographicBoundaryDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -61,10 +61,10 @@ namespace ESS.Domain.Common.Contact.ReadModels
 
         private void Update(Guid id, Action<GeographicBoundaryItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
 

@@ -38,7 +38,7 @@ namespace ESS.Api.Foundation.EntityConfig
             switch (id)
             {
                 case "Users":
-                    return await Task.FromResult(_userView.UserList());
+                    return await _userView.UserList();
                         
             }
             return await _dropDownView.GetDropDown(id);

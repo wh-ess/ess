@@ -38,9 +38,9 @@ namespace ESS.UI.Web
 
             Configuration.Create()
                 .UseAutofac()
+                .RegisterCommonComponents()
                 .UseLog4Net()
                 .UseJsonNet()
-                .RegisterCommonComponents()
                 .UseRedisRepository()
                 .RegisterBusinessComponents(assemblies)
                 .InitializeCQRSAssemblies(es, assemblies)
@@ -51,6 +51,7 @@ namespace ESS.UI.Web
             //内存模式测试用
             //new Api.Foundation.InitData().Init();
             //new Api.Common.InitData().Init();
+            
         }
     }
 }

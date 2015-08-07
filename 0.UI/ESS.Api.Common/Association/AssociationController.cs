@@ -23,14 +23,14 @@ namespace ESS.Api.Common.Association
             _associationView = associationView;
         }
 
-        public Task<IEnumerable<AssociationItem>> Get()
+        public async Task<IEnumerable<AssociationItem>> Get()
         {
-            return _associationView.AssociationList();
+            return await _associationView.AssociationListAsync();
         }
 
         public Task<AssociationItem> Get(Guid id)
         {
-            return _associationView.GetAssociation(id);
+            return _associationView.GetAssociationAsync(id);
         }
 
         [HttpPost]

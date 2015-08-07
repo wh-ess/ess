@@ -17,9 +17,9 @@ namespace ESS.Framework.Common.Cache
         T Get<T>(string key) where T : class;
         /// <summary>Set an aggregate to memory cache.
         /// </summary>
-        void Set(object obj);
+        void Set(object obj, DateTimeOffset absoluteExpiration = default(DateTimeOffset));
 
-        void Set(string key,object obj);
+        void Set(string key,object obj, DateTimeOffset absoluteExpiration = default(DateTimeOffset));
 
     }
 }

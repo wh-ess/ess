@@ -19,26 +19,26 @@ namespace ESS.Domain.Mall.Pop.ReadModels
 {
     public class PopTemplateView :ReadModel, ISubscribeTo<PopTemplateCreated>, ISubscribeTo<PopTemplateDeleted>, ISubscribeTo<PopTemplateEdited>
     {
-        private readonly IRepository<PopTemplateItem, Guid> _repository;
+        private readonly IRepositoryAsync<PopTemplateItem, Guid> _repositoryAsync;
 
-        public PopTemplateView(IRepository<PopTemplateItem, Guid> repository)
+        public PopTemplateView(IRepositoryAsync<PopTemplateItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<PopTemplateItem>> PopTemplateList(Expression<Func<PopTemplateItem, bool>> condition)
+        public async Task<IEnumerable<PopTemplateItem>> PopTemplateList(Expression<Func<PopTemplateItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<PopTemplateItem>> PopTemplateList()
+        public async Task<IEnumerable<PopTemplateItem>> PopTemplateList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<PopTemplateItem> GetPopTemplate(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -47,32 +47,32 @@ namespace ESS.Domain.Mall.Pop.ReadModels
         {
             var item = Mapper.DynamicMap<PopTemplateItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(PopTemplateEdited e)
         {
             var item = Mapper.DynamicMap<PopTemplateItem>(e);
 
-            _repository.Update(e.Id, item);
+            _repositoryAsync.UpdateAsync(e.Id, item);
         }
 
         public void Handle(PopTemplateDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
         private void Update(Guid id, Action<PopTemplateItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()

@@ -1,8 +1,8 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,23 +10,28 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace ESS.Framework.Data.Dapper
+namespace ESS.Framework.Data.EF
 {
-    public class DapperRepositoryAsync<TEntity, TKey> : IRepositoryAsync<TEntity, TKey> where TEntity : class
+    public class EfRepositoryAsync<TEntity, TKey> : IRepositoryAsync<TEntity, TKey> where TEntity : class
     {
-        private IDbConnection _conn;
-        public DapperRepositoryAsync(string connString)
+        private readonly DbContext _dbContext;
+        private readonly DbSet<TEntity> _dbSet;
+        public EfRepositoryAsync(DbContext dbContext)
         {
-            _conn  = new SqlConnection(connString);
+            _dbContext = dbContext;
+            _dbSet = _dbContext.Set<TEntity>();
         }
+
         public async Task<bool> AddAsync(TKey id, TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Add(entity);
+            return await _dbContext.SaveChangesAsync() == 1;
         }
 
         public async Task<bool> UpdateAsync(TKey id, TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Attach(entity);
+            return await _dbContext.SaveChangesAsync()==1;
         }
 
         public async Task<bool> DeleteAsync(TKey id)
@@ -34,15 +39,19 @@ namespace ESS.Framework.Data.Dapper
             return false;
         }
 
-        public Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var entities = FindAsync(predicate).Result;
+            _dbSet.RemoveRange(entities);
+            return await _dbContext.SaveChangesAsync() == entities.Count();
+
         }
-        
 
         public async Task<bool> DeleteAllAsync()
         {
-            throw new NotImplementedException();
+            var count = _dbSet.Count();
+            _dbSet.RemoveRange(_dbSet);
+            return await _dbContext.SaveChangesAsync() == count;
         }
         public async Task<TEntity> GetAsync(TKey id)
         {
@@ -51,42 +60,42 @@ namespace ESS.Framework.Data.Dapper
 
         public async Task<IQueryable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _dbSet;
         }
 
         public async Task<IQueryable<TEntity>> GetAllPagedAsync(int page, int pageSize)
         {
-            throw new NotImplementedException();
+            return _dbSet.Skip((page - 1)*pageSize).Take(pageSize);
         }
 
         public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _dbSet.Where(predicate);
         }
 
         public async Task<IQueryable<TEntity>> FindPagedAsync(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return (await FindAsync(predicate)).Skip((page - 1) * pageSize).Take(pageSize);
         }
 
         public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.SingleOrDefaultAsync(predicate);
         }
 
         public async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
         public async Task<int> CountAsync()
         {
-            return 0;
+            return await _dbSet.CountAsync();
         }
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria)
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.CountAsync(predicate);
         }
 
         #region IDisposable
@@ -99,9 +108,7 @@ namespace ESS.Framework.Data.Dapper
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
-            _conn.Close();
-            _conn.Dispose();
-            _conn = null;
+            _dbContext.Dispose();
         }
         #endregion
     }

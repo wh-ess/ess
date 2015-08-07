@@ -30,66 +30,67 @@ namespace ESS.Framework.Common.Cache.Redis
         }
 
         /// <summary>
-        ///     Get an aggregate from memory cache.
+        ///     Get from memory cache.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public object Get(string id, Type type)
+        public object Get(string key, Type type)
         {
-            if (id == null)
+            if (key == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(key));
             }
 
             byte[] data;
             try
             {
-                data = _redis.StringGet(id);
+                data = _redis.StringGet(key);
             }
             catch (Exception ex)
             {
-                throw new IOException(string.Format("Get data from redis server has exception, type:{0}, Id:{1}", type, id), ex);
+                throw new IOException($"Get data from redis server has exception, type:{type}, Id:{key}", ex);
             }
             return data.Length > 0 ? _binarySerializer.Deserialize(data, type) : null;
         }
 
         /// <summary>
-        ///     Get a strong type aggregate from memory cache.
+        ///     Get a strong type from memory cache.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Get<T>(string id) where T : class
+        public T Get<T>(string key) where T : class
         {
-            if (id == null)
+            if (key == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(key));
             }
-            byte[] value = _redis.StringGet(id);
+            byte[] value = _redis.StringGet(key);
             return value.Length > 0 ? _binarySerializer.Deserialize<T>(value) : null;
         }
 
         /// <summary>
-        ///     Set an aggregate to memory cache.
+        ///     Set to memory cache.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Set(object obj)
+        public void Set(object obj, DateTimeOffset absoluteExpiration = default(DateTimeOffset))
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException("obj");
-            }
-            _redis.StringSet( obj.GetType().FullName, _binarySerializer.Serialize(obj));
+            Set(obj.GetType().FullName, obj, absoluteExpiration);
         }
 
-        public void Set(string key,object obj)
+        public void Set(string key,object obj, DateTimeOffset absoluteExpiration = default(DateTimeOffset))
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
+            }
+            if (absoluteExpiration == default(DateTimeOffset))
+            {
+                absoluteExpiration = DateTime.Now.AddHours(2);
             }
             _redis.StringSet( key, _binarySerializer.Serialize(obj));
+            _redis.KeyExpire(key, absoluteExpiration.DateTime);
         }
     }
 }

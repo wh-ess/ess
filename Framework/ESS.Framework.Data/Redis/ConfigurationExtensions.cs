@@ -26,7 +26,7 @@ namespace ESS.Framework.Data.Redis
         {
             var redis = ConnectionMultiplexer.Connect(host + ":" + port).GetDatabase(1);
             configuration.SetDefault<IDatabase, IDatabase>(redis);
-            ObjectContainer.Current.RegisterGeneric(typeof(IRepository<,>), typeof(RedisRepository<,>));
+            ObjectContainer.Current.RegisterGeneric(typeof(IRepositoryAsync<,>), typeof(RedisRepositoryAsync<,>));
             return configuration;
         }
     }

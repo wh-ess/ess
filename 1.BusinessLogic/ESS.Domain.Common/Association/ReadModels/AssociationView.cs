@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -21,26 +22,26 @@ namespace ESS.Domain.Common.Association.ReadModels
     public class AssociationView
         :ReadModel, ISubscribeTo<AssociationCreated>, ISubscribeTo<AssociationDeleted>, ISubscribeTo<AssociationEdited>
     {
-        private readonly IRepository<AssociationItem, Guid> _repository;
+        private readonly IRepositoryAsync<AssociationItem, Guid> _repositoryAsync;
 
-        public AssociationView(IRepository<AssociationItem, Guid> repository)
+        public AssociationView(IRepositoryAsync<AssociationItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<AssociationItem>> AssociationList(Expression<Func<AssociationItem, bool>> condition)
+        public async Task<IQueryable<AssociationItem>> AssociationListAsync(Expression<Func<AssociationItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<AssociationItem>> AssociationList()
+        public async Task<IQueryable<AssociationItem>> AssociationListAsync()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
-        public Task<AssociationItem> GetAssociation(Guid id)
+        public Task<AssociationItem> GetAssociationAsync(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -49,36 +50,36 @@ namespace ESS.Domain.Common.Association.ReadModels
         {
             var item = Mapper.DynamicMap<AssociationItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
         public void Handle(AssociationEdited e)
         {
             var item = Mapper.DynamicMap<AssociationItem>(e);
 
-            _repository.Update(e.Id, item);
+            _repositoryAsync.UpdateAsync(e.Id, item);
         }
 
         public void Handle(AssociationDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
         private void Update(Guid id, Action<AssociationItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()
         {
-            return await AssociationList();
+            return await AssociationListAsync();
         }
 
         #endregion

@@ -16,25 +16,25 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
 {
     public class EntityView : ISubscribeTo<EntityCreated>, ISubscribeTo<EntityEdited>, ISubscribeTo<EntityDeleted>
     {
-        private readonly IRepository<EntityItem, Guid> _repository;
+        private readonly IRepositoryAsync<EntityItem, Guid> _repositoryAsync;
         private readonly ModuleView _moduleView;
 
-        public EntityView(IRepository<EntityItem, Guid> repository, ModuleView moduleView)
+        public EntityView(IRepositoryAsync<EntityItem, Guid> repositoryAsync, ModuleView moduleView)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
             _moduleView = moduleView;
         }
 
-        public Task<IEnumerable<EntityItem>> GetEntity(string moduleNo)
+        public async Task<IEnumerable<EntityItem>> GetEntity(string moduleNo)
         {
-            return _repository.Find(c => c.ModuleNo.ToLower() == moduleNo.ToLower());
+            return await _repositoryAsync.FindAsync(c => c.ModuleNo.ToLower() == moduleNo.ToLower());
 
         }
 
 
-        public Task<EntityItem> GetEntity(string moduleNo, Guid id)
+        public async Task<EntityItem> GetEntity(string moduleNo, Guid id)
         {
-            return _repository.Single(c => c.ModuleNo.ToLower() == moduleNo.ToLower() && c.Id == id);
+            return await _repositoryAsync.SingleAsync(c => c.ModuleNo.ToLower() == moduleNo.ToLower() && c.Id == id);
         }
 
 
@@ -42,18 +42,18 @@ namespace ESS.Domain.Foundation.EntityConfig.ReadModels
 
         public void Handle(EntityCreated e)
         {
-            _repository.Add(e.Id, new EntityItem() { Id = e.Id, ModuleNo = e.ModuleNo, Fields = e.Fields });
+            _repositoryAsync.AddAsync(e.Id, new EntityItem() { Id = e.Id, ModuleNo = e.ModuleNo, Fields = e.Fields });
 
         }
 
         public void Handle(EntityDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
         public void Handle(EntityEdited e)
         {
-            _repository.Update(e.Id, new EntityItem() { Id = e.Id, ModuleNo = e.ModuleNo, Fields = e.Fields });
+            _repositoryAsync.UpdateAsync(e.Id, new EntityItem() { Id = e.Id, ModuleNo = e.ModuleNo, Fields = e.Fields });
 
         }
 

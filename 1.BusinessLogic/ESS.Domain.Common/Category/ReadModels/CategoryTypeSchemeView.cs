@@ -16,26 +16,26 @@ namespace ESS.Domain.Common.Category.ReadModels
     public class CategoryTypeSchemeView
         : ISubscribeTo<CategoryTypeSchemeCreated>, ISubscribeTo<CategoryTypeSchemeNameChanged>, ISubscribeTo<CategoryTypeSchemeDeleted>
     {
-        private readonly IRepository<CategoryTypeSchemeItem, Guid> _repository;
+        private readonly IRepositoryAsync<CategoryTypeSchemeItem, Guid> _repositoryAsync;
 
-        public CategoryTypeSchemeView(IRepository<CategoryTypeSchemeItem, Guid> repository)
+        public CategoryTypeSchemeView(IRepositoryAsync<CategoryTypeSchemeItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<CategoryTypeSchemeItem>> CategoryTypeSchemeList(Expression<Func<CategoryTypeSchemeItem, bool>> condition)
+        public async Task<IEnumerable<CategoryTypeSchemeItem>> CategoryTypeSchemeList(Expression<Func<CategoryTypeSchemeItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<CategoryTypeSchemeItem>> CategoryTypeSchemeList()
+        public async Task<IEnumerable<CategoryTypeSchemeItem>> CategoryTypeSchemeList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<CategoryTypeSchemeItem> GetCategoryTypeScheme(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -44,12 +44,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             var item = Mapper.DynamicMap<CategoryTypeSchemeItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(CategoryTypeSchemeDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -61,10 +61,10 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryTypeSchemeItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         #endregion

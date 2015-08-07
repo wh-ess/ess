@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ESS.Domain.Foundation.AccessControl.Commands;
 using ESS.Domain.Foundation.AccessControl.ReadModels;
@@ -20,9 +21,9 @@ namespace ESS.Api.Foundation.AccessControl
             _userView = userView;
         }
 
-        public IEnumerable<UserItem> Get()
+        public async Task<IEnumerable<UserItem>> Get()
         {
-            return _userView.UserList();
+            return await _userView.UserList();
         }
 
         public UserItem Get(Guid id)

@@ -16,26 +16,26 @@ namespace ESS.Domain.Common.Category.ReadModels
     public class CategoryClassificationView
         : ISubscribeTo<CategoryClassificationCreated>,  ISubscribeTo<CategoryClassificationDeleted>
     {
-        private readonly IRepository<CategoryClassificationItem, Guid> _repository;
+        private readonly IRepositoryAsync<CategoryClassificationItem, Guid> _repositoryAsync;
 
-        public CategoryClassificationView(IRepository<CategoryClassificationItem, Guid> repository)
+        public CategoryClassificationView(IRepositoryAsync<CategoryClassificationItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList(Expression<Func<CategoryClassificationItem, bool>> condition)
+        public async Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList(Expression<Func<CategoryClassificationItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList()
+        public async Task<IEnumerable<CategoryClassificationItem>> CategoryClassificationList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
-        public Task<CategoryClassificationItem> GetCategoryClassification(Guid id)
+        public async Task<CategoryClassificationItem> GetCategoryClassification(Guid id)
         {
-            return _repository.Get(id);
+            return await _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -44,12 +44,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             var item = Mapper.DynamicMap<CategoryClassificationItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(CategoryClassificationDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -57,10 +57,10 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryClassificationItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         #endregion

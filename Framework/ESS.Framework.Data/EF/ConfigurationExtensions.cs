@@ -1,9 +1,8 @@
-﻿
-
-using ESS.Framework.Common.Components;
+﻿using ESS.Framework.Common.Components;
 using ESS.Framework.Common.Configurations;
+using ESS.Framework.Data.Dapper;
 
-namespace ESS.Framework.Data.Dapper
+namespace ESS.Framework.Data.EF
 {
     /// <summary>configuration class Redis extensions.
     /// </summary>
@@ -13,9 +12,9 @@ namespace ESS.Framework.Data.Dapper
         /// <summary>Use Redis to implement the memory cache.
         /// </summary>
         /// <returns></returns>
-        public static Configuration UseDapperRepository(this Configuration configuration, string connString)
+        public static Configuration UseEfRepository(this Configuration configuration, string connString)
         {
-            ObjectContainer.Current.RegisterGeneric(typeof(IRepositoryAsync<,>), typeof(DapperRepositoryAsync<,>), LifeStyle.Singleton,connString);
+            ObjectContainer.Current.RegisterGeneric(typeof(IRepositoryAsync<,>), typeof(EfRepositoryAsync<,>), LifeStyle.Singleton,connString);
             return configuration;
         }
     }

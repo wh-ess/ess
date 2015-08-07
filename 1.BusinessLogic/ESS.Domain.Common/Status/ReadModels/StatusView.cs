@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,26 +20,26 @@ namespace ESS.Domain.Common.Status.ReadModels
     public class StatusView
         :ReadModel, ISubscribeTo<StatusCreated>,  ISubscribeTo<StatusDeleted>
     {
-        private readonly IRepository<StatusItem, Guid> _repository;
+        private readonly IRepositoryAsync<StatusItem, Guid> _repositoryAsync;
 
-        public StatusView(IRepository<StatusItem, Guid> repository)
+        public StatusView(IRepositoryAsync<StatusItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<StatusItem>> StatusList(Expression<Func<StatusItem, bool>> condition)
+        public Task<IQueryable<StatusItem>> StatusList(Expression<Func<StatusItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<StatusItem>> StatusList()
+        public Task<IQueryable<StatusItem>> StatusList()
         {
-            return _repository.GetAll();
+            return _repositoryAsync.GetAllAsync();
         }
 
         public Task<StatusItem> GetStatus(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
         #region handle
@@ -47,27 +48,27 @@ namespace ESS.Domain.Common.Status.ReadModels
         {
             var item = Mapper.DynamicMap<StatusItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(StatusDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
         private void Update(Guid id, Action<StatusItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
 
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()

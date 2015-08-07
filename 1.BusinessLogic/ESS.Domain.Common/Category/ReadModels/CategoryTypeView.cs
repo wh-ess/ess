@@ -20,31 +20,31 @@ namespace ESS.Domain.Common.Category.ReadModels
             ISubscribeTo<CategoryTypeParentChanged>, ISubscribeTo<CategoryTypeSchemeChanged>,
             ISubscribeTo<CategoryTypeSchemeNameChanged>
     {
-        private readonly IRepository<CategoryTypeItem, Guid> _repository;
+        private readonly IRepositoryAsync<CategoryTypeItem, Guid> _repositoryAsync;
 
-        public CategoryTypeView(IRepository<CategoryTypeItem, Guid> repository)
+        public CategoryTypeView(IRepositoryAsync<CategoryTypeItem, Guid> repositoryAsync)
         {
-            _repository = repository;
+            _repositoryAsync = repositoryAsync;
         }
 
-        public Task<IEnumerable<CategoryTypeItem>> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
+        public async Task<IEnumerable<CategoryTypeItem>> CategoryTypeList(Expression<Func<CategoryTypeItem, bool>> condition)
         {
-            return _repository.Find(condition);
+            return await _repositoryAsync.FindAsync(condition);
         }
 
-        public Task<IEnumerable<CategoryTypeItem>> CategoryTypeList()
+        public async Task<IEnumerable<CategoryTypeItem>> CategoryTypeList()
         {
-            return _repository.GetAll();
+            return await _repositoryAsync.GetAllAsync();
         }
 
         public Task<CategoryTypeItem> GetCategoryType(Guid id)
         {
-            return _repository.Get(id);
+            return _repositoryAsync.GetAsync(id);
         }
 
-        public Task<IEnumerable<CategoryTypeItem>> GetCategoryTypeByScheme(string name)
+        public async Task<IEnumerable<CategoryTypeItem>> GetCategoryTypeByScheme(string name)
         {
-            return _repository.Find(c => c.Scheme.Name == name);
+            return await _repositoryAsync.FindAsync(c => c.Scheme.Name == name);
         }
 
         #region handle
@@ -53,12 +53,12 @@ namespace ESS.Domain.Common.Category.ReadModels
         {
             var item = Mapper.DynamicMap<CategoryTypeItem>(e);
 
-            _repository.Add(e.Id, item);
+            _repositoryAsync.AddAsync(e.Id, item);
         }
 
         public void Handle(CategoryTypeDeleted e)
         {
-            _repository.Delete(e.Id);
+            _repositoryAsync.DeleteAsync(e.Id);
         }
 
 
@@ -70,10 +70,10 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         private void Update(Guid id, Action<CategoryTypeItem> action)
         {
-            var item = _repository.Single(c => c.Id == id).Result;
+            var item = _repositoryAsync.SingleAsync(c => c.Id == id).Result;
 
             action.Invoke(item);
-            _repository.Update(item.Id, item);
+            _repositoryAsync.UpdateAsync(item.Id, item);
         }
 
         public void Handle(CategoryTypeParentChanged e)
@@ -92,7 +92,7 @@ namespace ESS.Domain.Common.Category.ReadModels
 
         public override Task<bool> Clear()
         {
-            return _repository.DeleteAll();
+            return _repositoryAsync.DeleteAllAsync();
         }
 
         public override async Task<IEnumerable> GetAll()
