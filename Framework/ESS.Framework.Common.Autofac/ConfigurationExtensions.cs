@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using Autofac;
+using Autofac.Extras.DynamicProxy2;
 using ESS.Framework.Common.Components;
 using ESS.Framework.Common.Configurations;
 
