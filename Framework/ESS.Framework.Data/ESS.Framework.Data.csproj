@@ -75,12 +75,15 @@
     <Compile Include="Dapper\SqlMapperExtensions.cs" />
     <Compile Include="EF\ConfigurationExtensions.cs" />
     <Compile Include="EF\EFRepository.cs" />
-    <Compile Include="InMemory\ConfigurationExtensions.cs" />
+    <Compile Include="EF\EFRepositoryAsync.cs" />
     <Compile Include="InMemory\InMemoryRepository.cs" />
+    <Compile Include="InMemory\ConfigurationExtensions.cs" />
+    <Compile Include="InMemory\InMemoryRepositoryAsync.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="IRepositoryAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redis\ConfigurationExtensions.cs" />
-    <Compile Include="Redis\RedisRepository.cs" />
+    <Compile Include="Redis\RedisRepositoryAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

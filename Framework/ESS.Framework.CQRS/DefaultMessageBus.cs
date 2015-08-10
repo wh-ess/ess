@@ -10,6 +10,7 @@ using ESS.Framework.CQRS.Command;
 using ESS.Framework.CQRS.Domain;
 using ESS.Framework.CQRS.Event;
 using ESS.Framework.CQRS.ReadModel;
+using JZT.Frame.CQRS;
 
 #endregion
 
@@ -21,7 +22,7 @@ namespace ESS.Framework.CQRS
     ///     node application that can safely build its subscriber list at startup and keep
     ///     it in memory. Depends on some kind of event storage mechanism.
     /// </summary>
-    public class MessageDispatcher
+    public class DefaultMessageBus :IMessageBus
     {
         private readonly Dictionary<Type, Action<object>> _commandHandlers = new Dictionary<Type, Action<object>>();
         private readonly IEventStore _eventStore;
@@ -34,7 +35,7 @@ namespace ESS.Framework.CQRS
         ///     implementation.
         /// </summary>
         /// <param name="es"></param>
-        public MessageDispatcher(IEventStore es)
+        public DefaultMessageBus(IEventStore es)
         {
             _eventStore = es;
         }
@@ -61,7 +62,7 @@ namespace ESS.Framework.CQRS
         ///     Publishes the specified event to all of its subscribers.
         /// </summary>
         /// <param name="e"></param>
-        private void PublishEvent(object e)
+        public void PublishEvent(object e)
         {
             var eventType = e.GetType();
             if (_eventSubscribers.ContainsKey(eventType))

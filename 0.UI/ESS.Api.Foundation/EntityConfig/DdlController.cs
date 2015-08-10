@@ -18,11 +18,11 @@ namespace ESS.Api.Foundation.EntityConfig
 {
     public class DdlController : ApiController
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
         private readonly DropDownView _dropDownView;
         private readonly UserView _userView;
 
-        public DdlController(MessageDispatcher messageDispatcher, DropDownView dropDownView, UserView userView)
+        public DdlController(DefaultMessageBus messageDispatcher, DropDownView dropDownView, UserView userView)
         {
             _messageDispatcher = messageDispatcher;
             _dropDownView = dropDownView;

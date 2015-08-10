@@ -15,9 +15,9 @@ namespace ESS.Api.Mall.Pop
     public class PopTemplateController : ApiController
     {
         private readonly PopTemplateView _popTemplateView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public PopTemplateController(MessageDispatcher messageDispatcher, PopTemplateView popTemplateView)
+        public PopTemplateController(DefaultMessageBus messageDispatcher, PopTemplateView popTemplateView)
         {
             _messageDispatcher = messageDispatcher;
             _popTemplateView = popTemplateView;

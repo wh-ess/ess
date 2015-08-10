@@ -17,9 +17,9 @@ namespace ESS.Api.Foundation.EntityConfig
     {
         private readonly FieldView _fieldView;
         private readonly CategoryView _categoryView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public FieldController(MessageDispatcher messageDispatcher, FieldView fieldView, CategoryView categoryView)
+        public FieldController(DefaultMessageBus messageDispatcher, FieldView fieldView, CategoryView categoryView)
         {
             _messageDispatcher = messageDispatcher;
             _fieldView = fieldView;

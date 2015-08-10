@@ -12,10 +12,10 @@ namespace ESS.Api.Foundation.AccessControl
     [RoutePrefix("api/Role")]
     public class RoleController : ApiController
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
         private readonly RoleView _roleView;
 
-        public RoleController(MessageDispatcher messageDispatcher, RoleView roleView)
+        public RoleController(DefaultMessageBus messageDispatcher, RoleView roleView)
         {
             _messageDispatcher = messageDispatcher;
             _roleView = roleView;

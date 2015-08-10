@@ -10,9 +10,15 @@ namespace ESS.Framework.Data.InMemory
         /// <summary>Use InMemory to implement the Repository.
         /// </summary>
         /// <returns></returns>
-        public static Configuration UseInMemoryRepository(this Configuration configuration)
+        public static Configuration UseInMemoryRepositoryAsync(this Configuration configuration)
         {
             ObjectContainer.Current.RegisterGeneric(typeof(IRepositoryAsync<,>), typeof(InMemoryRepositoryAsync<,>));
+            return configuration;
+        }
+
+        public static Configuration UseInMemoryRepository(this Configuration configuration)
+        {
+            ObjectContainer.Current.RegisterGeneric(typeof(IRepository<,>), typeof(InMemoryRepository<,>));
             return configuration;
         }
     }

@@ -12,10 +12,10 @@ namespace ESS.Api.Foundation.AccessControl
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
         private readonly UserView _userView;
 
-        public UserController(MessageDispatcher messageDispatcher, UserView userView)
+        public UserController(DefaultMessageBus messageDispatcher, UserView userView)
         {
             _messageDispatcher = messageDispatcher;
             _userView = userView;

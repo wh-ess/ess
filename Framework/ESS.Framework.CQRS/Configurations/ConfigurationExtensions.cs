@@ -28,9 +28,9 @@ namespace ESS.Framework.CQRS.Configurations
 
         public static Configuration InitializeCQRSAssemblies(this Configuration configuration, IEventStore es, Assembly[] assemblies)
         {
-            MessageDispatcher dispatcher = new MessageDispatcher(es);
+            DefaultMessageBus dispatcher = new DefaultMessageBus(es);
             dispatcher.ScanAssembly(assemblies);
-            Configuration.Instance.SetDefault<MessageDispatcher, MessageDispatcher>(dispatcher);
+            Configuration.Instance.SetDefault<DefaultMessageBus, DefaultMessageBus>(dispatcher);
             
             return configuration;
         }

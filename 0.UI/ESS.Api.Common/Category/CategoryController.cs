@@ -16,9 +16,9 @@ namespace ESS.Api.Common.Category
     public class CategoryController : ApiController
     {
         private readonly CategoryView _categoryView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public CategoryController(MessageDispatcher messageDispatcher, CategoryView categoryView)
+        public CategoryController(DefaultMessageBus messageDispatcher, CategoryView categoryView)
         {
             _messageDispatcher = messageDispatcher;
             _categoryView = categoryView;

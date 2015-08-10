@@ -16,9 +16,9 @@ namespace ESS.Api.Foundation.EntityConfig
     public class EntityController : ApiController
     {
         private readonly EntityView _entityView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public EntityController(MessageDispatcher messageDispatcher, EntityView entityView)
+        public EntityController(DefaultMessageBus messageDispatcher, EntityView entityView)
         {
             _messageDispatcher = messageDispatcher;
             _entityView = entityView;

@@ -1,130 +1,103 @@
 ﻿#region
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using ESS.Framework.Common.Extensions;
 
 #endregion
 
 namespace ESS.Framework.Data.InMemory
 {
-    public class InMemoryRepositoryAsync<TEntity, TKey> : IRepositoryAsync<TEntity, TKey> where TEntity : class
+    public class InMemoryRepository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
     {
-        private ConcurrentDictionary<TKey, TEntity> _store = new ConcurrentDictionary<TKey, TEntity>();
+        private Dictionary<TKey, TEntity> _store = new Dictionary<TKey, TEntity>();
 
-        public async Task<bool> AddAsync(TKey id, TEntity entity)
+        public bool Add(TKey id, TEntity entity)
         {
-            return await Task.Run(() =>
+            _store.Add(id, entity);
+            return true;
+        }
+
+        public bool Update(TKey id, TEntity entity)
+        {
+            if (_store.ContainsKey(id))
             {
-                _store.AddOrUpdate(id, entity, (k, v) => entity);
-                return true;
-            });
+                _store[id] = entity;
+            }
+            return true;
         }
 
-        public async Task<bool> UpdateAsync(TKey id, TEntity entity)
+        public bool Delete(TKey id)
         {
-            return await Task.Run(() =>
-            {
-                _store.AddOrUpdate(id, entity, (k, v) => entity);
-                return true;
-            });
+            return _store.Remove(id);
         }
 
-        public async Task<bool> DeleteAsync(TKey id)
+        public bool Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.Run(() =>
-               {
-                   _store.Remove(id);
-                   return true;
-               });
+            return false;
         }
 
-        public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public bool DeleteAll()
         {
-            return await Task.Run(() =>
-               {
-                   return false;
-               });
+            _store.Clear();
+            return true;
         }
 
-        public async Task<bool> DeleteAllAsync()
+        public TEntity Get(TKey id)
         {
-            return await Task.Run(() =>
-               {
-                   _store.Clear();
-                   return true;
-               });
-        }
-
-        public async Task<TEntity> GetAsync(TKey id)
-        {
-            return await Task.Run(() =>
-               {
                    TEntity result;
                    _store.TryGetValue(id, out result);
                    return result;
-               });
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync()
+        public IQueryable<TEntity> GetAll()
         {
-            
-            return await Task.Run(() => _store.Values.AsQueryable());
+
+            return _store.Values.AsQueryable();
         }
 
-        public async Task<IQueryable<TEntity>> GetAllPagedAsync(int page, int pageSize)
+        public IQueryable<TEntity> GetAllPaged(int page, int pageSize)
         {
-            if (!_store.Any())
-            {
-                return null;
-            }
-            return await Task.Run(() => _store.Values.AsQueryable().Skip((page - 1) * pageSize)
-                .Take(pageSize));
+            return _store.Values.AsQueryable().Skip((page - 1) * pageSize)
+                .Take(pageSize);
         }
 
-        public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            if (!_store.Any())
-            {
-                return _store.Values.AsQueryable();
-            }
-            return await Task.Run(() => _store.Values.AsQueryable().Where(predicate));
+            return _store.Values.AsQueryable().Where(predicate);
         }
 
-        public async Task<IQueryable<TEntity>> FindPagedAsync(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
+        public IQueryable<TEntity> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            return (await FindAsync(predicate))
+            return Find(predicate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
 
         }
 
-        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
-            return (await FindAsync(predicate))
+            return Find(predicate)
                 .SingleOrDefault();
 
         }
 
-        public async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate)
+        public TEntity First(Expression<Func<TEntity, bool>> predicate)
         {
-            return (await FindAsync(predicate))
+            return Find(predicate)
                 .FirstOrDefault();
 
         }
 
-        public async Task<int> CountAsync()
+        public int Count()
         {
-            return await Task.Run(() => _store.Count);
+            return _store.Count;
         }
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria)
+        public int Count(Expression<Func<TEntity, bool>> criteria)
         {
-            return (await FindAsync(criteria))
+            return  Find(criteria)
                 .Count();
 
         }

@@ -15,10 +15,10 @@ namespace ESS.Api.Foundation.EntityConfig
     [RoutePrefix("api/Module")]
     public class ModuleController : ApiController
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
         private readonly ModuleView _moduleView;
 
-        public ModuleController(MessageDispatcher messageDispatcher, ModuleView moduleView)
+        public ModuleController(DefaultMessageBus messageDispatcher, ModuleView moduleView)
         {
             _messageDispatcher = messageDispatcher;
             _moduleView = moduleView;

@@ -74,7 +74,8 @@
     <Compile Include="Event\InMemoryEventStore.cs" />
     <Compile Include="Event\RedisEventStore.cs" />
     <Compile Include="Event\ISubscribeTo.cs" />
-    <Compile Include="MessageDispatcher.cs" />
+    <Compile Include="IMessageBus.cs" />
+    <Compile Include="DefaultMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Event\SqlEventStore.cs" />
     <Compile Include="ReadModel\IReadModel.cs" />

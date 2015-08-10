@@ -10,11 +10,11 @@ namespace ESS.Api.Common
 {
     public class InitData
     {
-        private static MessageDispatcher _messageDispatcher;
+        private static DefaultMessageBus _messageDispatcher;
 
         public InitData()
         {
-            _messageDispatcher = ObjectContainer.Resolve<MessageDispatcher>();
+            _messageDispatcher = ObjectContainer.Resolve<DefaultMessageBus>();
         }
 
         public void Init()

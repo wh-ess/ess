@@ -15,9 +15,9 @@ namespace ESS.Api.Common.Association
     public class AssociationController : ApiController
     {
         private readonly AssociationView _associationView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public AssociationController(MessageDispatcher messageDispatcher, AssociationView associationView)
+        public AssociationController(DefaultMessageBus messageDispatcher, AssociationView associationView)
         {
             _messageDispatcher = messageDispatcher;
             _associationView = associationView;

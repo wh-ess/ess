@@ -14,9 +14,9 @@ namespace ESS.Api.Common.PartyRole
     public class PartyController : ApiController
     {
         private readonly PartyView _partyView;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public PartyController(MessageDispatcher messageDispatcher, PartyView partyView)
+        public PartyController(DefaultMessageBus messageDispatcher, PartyView partyView)
         {
             _messageDispatcher = messageDispatcher;
             _partyView = partyView;

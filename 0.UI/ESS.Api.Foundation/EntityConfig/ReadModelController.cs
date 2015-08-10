@@ -19,9 +19,9 @@ namespace ESS.Api.Foundation.EntityConfig
     /// </summary>
     public class ReadModelController : ApiController
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly DefaultMessageBus _messageDispatcher;
 
-        public ReadModelController(MessageDispatcher messageDispatcher)
+        public ReadModelController(DefaultMessageBus messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }

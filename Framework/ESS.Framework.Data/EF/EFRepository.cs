@@ -1,101 +1,98 @@
 ﻿#region
 
 using System;
-using System.Data;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 #endregion
 
 namespace ESS.Framework.Data.EF
 {
-    public class EfRepositoryAsync<TEntity, TKey> : IRepositoryAsync<TEntity, TKey> where TEntity : class
+    public class EfRepository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
     {
         private readonly DbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
-        public EfRepositoryAsync(DbContext dbContext)
+        public EfRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-        public async Task<bool> AddAsync(TKey id, TEntity entity)
+        public  bool Add(TKey id, TEntity entity)
         {
             _dbSet.Add(entity);
-            return await _dbContext.SaveChangesAsync() == 1;
+            return  _dbContext.SaveChanges() == 1;
         }
 
-        public async Task<bool> UpdateAsync(TKey id, TEntity entity)
+        public  bool Update(TKey id, TEntity entity)
         {
             _dbSet.Attach(entity);
-            return await _dbContext.SaveChangesAsync()==1;
+            return  _dbContext.SaveChanges()==1;
         }
 
-        public async Task<bool> DeleteAsync(TKey id)
+        public  bool Delete(TKey id)
         {
             return false;
         }
 
-        public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public  bool Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            var entities = FindAsync(predicate).Result;
+            var entities = Find(predicate);
             _dbSet.RemoveRange(entities);
-            return await _dbContext.SaveChangesAsync() == entities.Count();
+            return  _dbContext.SaveChanges() == entities.Count();
 
         }
 
-        public async Task<bool> DeleteAllAsync()
+        public  bool DeleteAll()
         {
             var count = _dbSet.Count();
             _dbSet.RemoveRange(_dbSet);
-            return await _dbContext.SaveChangesAsync() == count;
+            return  _dbContext.SaveChanges() == count;
         }
-        public async Task<TEntity> GetAsync(TKey id)
+        public  TEntity Get(TKey id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync()
+        public  IQueryable<TEntity> GetAll()
         {
             return _dbSet;
         }
 
-        public async Task<IQueryable<TEntity>> GetAllPagedAsync(int page, int pageSize)
+        public  IQueryable<TEntity> GetAllPaged(int page, int pageSize)
         {
             return _dbSet.Skip((page - 1)*pageSize).Take(pageSize);
         }
 
-        public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public  IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.Where(predicate);
         }
 
-        public async Task<IQueryable<TEntity>> FindPagedAsync(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
+        public  IQueryable<TEntity> FindPaged(int page, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            return (await FindAsync(predicate)).Skip((page - 1) * pageSize).Take(pageSize);
+            return ( Find(predicate)).Skip((page - 1) * pageSize).Take(pageSize);
         }
 
-        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        public  TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.SingleOrDefaultAsync(predicate);
+            return  _dbSet.SingleOrDefault(predicate);
         }
 
-        public async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate)
+        public  TEntity First(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            return  _dbSet.FirstOrDefault(predicate);
         }
 
-        public async Task<int> CountAsync()
+        public  int Count()
         {
-            return await _dbSet.CountAsync();
+            return  _dbSet.Count();
         }
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        public  int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.CountAsync(predicate);
+            return  _dbSet.Count(predicate);
         }
 
         #region IDisposable
