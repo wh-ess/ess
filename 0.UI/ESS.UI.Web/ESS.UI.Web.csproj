@@ -168,9 +168,9 @@
     <Content Include="Content\img\text.svg" />
     <Content Include="Content\simple-line-icons.css" />
     <Content Include="Content\treeGrid.css" />
-    <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="demo\movieDemo\1.jpg" />
     <Content Include="demo\movieDemo\2.jpg" />
     <Content Include="demo\movieDemo\app.js" />
