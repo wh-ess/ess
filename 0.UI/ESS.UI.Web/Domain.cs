@@ -31,6 +31,7 @@ namespace ESS.UI.Web
 
             IEventStore es = new RedisEventStore("127.0.0.1", "6379");
 
+
             var assemblies = BuildManager.GetReferencedAssemblies()
                 .Cast<Assembly>()
                 .Where(c => c.FullName.Contains("ESS"))
@@ -41,9 +42,9 @@ namespace ESS.UI.Web
                 .UseJsonNet()
                 .RegisterCommonComponents()
                 .UseLog4Net()
-                .UseRedisRepository()
+                .UseRedisRepositoryAsync()
                 .RegisterBusinessComponents(assemblies)
-                .InitializeCQRSAssemblies(es, assemblies)
+                .InitializeCQRSAssemblies(assemblies)
                 .RegisterController(config, assemblies)
                 .UseOAuth(app, config)
                 .UseWebApi(app, config);
