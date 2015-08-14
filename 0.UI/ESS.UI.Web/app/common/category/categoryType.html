@@ -1,12 +1,13 @@
 ﻿
 <md-content layout="row">
+    <!-- scheme -->
     <md-card>
-        <md-virtual-repeat-container >
-            <div md-virtual-repeat="scheme in categoryTypeSchemes">
+        <md-list>
+            <md-list-item ng--repeat="scheme in categoryTypeSchemes" ng-click="cur.scheme=scheme">
                 {{scheme.Name}}
-                <md-button ng-click="delCategoryTypeScheme(scheme)" aria-label="delete"><i class="fa fa-close"></i></md-button>
-            </div>
-        </md-virtual-repeat-container>
+                <md-button ng-click="delCategoryTypeScheme(scheme)" class="md-secondary" aria-label="delete"><i class="fa fa-close"></i></md-button>
+            </md-list-item>
+        </md-list>
 
         <form ng-submit="editCategoryTypeScheme(currentScheme)" layout="column" class="md-padding" name="formScheme">
             <div layout="row" layout-sm="column">
@@ -18,21 +19,44 @@
             </div>
         </form>
     </md-card>
-
-    <md-card>
-        <md-virtual-repeat-container >
-            <div md-virtual-repeat="t in categoryTypes | filter:scheme.Id">
+    
+    <!-- type -->
+    <md-card ng-show="cur.scheme.Id">
+        <md-list>
+            <md-subheader>{{cur.scheme.Name}}</md-subheader>
+            <md-list-item ng-repeat="t in categoryTypes | filter:cur.scheme.Id" ng-click="cur.type=t">
                 {{t.Name}}
-                <md-button ng-click="delCategoryType(t)" aria-label="delete"><i class="fa fa-close"></i></md-button>
-            </div>
-        </md-virtual-repeat-container>
-        <form ng-submit="editCategoryType(currentType,scheme)" layout="column" class="md-padding" name="formType">
+                <md-button ng-click="delCategoryType(t)" class="md-secondary" aria-label="delete"><i class="fa fa-close"></i></md-button>
+            </md-list-item>
+        </md-list>
+        <form ng-submit="editCategoryType(currentType,cur.scheme)" layout="column" class="md-padding" name="formType">
             <div layout="row" layout-sm="column">
                 <md-input-container>
                     <label for="name">Name</label>
                     <input id="name" type="text" ng-model="currentType.Name" required>
                 </md-input-container>
                 <md-button class="md-primary md-raised" ng-disabled="formType.$invalid" type="submit">Add Type</md-button>
+            </div>
+        </form>
+    </md-card>
+
+
+    <!-- category -->
+    <md-card ng-show="cur.type.Id">
+        <md-list>
+            <md-subheader>{{cur.type.Name}}</md-subheader>
+            <md-list-item ng-repeat="ca in categorys | filter:cur.type.Id" ng-click="#">
+                {{ca.Name}}
+                <md-button ng-click="delCategory(ca)" class="md-secondary" aria-label="delete"><i class="fa fa-close"></i></md-button>
+            </md-list-item>
+        </md-list>
+        <form ng-submit="editCategory(current,cur.type)" layout="column" class="md-padding" name="formCategory">
+            <div layout="row" layout-sm="column">
+                <md-input-container>
+                    <label for="name">Name</label>
+                    <input id="name" type="text" ng-model="current.Name" required>
+                </md-input-container>
+                <md-button class="md-primary md-raised" ng-disabled="formCategory.$invalid" type="submit">Add {{cur.type.Name}}</md-button>
             </div>
         </form>
     </md-card>

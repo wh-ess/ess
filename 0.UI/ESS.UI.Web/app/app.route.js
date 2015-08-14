@@ -48,7 +48,6 @@ angular.module("EssApp").run([
 
                 //category
                 .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
-                .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
 
                 //association
                 .when("/association", { templateUrl: "/app/common/association/association.html", controller: "AssociationController" })

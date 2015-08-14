@@ -1,0 +1,110 @@
+[
+  {
+    "outputFileName": "Content/style.css",
+    "inputFiles": [
+      "Content/bootstrap.css",
+      "Content/angular-material/angular-material.css",
+      "Content/font-awesome.css",
+      "Content/simple-line-icons.css",
+      "Content/layout.css",
+      "Content/custome.css"
+    ],
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "sourceMaps": false
+  },
+  {
+    "outputFileName": "app/app.js",
+    "inputFiles": [
+      "app/app.module.js",
+      "app/app.route.js",
+      "app/shared/common/tree-grid-directive.js",
+      "app//shared/filters.js",
+      "app//shared/services.js",
+      "app/shared/auth.service.js",
+      "app/shared/common.directive.js",
+      "app/shared/authInterceptor.service.js",
+      "app/shared/errorInterceptor.service.js",
+      //<!-- shared -->
+      "app/shared/header/header.service.js",
+      "app/shared/header/header.controller.js",
+
+      //<!-- module -->
+      "app/foundation/moduleConifg/module.controller.js",
+      "app/foundation/moduleConifg/module.service.js",
+      "app/foundation/moduleConifg/module.directive.js",
+
+      //<!-- accessControl -->
+      "app/foundation/accessControl/user.controller.js",
+      "app/foundation/accessControl/user.service.js",
+      "app/foundation/accessControl/role.service.js",
+      "app/foundation/accessControl/role.controller.js",
+      "app/foundation/accessControl/login.controller.js",
+
+      //<!-- ==================================common================================== -->
+
+      //<!-- category -->
+      //<!--"app/common/svg/svgEditor.service.js",-->
+      "app/common/svg/svgEditor.controller.js",
+
+      //<!-- category -->
+      "app/common/category/category.service.js",
+      "app/common/category/category.controller.js",
+
+      //<!-- association -->
+      "app/common/association/association.service.js",
+      "app/common/association/association.controller.js",
+
+      //<!-- partyrole -->
+      "app/common/partyRole/partyRole.service.js",
+      "app/common/partyRole/partyRole.controller.js",
+      "app/common/partyRole/party.controller.js",
+      //<!-- basic -->
+      "app/common/basic/basic.service.js",
+      "app/common/basic/basic.controller.js",
+      "app/common/basic/floor.controller.js",
+      "app/common/basic/brand.controller.js",
+      "app/common/basic/brandType.controller.js",
+      "app/common/basic/bank.controller.js",
+
+      //<!-- ==================================mall================================== -->
+
+      //<!-- pop -->
+      "app/mall/pop/popTemplate.service.js",
+      "app/mall/pop/popTemplate.controller.js"
+    ],
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "sourceMaps": false
+  },
+  {
+    "outputFileName": "app/plugins.js",
+    "inputFiles": [
+      "Scripts/jquery-2.1.4.js",
+      "Scripts/angular.js",
+      "Scripts/angular-ui/ui-bootstrap-tpls.min.js",
+      "Scripts/angular-animate.js",
+      "Scripts/angular-aria.js",
+      "Scripts/angular-material.js",
+      "Scripts/angular-messages.js",
+      "Scripts/angular-resource.js",
+      "Scripts/angular-sanitize.js",
+      "Scripts/angular-local-storage.js",
+      "Scripts/angular-ui/ui-utils.js",
+      "Scripts/angular-route.js",
+      "Scripts/ng-file-upload-all.js",
+      //<!-- for restangular-->
+      "Scripts/underscore.js"
+
+    ],
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "sourceMaps": false
+  }
+]

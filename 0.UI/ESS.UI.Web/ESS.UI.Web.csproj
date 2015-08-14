@@ -97,6 +97,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\app.js" />
+    <Content Include="app\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
     <Content Include="app\common\association\association.controller.js" />
     <Content Include="app\common\association\association.html" />
     <Content Include="app\common\association\association.service.js" />
@@ -110,7 +114,6 @@
     <Content Include="app\common\basic\brandType.html" />
     <Content Include="app\common\basic\floor.controller.js" />
     <Content Include="app\common\basic\floor.html" />
-    <Content Include="app\common\category\category.html" />
     <Content Include="app\common\category\categoryType.html" />
     <Content Include="app\common\category\category.controller.js" />
     <Content Include="app\common\category\category.service.js" />
@@ -142,6 +145,10 @@
     <Content Include="app\mall\pop\popTemplate.controller.js" />
     <Content Include="app\mall\pop\popTemplate.html" />
     <Content Include="app\mall\pop\popTemplate.service.js" />
+    <Content Include="app\plugins.js" />
+    <Content Include="app\plugins.min.js">
+      <DependentUpon>plugins.js</DependentUpon>
+    </Content>
     <Content Include="app\shared\errorInterceptor.service.js" />
     <Content Include="app\shared\authInterceptor.service.js" />
     <Content Include="app\shared\auth.service.js" />
@@ -154,7 +161,6 @@
     <Content Include="app\shared\help\help.html" />
     <Content Include="app\shared\common.directive.js" />
     <Content Include="Content\angular-material\angular-material.css" />
-    <Content Include="Content\angular-material\angular-material.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -166,10 +172,17 @@
     <Content Include="Content\img\select2.png" />
     <Content Include="Content\img\select2x2.png" />
     <Content Include="Content\img\text.svg" />
+    <Content Include="Content\layout.css" />
     <Content Include="Content\simple-line-icons.css" />
+    <Content Include="Content\style.css" />
+    <Content Include="Content\style.min.css">
+      <DependentUpon>style.css</DependentUpon>
+    </Content>
     <Content Include="Content\treeGrid.css" />
     <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\font-awesome.min.css">
+      <DependentUpon>font-awesome.css</DependentUpon>
+    </Content>
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="demo\movieDemo\1.jpg" />
     <Content Include="demo\movieDemo\2.jpg" />
@@ -519,6 +532,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -530,18 +544,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="app\app.js.bundle" />
-    <Content Include="Content\style.css.bundle" />
     <Content Include="log4net.config" />
-    <Content Include="app\app.min.js.map">
-      <DependentUpon>app.min.js</DependentUpon>
-    </Content>
-    <Content Include="app\plugins.js.bundle">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="app\plugins.min.js.map">
-      <DependentUpon>plugins.min.js</DependentUpon>
-    </Content>
     <Content Include="Content\fonts\Simple-Line-Icons.woff" />
     <Content Include="Content\fonts\Simple-Line-Icons.eot" />
     <Content Include="Content\fonts\Simple-Line-Icons.ttf" />
@@ -559,23 +562,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\app.js">
-      <DependentUpon>app.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="app\app.min.js">
-      <DependentUpon>app.js</DependentUpon>
-    </Content>
     <Content Include="app\app.module.js" />
     <Content Include="app\app.route.js" />
     <Content Include="app\app.route2.js" />
     <Content Include="app\foundation\accessControl\user.controller.js" />
     <Content Include="app\foundation\accessControl\user.service.js" />
-    <Content Include="app\plugins.js">
-      <DependentUpon>plugins.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="app\plugins.min.js">
-      <DependentUpon>plugins.js</DependentUpon>
-    </Content>
     <Content Include="app\shared\common\form_modal.directive.js" />
     <Content Include="app\shared\common\form_modal.html" />
     <Content Include="app\shared\common\oc_modal.directive.js" />
@@ -664,12 +655,6 @@
     <Content Include="Content\img\social\youtube.png" />
     <Content Include="Content\img\syncfusion-icons-white.png" />
     <Content Include="Content\img\syncfusion-icons.png" />
-    <Content Include="Content\style.css">
-      <DependentUpon>style.css.bundle</DependentUpon>
-    </Content>
-    <Content Include="Content\style.min.css">
-      <DependentUpon>style.css</DependentUpon>
-    </Content>
     <Content Include="index.html" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Web.config" />

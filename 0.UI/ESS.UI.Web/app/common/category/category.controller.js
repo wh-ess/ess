@@ -3,7 +3,10 @@
 angular.module("EssApp").controller("CategoryController", [
     "$scope", "CategoryTypeScheme", "CategoryType", "Category", "$routeParams", "$timeout",
 function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $timeout) {
-    $scope.cur = { type: {} };
+    $scope.cur = {
+        type: {},
+        scheme: {}
+    };
     //#region CategoryTypeScheme
     var fetchCategoryTypeSchemes = function () {
         $timeout(function () {
@@ -13,6 +16,8 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
         }, 100);
     };
     fetchCategoryTypeSchemes();
+
+    $scope.categoryTypeScheme = [{Name:"fdsfs"}, {Name:"fdsfds"}];
 
     $scope.editCategoryTypeScheme = function (scheme) {
         if (scheme.Id) {

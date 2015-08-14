@@ -1,5 +1,4 @@
-﻿///#source 1 1 /app/app.module.js
-"use strict";
+﻿"use strict";
 
 
 // Declare app level module which depends on filters, and services
@@ -82,7 +81,6 @@ angular.isUndefinedOrNull = function (val) {
     return angular.isUndefined(val) || val === null;
 }
 
-///#source 1 1 /app/app.route.js
 "use strict";
 
 
@@ -133,7 +131,6 @@ angular.module("EssApp").run([
 
                 //category
                 .when("/categoryType", { templateUrl: "/app/common/category/categoryType.html", controller: "CategoryController" })
-                .when("/category", { templateUrl: "/app/common/category/category.html", controller: "CategoryController" })
 
                 //association
                 .when("/association", { templateUrl: "/app/common/association/association.html", controller: "AssociationController" })
@@ -167,7 +164,6 @@ function getUrl(path) {
 function getController(path) {
     return path.name.substring(path.name.lastIndexOf("/") + 1) + "Controller";
 }
-///#source 1 1 /app/shared/common/tree-grid-directive.js
 (function () {
   angular
     .module('template/treeGrid/treeGrid.html', [])
@@ -778,7 +774,6 @@ function getController(path) {
       };
     });
 }).call(window);
-///#source 1 1 /app//shared/filters.js
 'use strict';
 
 /* Filters */
@@ -798,7 +793,6 @@ angular.module('EssApp')
     };
 });
 
-///#source 1 1 /app//shared/services.js
 'use strict';
 
 /* Services */
@@ -817,7 +811,6 @@ angular.module('EssApp').
             return this;
         }
     ]);
-///#source 1 1 /app/shared/auth.service.js
 'use strict';
 angular.module("EssApp").factory('authService', ['$http', '$q', 'localStorageService', function ($http, $q, localStorageService) {
 
@@ -989,7 +982,6 @@ angular.module("EssApp").factory('authService', ['$http', '$q', 'localStorageSer
 
     return authServiceFactory;
 }]);
-///#source 1 1 /app/shared/common.directive.js
 'use strict';
 
 
@@ -1004,7 +996,6 @@ angular.module('EssApp').directive('back', ['$window', function ($window) {
     };
 }]);;
 
-///#source 1 1 /app/shared/authInterceptor.service.js
 'use strict';
 angular.module("EssApp").factory('authInterceptorService', ['$q', '$location', 'localStorageService', function ($q, $location, localStorageService) {
 
@@ -1034,7 +1025,6 @@ angular.module("EssApp").factory('authInterceptorService', ['$q', '$location', '
 
     return authInterceptorServiceFactory;
 }]);
-///#source 1 1 /app/shared/errorInterceptor.service.js
 'use strict';
 angular.module("EssApp").factory('errorInterceptorService', ['$q', '$location', 'localStorageService', function ($q, $location, localStorageService) {
 
@@ -1059,7 +1049,6 @@ angular.module("EssApp").factory('errorInterceptorService', ['$q', '$location', 
 
     return errorInterceptorServiceFactory;
 }]);
-///#source 1 1 /app/shared/header/header.service.js
 'use strict';
 angular.module('EssApp').factory('Menu', [
     'Restangular',
@@ -1068,7 +1057,6 @@ angular.module('EssApp').factory('Menu', [
         return Menu;
     }
 ]);
-///#source 1 1 /app/shared/header/header.controller.js
 'use strict';
 
 angular.module('EssApp').
@@ -1104,7 +1092,6 @@ function arrayToTree(data, id, pid)      //将ID、ParentID这种数据格式转
     }
     return targetData;
 }
-///#source 1 1 /app/foundation/moduleConifg/module.controller.js
 "use strict";
 
 angular.module("EssApp").controller("ModuleController", [
@@ -1197,7 +1184,6 @@ angular.module("EssApp").controller("ModuleController", [
         }
     }
 ]);
-///#source 1 1 /app/foundation/moduleConifg/module.service.js
 'use strict';
 angular.module('EssApp').factory('Module', ['Restangular',
     function (Restangular) {
@@ -1230,7 +1216,6 @@ var Enums = {};
 $.getJSON("/api/enum/enums", function (data) {
     Enums = JSON.parse(data);
 });
-///#source 1 1 /app/foundation/moduleConifg/module.directive.js
 'use strict';
 
 // contains
@@ -1539,7 +1524,6 @@ angular.module("EssApp").directive("tableView", ["Module",
     }
     ]);
 
-///#source 1 1 /app/foundation/accessControl/user.controller.js
 "use strict";
 
 angular.module("EssApp").controller("UserController", [
@@ -1591,7 +1575,6 @@ function ($scope, User, $routeParams, $timeout) {
     }
 }
 ]);
-///#source 1 1 /app/foundation/accessControl/user.service.js
 'use strict';
 
 angular.module('EssApp').factory('User', ['Restangular',
@@ -1619,7 +1602,6 @@ angular.module('EssApp').factory('User', ['Restangular',
         return User;
     }
 ]);
-///#source 1 1 /app/foundation/accessControl/role.service.js
 'use strict';
 
 angular.module('EssApp').factory('Role', ['Restangular',
@@ -1650,7 +1632,6 @@ angular.module('EssApp').factory('Role', ['Restangular',
         return Role;
     }
 ]);
-///#source 1 1 /app/foundation/accessControl/role.controller.js
 'use strict';
 
 angular.module('EssApp').controller('RoleController', [
@@ -1700,7 +1681,6 @@ function ($scope, Role, User, $routeParams) {
     }
 }
 ]);
-///#source 1 1 /app/foundation/accessControl/login.controller.js
 'use strict';
 angular.module('EssApp').controller('loginController', ['$scope', '$location', 'authService', function ($scope, $location, authService) {
 
@@ -1721,7 +1701,6 @@ angular.module('EssApp').controller('loginController', ['$scope', '$location', '
     };
 
 }]);
-///#source 1 1 /app/common/svg/svgEditor.controller.js
 "use strict";
 
 angular.module("EssApp").controller("SvgEditorController", [
@@ -1763,7 +1742,6 @@ function ($scope) {
     }
 }
 ]);
-///#source 1 1 /app/common/category/category.service.js
 "use strict";
 angular.module("EssApp").factory("CategoryTypeScheme", [
     "Restangular",
@@ -1784,13 +1762,15 @@ angular.module("EssApp").factory("CategoryTypeScheme", [
         return Entity;
     }
 ]);
-///#source 1 1 /app/common/category/category.controller.js
 "use strict";
 
 angular.module("EssApp").controller("CategoryController", [
     "$scope", "CategoryTypeScheme", "CategoryType", "Category", "$routeParams", "$timeout",
 function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $timeout) {
-    $scope.cur = { type: {} };
+    $scope.cur = {
+        type: {},
+        scheme: {}
+    };
     //#region CategoryTypeScheme
     var fetchCategoryTypeSchemes = function () {
         $timeout(function () {
@@ -1800,6 +1780,8 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
         }, 100);
     };
     fetchCategoryTypeSchemes();
+
+    $scope.categoryTypeScheme = [{Name:"fdsfs"}, {Name:"fdsfds"}];
 
     $scope.editCategoryTypeScheme = function (scheme) {
         if (scheme.Id) {
@@ -1896,7 +1878,6 @@ function ($scope, CategoryTypeScheme, CategoryType, Category, $routeParams, $tim
     //#endregion
 }
 ]);
-///#source 1 1 /app/common/association/association.service.js
 "use strict";
 angular.module("EssApp").factory("Association", [
     "Restangular",
@@ -1905,7 +1886,6 @@ angular.module("EssApp").factory("Association", [
         return Entity;
     }
 ]);
-///#source 1 1 /app/common/association/association.controller.js
 "use strict";
 
 angular.module("EssApp").controller("AssociationController", [
@@ -1955,7 +1935,6 @@ function ($scope, Association, CategoryTypeScheme, Category, $routeParams, $time
     //#endregion
 }
 ]);
-///#source 1 1 /app/common/partyRole/partyRole.service.js
 "use strict";
 angular.module("EssApp").factory("Party", [
     "Restangular",
@@ -1970,7 +1949,6 @@ angular.module("EssApp").factory("Party", [
         return Entity;
     }
 ]);
-///#source 1 1 /app/common/partyRole/partyRole.controller.js
 "use strict";
 
 angular.module("EssApp").controller("PartyRoleController", [
@@ -2043,7 +2021,6 @@ function ($scope, PartyRole, CategoryTypeScheme, Category, $routeParams, $timeou
     };
 
 }]);
-///#source 1 1 /app/common/partyRole/party.controller.js
 "use strict";
 
 angular.module("EssApp").controller("PartyController", [
@@ -2088,7 +2065,6 @@ function ($scope, Party, CategoryTypeScheme, Category, $routeParams, $timeout) {
     //#endregion
 }
 ]);
-///#source 1 1 /app/common/basic/basic.service.js
 'use strict';
 angular.module('EssApp').factory('Brand', [
     'Restangular',
@@ -2115,11 +2091,9 @@ angular.module('EssApp').factory('Brand', [
         return Entity;
     }
 ]);
-///#source 1 1 /app/common/basic/basic.controller.js
 "use strict";
 
 angular.module("EssApp");
-///#source 1 1 /app/common/basic/floor.controller.js
 "use strict";
 
 angular.module("EssApp").controller("FloorController", [
@@ -2159,7 +2133,6 @@ function ($scope, Floor, $routeParams, $timeout) {
 
 }
 ]);
-///#source 1 1 /app/common/basic/brand.controller.js
 "use strict";
 
 angular.module("EssApp").controller("BrandController", [
@@ -2199,7 +2172,6 @@ function ($scope, Brand, $routeParams, $timeout) {
 
 }
 ]);
-///#source 1 1 /app/common/basic/brandType.controller.js
 "use strict";
 
 angular.module("EssApp").controller("BrandTypeController", [
@@ -2239,7 +2211,6 @@ function ($scope, BrandType, $routeParams, $timeout) {
 
 }
 ]);
-///#source 1 1 /app/common/basic/bank.controller.js
 "use strict";
 
 angular.module("EssApp").controller("BankController", [
@@ -2279,7 +2250,6 @@ function ($scope, Bank, $routeParams, $timeout) {
 
 }
 ]);
-///#source 1 1 /app/mall/pop/popTemplate.service.js
 "use strict";
 angular.module("EssApp").factory("PopTemplate", [
     "Restangular",
@@ -2288,7 +2258,6 @@ angular.module("EssApp").factory("PopTemplate", [
         return Entity;
     }
 ]);
-///#source 1 1 /app/mall/pop/popTemplate.controller.js
 "use strict";
 
 angular.module("EssApp").controller("PopTemplateController", [
